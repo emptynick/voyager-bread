@@ -1,6 +1,21 @@
 # Voyager Bread Builder
 This is a new Package which allows you to build extensive BREAD Views and Lists.  
-Its works in a different way then Voyager.
+## Installation
+#### 1. Clone the hook
+From your root directory clone the hook into the hooks dir
+```bash
+git clone https://github.com/emptynick/bread.git hooks/bread
+```
+#### 2. Install the hook
+After you cloned the hook, you can install it.
+```bash
+php artisan hook:install bread
+```
+#### 3. Enable the hook
+You can do this through Voyagers Hook-UI or by running the following command
+```bash
+php artisan hook:enable bread
+```
 ## Terminology
 ##### View
 A View is a set of Formfields. They are used for Reading, Editing and Adding BREAD-Content.  
