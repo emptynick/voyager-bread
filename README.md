@@ -54,6 +54,7 @@ Both Views and Lists can have a free-name (~~and get assigned to different Roles
 - [ ] Reimplement Permissions
 - [ ] Dont display a relationship as a DataTable if there is only one `visible_row`
 - [ ] Properly display a relationship in `Read`
+- [ ] Add Validation-Repeater to List-Builder
 - [ ] Change the way we get Model-Fields.  
 	Currently we read the Database, because there is no way getting the attributes through the model if theres no entry.
 
