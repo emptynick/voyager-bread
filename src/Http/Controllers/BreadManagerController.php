@@ -81,7 +81,7 @@ class BreadManagerController extends Controller
                 } else {
                     $validation = null;
                 }
-                //dd($validation);
+
                 $newrow = BreadFacade::model('BreadRow')->updateOrCreate([
                     'id' => $row['id']
                 ], [
@@ -123,7 +123,7 @@ class BreadManagerController extends Controller
             if ($type == 'input') {
                 return BreadFacade::formField($row->type)->createInput(null, array_merge($row->options, $request->options), $request->name);
             } else {
-                /** @todo: Add other things here **/
+                /** @todo: Add other things here. Currently only input is needed **/
             }
         }
     }

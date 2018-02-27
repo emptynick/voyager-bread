@@ -95,21 +95,6 @@ if (!function_exists('get_related_bread')) {
     }
 }
 
-if (!function_exists('get_array_depth')) {
-    function get_array_depth($array)
-    {
-        $depth = 0;
-        $iteIte = new \RecursiveIteratorIterator(new \RecursiveArrayIterator($array));
-
-        foreach ($iteIte as $ite) {
-            $d = $iteIte->getDepth();
-            $depth = $d > $depth ? $d : $depth;
-        }
-
-        return $depth;
-    }
-}
-
 if (!function_exists('parse_validation')) {
     function parse_validation($input)
     {

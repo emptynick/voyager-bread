@@ -104,29 +104,7 @@ class BreadController extends Controller
         $messages = $view->getValidationRules(true);
 
         if ($request->has('relationship')) {
-            /*foreach ($request->relationship as $id => $fields) {
-                //Add relationship validation
-                $rules = array_merge($rules, array_diff(
-                    $view->getValidationRules(false, false, '', '.'.$id),
-                    $view->getValidationRules()
-                ));
-
-                $messages = array_merge($messages, array_diff(
-                    $view->getValidationRules(true, false, '', '.'.$id),
-                    $view->getValidationRules(true)
-                ));
-
-                $rel_row = BreadFacade::model('BreadRow')->find($id);
-                $rel_view = BreadFacade::model('BreadView')->find($rel_row->options['list_id']);
-                if (get_array_depth($fields) >= 1) {
-                    $rules = array_merge($rules, $rel_view->getValidationRules(false, false, 'relationship.'.$id.'.*.'));
-                    $messages = array_merge($messages, $rel_view->getValidationRules(true, false, 'relationship.'.$id.'.*.'));
-                } else {
-                    $rules = array_merge($rules, $rel_view->getValidationRules(false, false, 'relationship.'.$id.'.'));
-                    $messages = array_merge($messages, $rel_view->getValidationRules(true, false, 'relationship.'.$id.'.'));
-                }
-
-            }*/
+            /* @todo: Validate Relationships */
         }
         $this->validate($request->input(), $rules, $messages);
 
