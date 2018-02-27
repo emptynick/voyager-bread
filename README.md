@@ -32,7 +32,7 @@ A BREAD-Type can have many Lists and Views.
 With this you can create different Views for different roles, e.g. an `Admin` can have a different View than a `Writer`  
 
 #### View
-A View is a set of Formfields. They are used for Reading, Editing and Adding BREAD-Content.  
+A View is a set of Formfields. They are used for Reading, Editing, Viewing and Adding BREAD-Content.  
 Views can contain the Relationships from its model.  
 
 #### List
@@ -51,6 +51,9 @@ Both Views and Lists can have a free-name (~~and get assigned to different Roles
 - [ ] Validate relationship
 - [ ] Implement various FormFields
 - [ ] Add `disabled` option to Formfields
+- [ ] Reimplement Permissions
+- [ ] Dont display a relationship as a DataTable if there is only one `visible_row`
+- [ ] Properly display a relationship in `Read`
 - [ ] Change the way we get Model-Fields.  
 	Currently we read the Database, because there is no way getting the attributes through the model if theres no entry.
 
