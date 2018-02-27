@@ -59,12 +59,12 @@ class CreateBreadTable extends Migration
         });
 
         // Create table for Roles <-> Views Relationship
-        Schema::create('bread_view_role', function (Blueprint $table) {
+        /*Schema::create('bread_view_role', function (Blueprint $table) {
             $table->integer('role_id')->unsigned()->index();
             $table->foreign('role_id')->references('id')->on('roles');
             $table->integer('bread_view_id')->unsigned()->index();
             $table->foreign('bread_view_id')->references('id')->on('bread_views');
-        });
+        });*/
     }
 
     /**
@@ -77,6 +77,6 @@ class CreateBreadTable extends Migration
         Schema::drop('bread');
         Schema::drop('bread_views');
         Schema::drop('bread_rows');
-        Schema::drop('bread_view_role');
+        /*Schema::drop('bread_view_role');*/
     }
 }

@@ -2,6 +2,7 @@
     "name": "bread",
     "description": "Extended BREAD functionality for Laravel Voyager",
     "license": "MIT",
+    "version": "0.1.1",
     "require": {
         "larapack/hooks": "~1.0",
         "tcg/voyager": "~1.0"
