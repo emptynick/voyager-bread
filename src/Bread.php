@@ -6,15 +6,15 @@ use Illuminate\Routing\Route;
 
 class Bread
 {
-	protected $models = [
+    protected $models = [
         'Bread'		=> \Bread\Models\Bread::class,
         'BreadView'	=> \Bread\Models\BreadView::class,
         'BreadRow'	=> \Bread\Models\BreadRow::class,
     ];
 
-	protected $formFields = [];
+    protected $formFields = [];
 
-	public function model($name)
+    public function model($name)
     {
         return app($this->models[studly_case($name)]);
     }
@@ -23,7 +23,7 @@ class Bread
         return $this->models[$name];
     }
 
-	public function addFormField($handler)
+    public function addFormField($handler)
     {
         if (!$handler instanceof HandlerInterface) {
             $handler = app($handler);
@@ -32,12 +32,12 @@ class Bread
         return $this;
     }
 
-	public function formField($type)
+    public function formField($type)
     {
         return $this->formFields[$type];
     }
 
-	public function formFields($type = 'formfield')
+    public function formFields($type = 'formfield')
     {
         $connection = config('database.default');
         $driver = config("database.connections.{$connection}.driver", 'mysql');
@@ -47,9 +47,9 @@ class Bread
         });
     }
 
-	public function routes()
-	{
-		require __DIR__.'/../routes/bread.php';
-	}
+    public function routes()
+    {
+        require __DIR__.'/../routes/bread.php';
+    }
 
 }
