@@ -31,11 +31,11 @@ Remember that it doesn't care if it makes sense (e.g. you have the same Field as
 A BREAD-Type can have many Lists and Views.  
 With this you can create different Views for different roles, e.g. an `Admin` can have a different View than a `Writer`  
 
-##### View
+#### View
 A View is a set of Formfields. They are used for Reading, Editing and Adding BREAD-Content.  
 Views can contain the Relationships from its model.  
 
-##### List
+#### List
 A List is used for Browsing BREAD-Content and displaying Relationships in a View.  
 It can contain its own fields, relationship fields and pivot fields.
 
