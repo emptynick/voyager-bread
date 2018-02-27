@@ -1,0 +1,35 @@
+{
+    "name": "bread",
+    "description": "Extended BREAD functionality for Laravel Voyager",
+    "require": {
+        "larapack/hooks": "~1.0",
+        "tcg/voyager": "~1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Bread\\": "src/"
+        }
+    },
+    "extra": {
+        "hook": {
+            "providers": [
+                "Bread\\BreadServiceProvider"
+            ],
+            "aliases": {
+                "Bread": "Bread\\BreadFacade"
+            },
+            "migrations": [
+                "resources/database/migrations"
+            ],
+            "seeders": [
+                "resources/database/seeders"
+            ],
+            "unseeders": [
+                "resources/database/unseeders"
+            ],
+            "assets": {
+                "resources/assets": "public/vendor/bread"
+            }
+        }
+    }
+}
