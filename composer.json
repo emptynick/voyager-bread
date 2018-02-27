@@ -23,12 +23,6 @@
             "migrations": [
                 "resources/database/migrations"
             ],
-            "seeders": [
-                "resources/database/seeders"
-            ],
-            "unseeders": [
-                "resources/database/unseeders"
-            ],
             "assets": {
                 "resources/assets": "public/vendor/bread"
             }
