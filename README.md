@@ -21,10 +21,9 @@ Both Views and Lists can have a free-name (and get assigned to different Roles)
 - [Formfields](/docs/Formfields.md)
 
 ## Todo:
-- [] Assign views to Roles *or* create a Permission for each view
-- [] Validate relationship
-- [] Implement various FormFields
-- [] Add `disabled` option to Formfields
-- [] Change the way we get the Columns.  
+- [ ] Assign views to Roles *or* create a Permission for each view
+- [ ] Validate relationship
+- [ ] Implement various FormFields
+- [ ] Add `disabled` option to Formfields
+- [ ] Change the way we get the Columns.  
 	Currently we read the Database, because there is no way getting the attributes through the model if theres no entry.
-- [] bla
