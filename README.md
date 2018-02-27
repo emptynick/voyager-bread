@@ -16,6 +16,12 @@ You can do this through Voyagers Hook-UI or by running the following command
 ```bash
 php artisan hook:enable bread
 ```
+### 4. Optional: Add Dummy Data
+To get you started, you can run
+```bash
+php artisan bread:dummydata
+```
+This will create some views, lists and models for `Categories`, `Pages` and `Posts`
 ## Terminology
 ##### View
 A View is a set of Formfields. They are used for Reading, Editing and Adding BREAD-Content.  

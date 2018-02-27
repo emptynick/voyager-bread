@@ -48,7 +48,10 @@ class BreadServiceProvider extends ServiceProvider
         });
 
         $this->registerFormFields();
-        $this->registerCommands();
+
+        $this->commands([
+            Commands\DummyDataCommand::class,
+        ]);
     }
 
     public function addMenuItem(Menu $menu)
@@ -170,15 +173,5 @@ class BreadServiceProvider extends ServiceProvider
         foreach ($formFields as $formField) {
             BreadFacade::addFormField($formField);
         }
-    }
-
-    protected function registerDesignElements()
-    {
-
-    }
-
-    protected function registerCommands()
-    {
-        $this->commands(Commands\DummyDataCommand::class);
     }
 }
