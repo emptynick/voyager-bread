@@ -42,3 +42,6 @@ Both Views and Lists can have a free-name (and get assigned to different Roles)
 - [ ] Add `disabled` option to Formfields
 - [ ] Change the way we get the Columns.  
 	Currently we read the Database, because there is no way getting the attributes through the model if theres no entry.
+
+## Bugs:
+- Adding a new entry through a relationship does not save the relationship

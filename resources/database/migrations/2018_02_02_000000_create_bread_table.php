@@ -52,6 +52,7 @@ class CreateBreadTable extends Migration
 			$table->integer('order')->nullable()->unsigned();
 			$table->integer('width')->nullable()->unsigned();
 			$table->text('options')->nullable();
+            $table->text('validation_rules')->nullable();
             $table->timestamps();
 
 			$table->foreign('bread_view_id')->references('id')->on('bread_views')

@@ -135,7 +135,6 @@ class BreadController extends Controller
         $breadContent->save();
 
         if ($request->has('relationship')) {
-            dd($request->relationship);
             foreach ($request->relationship as $id => $input) {
                 $relationship_row = BreadFacade::model('BreadRow')->find($id);
                 if (isset($relationship_row)) {

@@ -70,7 +70,6 @@ class BreadManagerController extends Controller
 
     public function updateView(Request $request)
     {
-		//dd($request->input());
         //Get BREAD
         $bread = BreadFacade::model('Bread')->where('table_name', $request->bread_name)->firstOrFail();
 

@@ -19,85 +19,275 @@ class BreadDummySeeder extends Seeder
      */
     public function run()
     {
-        if (Schema::hasTable('cars') && Schema::hasTable('drivers') && Schema::hasTable('colors') && Schema::hasTable('manufacturers') && Schema::hasTable('car_driver')) {
+        \DB::table('bread')->insert(array (
+            0 =>
+            array (
+                'id' => 1,
+                'table_name' => 'categories',
+                'slug' => 'categories',
+                'display_name_singular' => 'Category',
+                'display_name_plural' => 'Categories',
+                'icon' => 'voyager-categories',
+                'model_name' => 'App\\Category',
+                'policy_name' => NULL,
+                'controller_name' => NULL,
+                'browse_list' => 2,
+                'read_view' => 1,
+                'add_view' => 1,
+                'edit_view' => 1,
+            ),
+            1 =>
+            array (
+                'id' => 2,
+                'table_name' => 'pages',
+                'slug' => 'pages',
+                'display_name_singular' => 'Page',
+                'display_name_plural' => 'Pages',
+                'icon' => 'voyager-file-text',
+                'model_name' => 'App\\Page',
+                'policy_name' => NULL,
+                'controller_name' => NULL,
+                'browse_list' => 5,
+                'read_view' => 4,
+                'add_view' => 4,
+                'edit_view' => 4,
+            ),
+            2 =>
+            array (
+                'id' => 3,
+                'table_name' => 'posts',
+                'slug' => 'posts',
+                'display_name_singular' => 'Post',
+                'display_name_plural' => 'Posts',
+                'icon' => 'voyager-news',
+                'model_name' => 'App\\Post',
+                'policy_name' => NULL,
+                'controller_name' => NULL,
+                'browse_list' => 7,
+                'read_view' => 6,
+                'add_view' => 6,
+                'edit_view' => 6,
+            ),
+        ));
 
-            DB::table('colors')->insert([
-                ['color' => 'Red'],//1
-                ['color' => 'Blue'],//2
-                ['color' => 'Green'],//3
-                ['color' => 'Black'],//4
-                ['color' => 'Yellow'],//5
-                ['color' => 'White'],//6
-                ['color' => 'Grey'],//7
-            ]);
+        \DB::table('bread_views')->insert(array (
+            0 =>
+            array (
+                'id' => 1,
+                'bread_id' => 1,
+                'view_type' => 'view',
+                'name' => 'Default View',
+            ),
+            1 =>
+            array (
+                'id' => 2,
+                'bread_id' => 1,
+                'view_type' => 'list',
+                'name' => 'Default List',
+            ),
+            2 =>
+            array (
+                'id' => 3,
+                'bread_id' => 1,
+                'view_type' => 'list',
+                'name' => 'Relationship List',
+            ),
+            3 =>
+            array (
+                'id' => 4,
+                'bread_id' => 2,
+                'view_type' => 'view',
+                'name' => 'Default View',
+            ),
+            4 =>
+            array (
+                'id' => 5,
+                'bread_id' => 2,
+                'view_type' => 'list',
+                'name' => 'Default List',
+            ),
+            5 =>
+            array (
+                'id' => 6,
+                'bread_id' => 3,
+                'view_type' => 'view',
+                'name' => 'Default View',
+            ),
+            6 =>
+            array (
+                'id' => 7,
+                'bread_id' => 3,
+                'view_type' => 'list',
+                'name' => 'Default List',
+            ),
+        ));
 
-            DB::table('drivers')->insert([
-                ['name' => 'Chris'],
-                ['name' => 'Mark'],
-                ['name' => 'John'],
-                ['name' => 'Bruno'],
-                ['name' => 'Tony'],
-                ['name' => 'Eric'],
-                ['name' => 'Alex'],
-                ['name' => 'Christina'],
-                ['name' => 'Isabella'],
-                ['name' => 'Vicki'],
-                ['name' => 'Gabriel'],
-                ['name' => 'Anabelle'],
-            ]);
-
-            DB::table('manufacturers')->insert([
-                ['name' => 'BMW'],//1
-                ['name' => 'Cadillac'],//2
-                ['name' => 'Ford'],//3
-                ['name' => 'Honda'],//4
-                ['name' => 'Mercedes'],//5
-                ['name' => 'Fiat'],//6
-                ['name' => 'Chevrolet'],//7
-                ['name' => 'Mazda'],//8
-            ]);
-
-            DB::table('cars')->insert([
-                //BMW
-                ['model_name' => 'Z4', 'manufacturer_id' => 1, 'color_id' => 7, 'production_year' => 2007],
-                ['model_name' => '530d', 'manufacturer_id' => 1, 'color_id' => 4, 'production_year' => 2004],
-                ['model_name' => 'M3', 'manufacturer_id' => 1, 'color_id' => 1, 'production_year' => 2010],
-                ['model_name' => '118d', 'manufacturer_id' => 1, 'color_id' => 2, 'production_year' => 2012],
-
-                //Cadillac
-                ['model_name' => 'Escalade', 'manufacturer_id' => 2, 'color_id' => 4, 'production_year' => 2002],
-                ['model_name' => 'CT6', 'manufacturer_id' => 2, 'color_id' => 7, 'production_year' => 2001],
-                ['model_name' => 'XT5', 'manufacturer_id' => 2, 'color_id' => 6, 'production_year' => 2011],
-
-                //Ford
-                ['model_name' => 'F350', 'manufacturer_id' => 3, 'color_id' => 1, 'production_year' => 1991],
-                ['model_name' => 'Focus ST', 'manufacturer_id' => 3, 'color_id' => 3, 'production_year' => 1998],
-                ['model_name' => 'Taurus', 'manufacturer_id' => 3, 'color_id' => 2, 'production_year' => 2006],
-
-                //Honda
-                ['model_name' => 'Accord', 'manufacturer_id' => 4, 'color_id' => 1, 'production_year' => 2009],
-                ['model_name' => 'CR-V', 'manufacturer_id' => 4, 'color_id' => 6, 'production_year' => 2005],
-
-                //Mercedes
-                ['model_name' => 'Sprinter', 'manufacturer_id' => 5, 'color_id' => 6, 'production_year' => 2008],
-                ['model_name' => 'S350', 'manufacturer_id' => 5, 'color_id' => 7, 'production_year' => 2010],
-                ['model_name' => 'C63 AMG', 'manufacturer_id' => 5, 'color_id' => 5, 'production_year' => 2016],
-
-                //Fiat
-                ['model_name' => '500', 'manufacturer_id' => 6, 'color_id' => 5, 'production_year' => 2012],
-                ['model_name' => 'Panda', 'manufacturer_id' => 6, 'color_id' => 2, 'production_year' => 2006],
-                ['model_name' => 'Ducato', 'manufacturer_id' => 6, 'color_id' => 7, 'production_year' => 2010],
-
-                //Chevrolet
-                ['model_name' => 'Corvet C7', 'manufacturer_id' => 7, 'color_id' => 1, 'production_year' => 2013],
-                ['model_name' => 'Impala', 'manufacturer_id' => 7, 'color_id' => 4, 'production_year' => 1973],
-                ['model_name' => 'Caprice', 'manufacturer_id' => 7, 'color_id' => 3, 'production_year' => 1978],
-
-                //Mazda
-                ['model_name' => 'CX-3', 'manufacturer_id' => 8, 'color_id' => 7, 'production_year' => 2015],
-                ['model_name' => '6', 'manufacturer_id' => 8, 'color_id' => 6, 'production_year' => 2002],
-                ['model_name' => 'MX-5', 'manufacturer_id' => 8, 'color_id' => 1, 'production_year' => 2015],
-            ]);
-        }
+        \DB::table('bread_rows')->insert(array (
+            0 =>
+            array (
+                'id' => 1,
+                'bread_view_id' => 1,
+                'field' => 'name',
+                'type' => 'text',
+                'order' => 0,
+                'width' => 6,
+                'options' => '{"label":"Name","helptext":"Name of the Category","placeholder":"Name","value":null}',
+                'validation_rules' => NULL,
+            ),
+            1 =>
+            array (
+                'id' => 2,
+                'bread_view_id' => 1,
+                'field' => 'slug',
+                'type' => 'text',
+                'order' => 1,
+                'width' => 6,
+                'options' => '{"label":"Slug","helptext":"Slug of the Category","placeholder":"Slug","value":null,"slug":"true","slug_origin":"name"}',
+                'validation_rules' => NULL,
+            ),
+            2 =>
+            array (
+                'id' => 3,
+                'bread_view_id' => 2,
+                'field' => 'name',
+                'type' => 'text',
+                'order' => 0,
+                'width' => NULL,
+                'options' => '{"label":"Name","searchable":"true","orderable":"true"}',
+                'validation_rules' => NULL,
+            ),
+            3 =>
+            array (
+                'id' => 4,
+                'bread_view_id' => 2,
+                'field' => 'slug',
+                'type' => 'text',
+                'order' => 1,
+                'width' => NULL,
+                'options' => '{"label":"Slug","searchable":"true","orderable":"true"}',
+                'validation_rules' => NULL,
+            ),
+            4 =>
+            array (
+                'id' => 5,
+                'bread_view_id' => 3,
+                'field' => 'name',
+                'type' => 'text',
+                'order' => 0,
+                'width' => NULL,
+                'options' => '{"label":"Name","searchable":"true","orderable":"true"}',
+                'validation_rules' => NULL,
+            ),
+            5 =>
+            array (
+                'id' => 6,
+                'bread_view_id' => 4,
+                'field' => 'title',
+                'type' => 'text',
+                'order' => 0,
+                'width' => 6,
+                'options' => '{"label":"Title","helptext":"Title of the Page","placeholder":"Title","value":null}',
+                'validation_rules' => NULL,
+            ),
+            6 =>
+            array (
+                'id' => 7,
+                'bread_view_id' => 4,
+                'field' => 'slug',
+                'type' => 'text',
+                'order' => 1,
+                'width' => 6,
+                'options' => '{"label":"Slug","helptext":"Slug of the Page","placeholder":"Slug","value":null,"slug":"true","slug_origin":"title"}',
+                'validation_rules' => NULL,
+            ),
+            7 =>
+            array (
+                'id' => 8,
+                'bread_view_id' => 4,
+                'field' => 'relationship',
+                'type' => 'relationship',
+                'order' => 2,
+                'width' => 12,
+                'options' => '{"label":"Categories","helptext":"Categories of this Page","relationship":"categories","list_id":"3","view_id":"1"}',
+                'validation_rules' => NULL,
+            ),
+            8 =>
+            array (
+                'id' => 9,
+                'bread_view_id' => 5,
+                'field' => 'title',
+                'type' => 'text',
+                'order' => 0,
+                'width' => NULL,
+                'options' => '{"label":"Title","searchable":"true","orderable":"true"}',
+                'validation_rules' => NULL,
+            ),
+            9 =>
+            array (
+                'id' => 11,
+                'bread_view_id' => 1,
+                'field' => 'relationship',
+                'type' => 'relationship',
+                'order' => 2,
+                'width' => 12,
+                'options' => '{"label":"Pages","helptext":"Pages with this Category","relationship":"pages","list_id":"5","view_id":"null"}',
+                'validation_rules' => NULL,
+            ),
+            10 =>
+            array (
+                'id' => 12,
+                'bread_view_id' => 6,
+                'field' => 'title',
+                'type' => 'text',
+                'order' => 0,
+                'width' => 6,
+                'options' => '{"label":"Title","helptext":"Title of the Post","placeholder":"Title","value":null}',
+                'validation_rules' => NULL,
+            ),
+            11 =>
+            array (
+                'id' => 13,
+                'bread_view_id' => 6,
+                'field' => 'slug',
+                'type' => 'text',
+                'order' => 1,
+                'width' => 6,
+                'options' => '{"label":"Slug","helptext":"Slug of this Post","placeholder":"Slug","value":null}',
+                'validation_rules' => NULL,
+            ),
+            12 =>
+            array (
+                'id' => 14,
+                'bread_view_id' => 6,
+                'field' => 'relationship',
+                'type' => 'relationship',
+                'order' => 2,
+                'width' => 12,
+                'options' => '{"label":"Categories","helptext":"Categories of this Post","relationship":"categories","list_id":"3","view_id":"1"}',
+                'validation_rules' => NULL,
+            ),
+            13 =>
+            array (
+                'id' => 15,
+                'bread_view_id' => 7,
+                'field' => 'title',
+                'type' => 'text',
+                'order' => 0,
+                'width' => NULL,
+                'options' => '{"label":"Title","searchable":"true","orderable":"true"}',
+                'validation_rules' => NULL,
+            ),
+            14 =>
+            array (
+                'id' => 16,
+                'bread_view_id' => 1,
+                'field' => 'relationship',
+                'type' => 'relationship',
+                'order' => 3,
+                'width' => 12,
+                'options' => '{"label":"Posts","helptext":"Posts with this Category","relationship":"posts","list_id":"7","view_id":"null"}',
+                'validation_rules' => NULL,
+            ),
+        ));
     }
 }

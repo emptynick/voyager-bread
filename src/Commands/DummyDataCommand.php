@@ -47,8 +47,12 @@ class DummyDataCommand extends Command
      */
     public function handle(Filesystem $filesystem)
     {
-        $this->info('Publishing assets');
-        $this->call('vendor:publish', ['--provider' => BreadServiceProvider::class, '--force' => '']);
+        if (!Schema::hasTable('categories') || !Schema::hasTable('posts') || !Schema::hasTable('pages')) {
+			$this->info('Please run');
+            $this->info('php artisan db:seed --class=VoyagerDummyDatabaseSeeder');
+            $this->info('Before running this command!');
+            return;
+		}
 
         $this->info('Copying models to /app');
 		$files = $filesystem->allFiles(__DIR__.'/../../stub');
@@ -58,53 +62,25 @@ class DummyDataCommand extends Command
 			$filesystem->copy($file, base_path('app/'.$name));
 		}
 
-		$this->info('Creating tables');
+		$this->info('Creating pivot tables');
 
-		if (!Schema::hasTable('colors')) {
-			Schema::create('colors', function (Blueprint $table) {
-	            $table->increments('id');
-	            $table->string('color');
+        if (!Schema::hasTable('category_post')) {
+			Schema::create('category_post', function (Blueprint $table) {
+				$table->integer('category_id')->unsigned();
+				$table->integer('post_id')->unsigned();
+				$table->foreign('category_id')->references('id')->on('categories');
+				$table->foreign('post_id')->references('id')->on('posts');
 	        });
-		}
+        }
 
-		if (!Schema::hasTable('drivers')) {
-			Schema::create('drivers', function (Blueprint $table) {
-	            $table->increments('id');
-	            $table->string('name');
+        if (!Schema::hasTable('category_page')) {
+			Schema::create('category_page', function (Blueprint $table) {
+				$table->integer('category_id')->unsigned();
+				$table->integer('page_id')->unsigned();
+				$table->foreign('category_id')->references('id')->on('categories');
+				$table->foreign('page_id')->references('id')->on('pages');
 	        });
-		}
-
-		if (!Schema::hasTable('manufacturers')) {
-			Schema::create('manufacturers', function (Blueprint $table) {
-				$table->increments('id');
-	            $table->string('name');
-	        });
-		}
-
-		if (!Schema::hasTable('cars')) {
-			Schema::create('cars', function (Blueprint $table) {
-	            $table->increments('id');
-	            $table->string('model_name');
-				$table->integer('manufacturer_id')->nullable()->unsigned();
-				$table->integer('color_id')->nullable()->unsigned();
-				$table->integer('production_year')->nullable()->unsigned();
-
-				$table->foreign('manufacturer_id')->references('id')->on('manufacturers');
-				$table->foreign('color_id')->references('id')->on('colors');
-	        });
-		}
-
-		if (!Schema::hasTable('car_driver')) {
-			Schema::create('car_driver', function (Blueprint $table) {
-				$table->integer('car_id')->unsigned();
-				$table->integer('driver_id')->unsigned();
-				$table->dateTime('date_from')->nullable();
-				$table->dateTime('date_to')->nullable();
-
-				$table->foreign('car_id')->references('id')->on('cars');
-				$table->foreign('driver_id')->references('id')->on('drivers');
-	        });
-		}
+        }
 
 		$this->info('Seeding data');
 
