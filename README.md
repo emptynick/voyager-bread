@@ -31,7 +31,7 @@ A List is used for Browsing BREAD-Content and displaying Relationships in a View
 It can contain its own fields, relationship fields and pivot fields.  
 In the List-Builder you can set 3 different options:
 - **Searchable** Sets if this field is searchable (Global search **and** single-column-search)
-- **Orderable** Sets if this field is orderable. Please read the note [here](/docs/Relationships.md)
+- **Orderable** Sets if this field is orderable. Please read the note [here](/docs/Relationships.md#a-note-on-ordering-relationships)
 - **Visible** Sets if this field is visible. Useful if you want to search a field but don't want to display it.
 
 Both Views and Lists can have a free-name (and get assigned to different Roles)
