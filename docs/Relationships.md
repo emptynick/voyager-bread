@@ -8,6 +8,8 @@ These are the necessary steps:
 
 Thats it. You can now drop your Relationships in the View-Builder, use single Fields in Lists, and use Pivot-Fields for `BelongsToMany` relationships.
 
+## Adding a relationship entry
+If you want to add a related entry from a BREAD, e.g. add a `Category` from a `Post` edit/add page, you have to set an `Add-View` to your `Category` relationship inside your `Post` View.  
 
 ### A note on ordering relationships
 While searching relationships is possible with no problems, ordering by a relationship is very expensive.  
