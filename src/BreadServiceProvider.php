@@ -169,6 +169,7 @@ class BreadServiceProvider extends ServiceProvider
             \Bread\FormFields\HeadingHandler::class,
             \Bread\FormFields\ParagraphHandler::class,
             \Bread\FormFields\HorizontalRuleHandler::class,
+            \Bread\FormFields\TabControlHandler::class,
         ];
         foreach ($formFields as $formField) {
             BreadFacade::addFormField($formField);

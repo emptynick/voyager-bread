@@ -36,6 +36,7 @@
 			droppable = $(builder).sortable({
 				sort: true,
 				animation: 150,
+				delay: 25,
 				forceFallback: true,
 				draggable: settings.formfield,
 				group: {
@@ -84,8 +85,6 @@
 
 			$('.options-container').on('click', '.save-options', function(e) {
 				e.preventDefault();
-				//Load back html - used for repeater
-				//currentOptionFormfield.find('.options').html($('.options-container').html());
 
 				copyOptions($('.options-container'), currentOptionFormfield.find('.options'));
 				applyOptions($('.options-container'), currentOptionFormfield);
@@ -220,6 +219,7 @@
 		};
 
 		var applyOptions = function(options, formfield) {
+
 			var $content = formfield.find('.content');
 			options.find(':input, :checkbox, :radio').each(function() {
 				var $el = $(this);
@@ -305,7 +305,6 @@
 
 			//Add item
 			repeater.on('click', settings.repeaterAdd, function() {
-				console.log(repeater);
 				var item = repeater.find(settings.repeaterItem).first().clone();
 				item.find(':input').val('').prop('checked', false);
 				//item.insertAfter($(this).closest(settings.repeater).find(settings.repeaterItem).last());
