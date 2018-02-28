@@ -19,7 +19,7 @@
 	<input type="text" value="{{ $options['placeholder'] or '' }}" class="form-control" placeholder="{{ __('bread::generic.placeholder') }}" name="element[][options][placeholder]" data-name="placeholder">
 </div>
 <div class="form-group">
-	<label>{{ __('voyager.bread.default_value') }}</label>
+	<label>{{ __('bread::generic.default_value') }}</label>
 	<textarea class="form-control" placeholder="{{ __('bread::generic.default_value') }}" name="element[][options][value]" data-name="value">{{ $options['value'] or '' }}</textarea>
 </div>
 @endif
