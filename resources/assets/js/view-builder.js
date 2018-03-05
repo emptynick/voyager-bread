@@ -200,8 +200,7 @@
 
 			//Touch every value from every input
 			from.find(':input').each(function() {
-			    $(this).attr('value', $(this).val());
-
+				$(this).attr('value', $(this).val());
 			});
 
 			//Force set selected="true"
@@ -214,8 +213,14 @@
 			from.find(':checkbox, :radio').each(function() {
 				$(this).attr('checked', $(this).is(':checked'));
 			});
+			$cloned = $(from).clone();
 
-			$(to).html($(from).clone().html());
+			$cloned.find('textarea').each(function(index, item) {
+				$(item).text(from.find('textarea').eq(index).val());
+			});
+
+
+			$(to).html($cloned.html());
 		};
 
 		var applyOptions = function(options, formfield) {
@@ -261,7 +266,7 @@
 						});
 						break;
 					case 'html':
-						$content.find('h1, h2, h3, h4, h5, h6, p').html(value);
+						$content.find('h1, h2, h3, h4, h5, h6, p').html((value + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1<br>$2'));
 						break;
 				}
 			});

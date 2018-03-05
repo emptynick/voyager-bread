@@ -1,8 +1,8 @@
 @if(isset($input) || isset($output) || isset($mockup))
-<p>{{ $options['text'] or 'Paragraph' }}</p>
+<p>{!! isset($options['text']) ? nl2br($options['text']) : 'Paragraph' !!}</p>
 @else
 <div class="form-group">
 	<label>{{ __('bread::generic.text') }}</label>
-	<input type="text" value="{{ $options['text'] or '' }}" class="form-control" placeholder="{{ __('bread::generic.text') }}" name="row[][options][text]" data-name="html">
+	<textarea class="form-control" placeholder="{{ __('bread::generic.text') }}" name="row[][options][text]" data-name="html">{{ $options['text'] or '' }}</textarea>
 </div>
 @endif
