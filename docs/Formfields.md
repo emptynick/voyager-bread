@@ -48,3 +48,38 @@ You can easily set your custom viewfile by adding `protected $viewfile = 'your.f
 
 When calling any of the first five methods, a variable called `input`, `output`, `options`, `mockup` or `content` with value `true` is passed.  
 If you want to use just one view-file for your Formfield, you just need to define your view-file and check which variable is set to true.  
+## Options
+Options can implement the following:
+### Activates
+Putting the class `activates` to a checkbox/radio will toggle a targets disabled-state defined in the `data-activates` attribute.  
+For Example:
+```html
+<div class="form-group">
+	<label>Slug</label>
+	<input type="checkbox" class="form-check-input activates" data-activates=".origin">
+    <input type="text" class="form-control origin" disabled>
+</div>
+```
+### Repeater
+A repeater is applied to a button and will duplicate a given `data-repeats`  
+For example
+```html
+<div class="form-group">
+	<label>Options</label>
+    <input type="text" class="form-control repeat" name="element[][options][options][][value]">
+	<button class="btn btn-primary repeater" data-repeats=".repeat">Add</button>
+</div>
+```
+This will duplicate the `input` and place it after the last occurence of `data-repeats`  
+Also you can inject the count of `data-repeats` to an input-value by using `data-inc=".element"`
+
+### Deletable
+Deletes the closest `data-delete`.  
+For example
+```html
+<div class="row">
+<!-- Content -->
+<button class="btn btn-danger deletable" data-delete=".row">Delete</button>
+</div>
+```
+This will delete itself
