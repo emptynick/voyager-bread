@@ -7,6 +7,14 @@
 	<input type="text" value="{{ $options['value'] or '' }}" class="form-control" placeholder="{{ __('bread::generic.default_value') }}" name="row[][options][value]" data-name="value">
 </div>
 <div class="form-group">
+	<label>{{ __('bread::generic.type') }}</label>
+	<select class="form-control" name="row[][options][type]" data-name="type">
+		@foreach(__('bread::manager.text_types') as $key => $type)
+		<option value="{{ $key }}" {{ ((isset($options['type']) && $options['type'] == $key) ? 'checked' : '') }}>{{ $type }}</option>
+		@endforeach
+	</select>
+</div>
+<div class="form-group">
 	<label>{{ __('bread::generic.slug') }}</label>
 	<input type="checkbox" {{ ((isset($options['slug']) && $options['slug']) ? 'checked' : '') }} class="form-check-input enables" data-enables=".origin" name="row[][options][slug]" value="true">
     <input type="text" value="{{ $options['slug_origin'] or '' }}" name="row[][options][slug_origin]" placeholder="{{ __('bread::generic.slug_origin') }}" class="form-control origin" {{ ((isset($options['slug']) && $options['slug']) ? '' : 'disabled') }}>

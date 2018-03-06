@@ -65,6 +65,14 @@ return [
     'on_value'                      => 'On Value',
     'off_value'                     => 'Off Value',
     'checked'                       => 'Checked',
+    'text_types'                    => [
+            'text'                      => 'Text',
+            'email'                     => 'E-Mail',
+            'hidden'                    => 'Hidden',
+            'password'                  => 'Password',
+            'tel'                       => 'Telephone Number',
+            'url'                       => 'URL',
+    ],
     'date_time_types'               => [
             'date'                      => 'Date',
             'datetime-local'            => 'Date Time',
