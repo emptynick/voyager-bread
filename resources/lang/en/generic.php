@@ -23,4 +23,5 @@ return [
     'relationship'                  => 'Relationship',
     'field'                         => 'Field',
     'type'                          => 'Type',
+    'format'                        => 'Format',
 ];

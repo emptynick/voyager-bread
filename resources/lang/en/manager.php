@@ -62,4 +62,13 @@ return [
     'tab_control'                   => 'Tab Control',
     'horizontal_rule'               => 'Horizontal Rule',
     'paragraph'                     => 'Paragraph',
+    'on_value'                      => 'On Value',
+    'off_value'                     => 'Off Value',
+    'checked'                       => 'Checked',
+    'date_time_types'               => [
+            'date'                      => 'Date',
+            'datetime'                  => 'Date Time',
+            'time'                      => 'Time',
+            'number'                    => 'Timestamp',
+    ]
 ];
