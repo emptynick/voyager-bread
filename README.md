@@ -11,6 +11,7 @@ After you cloned the hook, you can install it.
 ```bash
 php artisan hook:install bread
 ```
+Tip: if you get any errors here, run `composer install bread`
 #### 3. Enable the hook
 You can do this through Voyagers Hook-UI or by running the following command
 ```bash
