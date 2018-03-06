@@ -67,8 +67,10 @@ return [
     'checked'                       => 'Checked',
     'date_time_types'               => [
             'date'                      => 'Date',
-            'datetime'                  => 'Date Time',
+            'datetime-local'            => 'Date Time',
             'time'                      => 'Time',
             'number'                    => 'Timestamp',
+            'week'                      => 'Week',
+            'month'                     => 'Month',
     ]
 ];

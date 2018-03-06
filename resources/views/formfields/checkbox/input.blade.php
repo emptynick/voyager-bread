@@ -3,7 +3,7 @@
 @else
 <?php $checked = isset($options['checked']) && $options['checked'] ? true : false; ?>
 @endif
-@if(isset($options->on) && isset($options->off))
+@if(isset($options['on']) && isset($options['off']))
 <input type="checkbox" name="{{ $name }}" class="toggleswitch"
            data-on="{{ $options['on'] }}" {{ $checked ? 'checked' : '' }}
            data-off="{{ $options['off'] }}">

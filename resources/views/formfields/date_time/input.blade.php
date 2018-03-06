@@ -3,4 +3,4 @@
        data-name="{{ $options['display_name'] or '' }}"
        class="form-control"
        name="{{ $name }}"
-       value="{{ $content or '') }}">
+       value="{{ $content or '' }}">
