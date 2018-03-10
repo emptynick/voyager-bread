@@ -42,6 +42,10 @@ class BreadServiceProvider extends ServiceProvider
         app(Dispatcher::class)->listen('voyager.admin.routing.after', function ($router) {
             $this->addRoutes($router);
         });
+        /* @todo: This shouldn't be necessary, but it only works this way in L5.6 and Voyager 1.x */
+        app(Dispatcher::class)->listen('voyager.admin.routing', function ($router) {
+            $this->addRoutes($router);
+        });
 
         app(Dispatcher::class)->listen('voyager.menu.display', function ($menu) {
             $this->addMenuItem($menu);
