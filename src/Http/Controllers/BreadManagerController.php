@@ -86,7 +86,16 @@ class BreadManagerController extends Controller
                 }
                 $row->field = $column['name'];
                 $row->order = $key;
-                $row->options = ['label' => title_case(str_replace('_', ' ', $row->field))];
+
+                if ($view->view_type == 'list') {
+                    $row->options = [
+                        'label' => title_case(str_replace(array('_', '-'), ' ', $row->field)),
+                        'searchable' => true,
+                        'orderable' => true,
+                    ];
+                } else {
+                    $row->options = ['label' => title_case(str_replace(array('_', '-'), ' ', $row->field))];
+                }
                 $rows[] = $row;
             }
         } else {
