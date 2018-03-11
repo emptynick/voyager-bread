@@ -54,7 +54,7 @@
 									</tr>
 								</thead>
 								<tbody>
-									@forelse($view->rows as $row)
+									@forelse($rows as $row)
 									<tr>
 										<input type="hidden" name="row[0][id]" value="{{ $row->id }}">
 										<td style="font-size:16px;vertical-align:middle;-webkit-transform: rotate(-45deg);

@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Bread\BreadFacade;
 use TCG\Voyager\Facades\Voyager;
 use TCG\Voyager\Database\Schema\SchemaManager;
+use Bread\Models\BreadRow;
 
 class BreadManagerController extends Controller
 {
@@ -56,8 +57,13 @@ class BreadManagerController extends Controller
 
     public function storeView(Request $request)
     {
-        $view = BreadFacade::model('BreadView')->create($request->except('_token'));
-        return redirect(route('voyager.bread.edit.view', $view));
+        $arg = '';
+        if ($request->has('create_default') && $request->create_default == 'true') {
+            $arg = '?default=true';
+        }
+
+        $view = BreadFacade::model('BreadView')->create($request->except('_token', 'create_default'));
+        return redirect(route('voyager.bread.edit.view', $view).$arg);
     }
 
     public function editView(Request $request, $view)
@@ -65,7 +71,29 @@ class BreadManagerController extends Controller
         $view = BreadFacade::model('BreadView')->find($view);
         $columns = get_model_fields($view->bread->model);
 
-        return view('bread::manager.edit-'.$view->view_type, compact('view', 'columns'));
+        $rows = [];
+        if ($request->has('default') && $request->default) {
+            //Fake rows based on table
+            $table_details = \TCG\Voyager\Database\Schema\SchemaManager::describeTable($view->bread->model->getTable());
+            foreach ($table_details as $key => $column) {
+                $row = new BreadRow;
+                if ($column['type'] == 'integer') {
+                    $row->type = 'number';
+                } else if ($column['type'] == 'text') {
+                    $row->type = 'text_area';
+                } else {
+                    $row->type = 'text';
+                }
+                $row->field = $column['name'];
+                $row->order = $key;
+                $row->options = ['label' => title_case(str_replace('_', ' ', $row->field))];
+                $rows[] = $row;
+            }
+        } else {
+            $rows = $view->rows;
+        }
+
+        return view('bread::manager.edit-'.$view->view_type, compact('view', 'columns', 'rows'));
     }
 
     public function updateView(Request $request)

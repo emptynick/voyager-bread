@@ -1,5 +1,6 @@
 <?php
 return [
+    'create'                        => 'Create',
     'actions'                 		=> 'Actions',
     'name'        				    => 'Name',
     'label'                         => 'Label',

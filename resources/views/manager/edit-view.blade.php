@@ -40,11 +40,10 @@
 					</div>
 
 					<div class="panel-body bread-builder">
-						<div class="ignore {{ (count($view->rows) > 0 ? 'hidden' : '') }}">
+						<div class="ignore {{ (count($rows) > 0 ? 'hidden' : '') }}">
 							<h3 class="text-center">{{ __('bread::manager.drag_formfields_here') }}</h3>
 						</div>
-
-						@foreach ($view->rows as $row)
+						@foreach ($rows as $row)
 							<div data-type="{{ $row->type }}" class="formfield">
 							@if ($row->type == 'relationship')
 							@include('bread::manager.partials.relationship-wrapper', [
