@@ -7,10 +7,10 @@ use Illuminate\Support\Facades\Schema;
 class CreateBreadTable extends Migration
 {
     /**
-    * Run the migrations.
-    *
-    * @return void
-    */
+     * Run the migrations.
+     *
+     * @return void
+     */
     public function up()
     {
         // Create table for storing breads
@@ -58,26 +58,17 @@ class CreateBreadTable extends Migration
             $table->foreign('bread_view_id')->references('id')->on('bread_views')
             ->onUpdate('cascade')->onDelete('cascade');
         });
+    }
 
-        // Create table for Roles <-> Views Relationship
-        /*Schema::create('bread_view_role', function (Blueprint $table) {
-        $table->integer('role_id')->unsigned()->index();
-        $table->foreign('role_id')->references('id')->on('roles');
-        $table->integer('bread_view_id')->unsigned()->index();
-        $table->foreign('bread_view_id')->references('id')->on('bread_views');
-    });*/
-}
-
-/**
-* Reverse the migrations.
-*
-* @return void
-*/
-public function down()
-{
-    Schema::drop('bread');
-    Schema::drop('bread_views');
-    Schema::drop('bread_rows');
-    /*Schema::drop('bread_view_role');*/
-}
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::drop('bread');
+        Schema::drop('bread_views');
+        Schema::drop('bread_rows');
+    }
 }
