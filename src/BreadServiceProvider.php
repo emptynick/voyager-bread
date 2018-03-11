@@ -2,15 +2,13 @@
 
 namespace Bread;
 
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Events\Dispatcher;
-
+use Illuminate\Support\ServiceProvider;
+use TCG\Voyager\Facades\Voyager;
 use TCG\Voyager\Models\Menu;
 use TCG\Voyager\Models\MenuItem;
 use TCG\Voyager\Models\Permission;
 use TCG\Voyager\Models\Role;
-
-use TCG\Voyager\Facades\Voyager;
 
 class BreadServiceProvider extends ServiceProvider
 {
@@ -23,7 +21,7 @@ class BreadServiceProvider extends ServiceProvider
     {
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'bread');
         $this->loadMigrationsFrom(__DIR__.'/../resources/database/migrations', 'bread');
-        $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'bread');
+        $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'bread');
 
         $this->publishes([
             __DIR__.'/../resources/assets' => public_path('vendor/bread'),
@@ -92,7 +90,7 @@ class BreadServiceProvider extends ServiceProvider
         $router->resource('bread', $namespacePrefix.'BreadManagerController', ['except' => ['show', 'create']]);
         $router->group([
             'as'    => 'bread.',
-            'prefix'=> 'bread'
+            'prefix'=> 'bread',
         ], function () use ($namespacePrefix, $router) {
             $router->get('/create/{table}', [
                 'uses'  => $namespacePrefix.'BreadManagerController@create',
@@ -128,13 +126,13 @@ class BreadServiceProvider extends ServiceProvider
         });
 
         foreach (BreadFacade::model('Bread')->all() as $bread) {
-        	$breadController = $bread->controller
-        				 ? $bread->controller
-        				 : $namespacePrefix.'BreadController';
+            $breadController = $bread->controller
+                         ? $bread->controller
+                         : $namespacePrefix.'BreadController';
 
-        	$router->resource($bread->slug, $breadController);
-        	$router->post($bread->slug.'/data/{breadView?}/{breadRow?}', ['uses' => $breadController.'@data', 'as' => $bread->slug.'.data']);
-        	$router->post($bread->slug.'/delete/{id?}', ['uses' => $breadController.'@delete', 'as' => $bread->slug.'.delete']);
+            $router->resource($bread->slug, $breadController);
+            $router->post($bread->slug.'/data/{breadView?}/{breadRow?}', ['uses' => $breadController.'@data', 'as' => $bread->slug.'.data']);
+            $router->post($bread->slug.'/delete/{id?}', ['uses' => $breadController.'@delete', 'as' => $bread->slug.'.delete']);
             $router->get($bread->slug.'/create/{view?}', ['uses' => $breadController.'@create', 'as' => $bread->slug.'.create']);
             $router->post($bread->slug.'/store/{view?}', ['uses' => $breadController.'@store', 'as' => $bread->slug.'.store']);
         }

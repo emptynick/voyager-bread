@@ -2,21 +2,19 @@
 
 namespace Bread\Traits;
 
-use Bread\BreadFacade;
-use TCG\Voyager\Database\Schema\SchemaManager;
-
 trait HasRelationships
 {
     public function getRelationshipsAttribute()
     {
         if (!isset($this->relationships)) {
-            return null;
+            return;
         }
         $relationships = [];
         foreach ($this->relationships as $relationship) {
             $method = $this->$relationship();
             $relationships[$relationship] = $method;
         }
+
         return $relationships;
     }
 
@@ -35,16 +33,17 @@ trait HasRelationships
         if ($type == 'BelongsTo') {
             $name = $relationship->getRelation();
             $content = $this->$name();
-        } else if ($type == 'BelongsToMany') {
+        } elseif ($type == 'BelongsToMany') {
             $name = $relationship->getRelationName();
             $content = $this->$name()->withPivot(array_unique($pivot));
-        } else if ($type == 'HasOne' || $type == 'HasMany') {
+        } elseif ($type == 'HasOne' || $type == 'HasMany') {
             $content = $this->$method();
         }
 
         if (isset($content)) {
             return $content->get();
         }
+
         return [];
     }
 }

@@ -1,9 +1,9 @@
 <?php
+
 namespace Bread\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Bread\BreadFacade;
-use TCG\Voyager\Database\Schema\SchemaManager;
+use Illuminate\Http\Request;
 
 class BreadController extends Controller
 {
@@ -12,29 +12,29 @@ class BreadController extends Controller
         $bread = $this->getBread($request);
         // Get Browse List
         $breadView = $bread->list($bread->browse_list);
-		if ($breadView === null) {
-			throw new \Exception('Please assign a (default) Browse List!');
-		}
+        if ($breadView === null) {
+            throw new \Exception('Please assign a (default) Browse List!');
+        }
 
-		$notOrderableColumns = [];
-		$firstOrderedColumn = '';
-		foreach ($breadView->visible_rows as $col => $row) {
-			if (!$row->is_orderable) {
-				$notOrderableColumns[] = $col+1; /** @todo: +1 only if can delete **/
-			} else {
-				if ($firstOrderedColumn == '') {
-					$firstOrderedColumn = $col+1;
-				}
-			}
-		}
+        $notOrderableColumns = [];
+        $firstOrderedColumn = '';
+        foreach ($breadView->visible_rows as $col => $row) {
+            if (!$row->is_orderable) {
+                $notOrderableColumns[] = $col + 1; /* @todo: +1 only if can delete **/
+            } else {
+                if ($firstOrderedColumn == '') {
+                    $firstOrderedColumn = $col + 1;
+                }
+            }
+        }
 
         $view = 'bread::bread.browse';
 
         return view($view, compact(
             'bread',
             'breadView',
-			'notOrderableColumns',
-			'firstOrderedColumn'
+            'notOrderableColumns',
+            'firstOrderedColumn'
         ));
     }
 
@@ -73,8 +73,8 @@ class BreadController extends Controller
         // Get Edit View
         $breadView = $bread->view($bread->edit_view);
         if ($breadView === null) {
-			throw new \Exception('Please assign a (default) Edit View!');
-		}
+            throw new \Exception('Please assign a (default) Edit View!');
+        }
 
         $compact = false;
 
@@ -168,11 +168,11 @@ class BreadController extends Controller
         //Validate fields based on view
         $this->validate($request->input(), $rules, $messages);
 
-        $created = new $breadModel;
+        $created = new $breadModel();
         $this->fillModel($request, $breadView, $created);
         $created->save();
 
-        if($request->ajax()){
+        if ($request->ajax()) {
             return $created->{$created->getKeyName()};
         }
 
@@ -186,9 +186,9 @@ class BreadController extends Controller
 
     public function delete(Request $request, $id = null)
     {
-		$bread = $this->getBread($request);
+        $bread = $this->getBread($request);
 
-		if (empty($id)) {
+        if (empty($id)) {
             // Bulk delete, get IDs from POST
             $ids = explode(',', $request->ids);
         } else {
@@ -199,9 +199,9 @@ class BreadController extends Controller
             $data = call_user_func([$bread->model_name, 'findOrFail'], $id);
         }
 
-		$res = $data->destroy($ids);
-		$displayName = count($ids) > 1 ? $bread->display_name_plural : $bread->display_name_singular;
-		$data = $res
+        $res = $data->destroy($ids);
+        $displayName = count($ids) > 1 ? $bread->display_name_plural : $bread->display_name_singular;
+        $data = $res
             ? [
                 'message'    => __('voyager.generic.successfully_deleted')." {$displayName}",
                 'alert-type' => 'success',
@@ -213,6 +213,7 @@ class BreadController extends Controller
         if ($res) {
             //event(new BreadDataDeleted($bread, $data)); //Todo: Re-implement event
         }
+
         return redirect()->route("voyager.{$bread->slug}.index")->with($data);
     }
 
@@ -231,8 +232,8 @@ class BreadController extends Controller
             $compact = true;
         }
 
-		$model = $bread->model;
-		$recordsTotal = $model->count();
+        $model = $bread->model;
+        $recordsTotal = $model->count();
 
         if ($request->has('columns')) {
             //Global Search Query
@@ -259,11 +260,11 @@ class BreadController extends Controller
                         if ($details['type'] == 'pivot') {
                             $relationship = $details['relationship'];
                             $model = $model->$relationship()->wherePivot($details['attribute'], 'like', '%'.$local_query.'%');
-                        } else if ($details['type'] == 'relationship') {
-                            $model = $model->whereHas($details['relationship'], function ($query) use($details, $local_query) {
+                        } elseif ($details['type'] == 'relationship') {
+                            $model = $model->whereHas($details['relationship'], function ($query) use ($details, $local_query) {
                                 $query->where($details['attribute'], 'like', '%'.$local_query.'%');
                             });
-                        } else if ($details['type'] == 'attribute') {
+                        } elseif ($details['type'] == 'attribute') {
                             $model = $model->where($details['attribute'], 'like', '%'.$local_query.'%');
                         }
                     }
@@ -272,13 +273,12 @@ class BreadController extends Controller
                 if ($key == $order_column) {
                     if ($details['type'] == 'attribute') {
                         $model = $model->orderBy($details['attribute'], $order_dir);
-                    } else if ($details['type'] == 'pivot') {
-                        /** @todo: Order here **/
-                    } else if($details['type'] == 'relationship') {
+                    } elseif ($details['type'] == 'pivot') {
+                        /* @todo: Order here **/
+                    } elseif ($details['type'] == 'relationship') {
                         /** @todo: Order here **/
                         $order_relationship = $details['relationship'];
                         $order_attribute = $details['attribute'];
-
                     }
                 }
             }
@@ -295,7 +295,7 @@ class BreadController extends Controller
             $results = $results->slice($request->input('start'), $request->input('length'));
         } else {
             $model = $model->skip($request->input('start'))->take($request->input('length'));
-    		$results = $model->get();
+            $results = $model->get();
         }
 
         $tableData = [];
@@ -303,10 +303,9 @@ class BreadController extends Controller
             $nested = [];
 
             if (!$compact) {
-                /** @todo: Hide checkbox ONLY here if the user has no permission to delete **/
+                /* @todo: Hide checkbox ONLY here if the user has no permission to delete **/
                 $nested[] = '<input type="checkbox" name="row_id" id="checkbox_'.$result->getKey().'" value="'.$result->getKey().'">';
             }
-
 
             foreach ($breadView->visible_rows as $key => $row) {
                 $parts = explode_field_name($row->field);
@@ -315,7 +314,7 @@ class BreadController extends Controller
                 if (count($parts) == 1) {
                     //Standard Field
                     $content = $row->formfield->createOutput($result->{$row->field});
-                } else if (count($parts) == 2) {
+                } elseif (count($parts) == 2) {
                     //Relationship
                     list($relation, $attribute) = $parts;
 
@@ -327,18 +326,18 @@ class BreadController extends Controller
                             $content = $row->formfield->createOutput($relationship_content->{$attribute});
                         }
                     }
-                } else if (count($parts) == 3) {
+                } elseif (count($parts) == 3) {
                     //Pivot
                 }
                 $nested['DT_RowId'] = $result->{$result->getKeyName()};
-				if ($bread->model->getKeyName() == $row->field && !$compact) {
-                    /** @todo: && user is allowed to display **/
-					$nested[] = '<a href="'.route('voyager.'.$bread->slug.'.show', $result->{$result->getKeyName()}).'">'.
-								$content.
-								'</a>';
-				} else {
-					$nested[] = $content;
-				}
+                if ($bread->model->getKeyName() == $row->field && !$compact) {
+                    /* @todo: && user is allowed to display **/
+                    $nested[] = '<a href="'.route('voyager.'.$bread->slug.'.show', $result->{$result->getKeyName()}).'">'.
+                                $content.
+                                '</a>';
+                } else {
+                    $nested[] = $content;
+                }
             }
 
             if (!$compact) {
@@ -360,11 +359,11 @@ class BreadController extends Controller
             $tableData[] = $nested;
         }
 
-        return array (
+        return [
                 'draw'            => intval($request->input('draw')),
                 'recordsTotal'    => $recordsTotal,
                 'recordsFiltered' => $recordsFiltered,
                 'data'            => $tableData,
-        );
+        ];
     }
 }

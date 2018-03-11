@@ -2,8 +2,8 @@
 
 namespace Bread\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Bread\BreadFacade;
+use Illuminate\Database\Eloquent\Model;
 
 class BreadRow extends Model
 {
@@ -29,8 +29,9 @@ class BreadRow extends Model
     public function getAddViewAttribute()
     {
         if (!isset($this->options['view_id']) || !is_numeric($this->options['view_id'])) {
-            return null;
+            return;
         }
+
         return BreadFacade::model('BreadView')->find($this->options['view_id']);
     }
 
@@ -38,28 +39,29 @@ class BreadRow extends Model
     {
         $formfield = BreadFacade::formField($this->type);
         $formfield->setBreadRow($this);
+
         return $formfield;
     }
 
-	public function getIsVisibleAttribute()
-	{
-		return !(isset($this->options['invisible']) && $this->options['invisible']);
-	}
+    public function getIsVisibleAttribute()
+    {
+        return !(isset($this->options['invisible']) && $this->options['invisible']);
+    }
 
-	public function getIsSearchableAttribute()
-	{
-		return (isset($this->options['searchable']) && $this->options['searchable']);
-	}
+    public function getIsSearchableAttribute()
+    {
+        return isset($this->options['searchable']) && $this->options['searchable'];
+    }
 
     public function getIsSearchableStringAttribute()
     {
         return $this->is_searchable ? 'true' : 'false';
     }
 
-	public function getIsOrderableAttribute()
-	{
-		return (isset($this->options['orderable']) && $this->options['orderable']);
-	}
+    public function getIsOrderableAttribute()
+    {
+        return isset($this->options['orderable']) && $this->options['orderable'];
+    }
 
     public function getIsOrderableStringAttribute()
     {

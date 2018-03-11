@@ -1,8 +1,9 @@
 <?php
+
 return [
     'create'                        => 'Create',
-    'actions'                 		=> 'Actions',
-    'name'        				    => 'Name',
+    'actions'                 		    => 'Actions',
+    'name'        				              => 'Name',
     'label'                         => 'Label',
     'delete'                        => 'Delete',
     'placeholder'                   => 'Placeholder',

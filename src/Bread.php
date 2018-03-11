@@ -1,15 +1,15 @@
 <?php
+
 namespace Bread;
 
 use Bread\FormFields\HandlerInterface;
-use Illuminate\Routing\Route;
 
 class Bread
 {
     protected $models = [
-        'Bread'		=> \Bread\Models\Bread::class,
+        'Bread'		   => \Bread\Models\Bread::class,
         'BreadView'	=> \Bread\Models\BreadView::class,
-        'BreadRow'	=> \Bread\Models\BreadRow::class,
+        'BreadRow'	 => \Bread\Models\BreadRow::class,
     ];
 
     protected $formFields = [];
@@ -18,6 +18,7 @@ class Bread
     {
         return app($this->models[studly_case($name)]);
     }
+
     public function modelClass($name)
     {
         return $this->models[$name];
@@ -29,6 +30,7 @@ class Bread
             $handler = app($handler);
         }
         $this->formFields[$handler->getCodename()] = $handler;
+
         return $this;
     }
 
@@ -43,7 +45,7 @@ class Bread
         $driver = config("database.connections.{$connection}.driver", 'mysql');
 
         return collect($this->formFields)->filter(function ($after) use ($driver, $type) {
-            return ($after->supports($driver) && $after->type == $type);
+            return $after->supports($driver) && $after->type == $type;
         });
     }
 
@@ -51,5 +53,4 @@ class Bread
     {
         require __DIR__.'/../routes/bread.php';
     }
-
 }

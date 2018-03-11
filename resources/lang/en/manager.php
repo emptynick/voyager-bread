@@ -1,4 +1,5 @@
 <?php
+
 return [
     'bread_manager'                 => 'BREAD Manager',
     'tables_wo_bread'               => 'Tables without BREAD',
@@ -16,16 +17,16 @@ return [
     'rows'                          => 'Rows',
     'choose_list'                   => 'Choose List',
     'display_name_singular'	        => 'Display Name Singular',
-    'display_name_plural'	        => 'Display Name Plural',
-    'model_name'			        => 'Model Name',
+    'display_name_plural'	          => 'Display Name Plural',
+    'model_name'			                 => 'Model Name',
     'model_name_ph'                 => 'ex. \App\User, if left empty will try and use the table name',
     'model_class'                   => 'Model Class Name',
-    'controller_name'		        => 'Controller Name',
+    'controller_name'		             => 'Controller Name',
     'controller_name_hint'          => 'ex. PageController, if left empty will use the BREAD Controller',
     'icon_class'                    => 'Icon to use for this Table',
     'icon_hint'                     => 'Icon (optional) Use a',
     'icon_hint2'                    => 'Voyager Font Class',
-    'edit_bread_for_table'	        => 'Edit Bread for Table :table',
+    'edit_bread_for_table'	         => 'Edit Bread for Table :table',
     'policy_name'                   => 'Policy Name',
     'policy_name_ph'                => 'ex. \App\Policies\UserPolicy, if left empty will try and use the default',
     'url_slug'                      => 'URL Slug (must be unique)',

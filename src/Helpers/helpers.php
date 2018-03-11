@@ -1,13 +1,12 @@
 <?php
 
 /**
-* Gets all fields of a model.
-*
-* @param Illuminate\Database\Eloquent\Model $relationship The relationship
-*
-* @return Illuminate\Support\Collection The columns
-*/
-
+ * Gets all fields of a model.
+ *
+ * @param Illuminate\Database\Eloquent\Model $relationship The relationship
+ *
+ * @return Illuminate\Support\Collection The columns
+ */
 if (!function_exists('get_model_fields')) {
     function get_model_fields($model, $relationship = null)
     {
@@ -22,6 +21,7 @@ if (!function_exists('parse_field_name')) {
         if (starts_with($field, 'pivot'.separator)) {
             list($pivot, $relationship, $attribute) = explode(separator, $field);
             $type = 'pivot';
+
             return compact('type', 'relationship', 'attribute');
         } else {
             $parts = explode(separator, $field);
@@ -29,11 +29,13 @@ if (!function_exists('parse_field_name')) {
                 //Relationship
                 list($relationship, $attribute) = $parts;
                 $type = 'relationship';
+
                 return compact('type', 'relationship', 'attribute');
-            } else if(count($parts) == 1) {
+            } elseif (count($parts) == 1) {
                 //Normal field
                 $attribute = $field;
                 $type = 'attribute';
+
                 return compact('type', 'attribute');
             } //There should be no other cases
             else {
@@ -72,7 +74,7 @@ if (!function_exists('get_table_fields')) {
         if (isset($relationship)) {
             $fields = $fields->diff([
                 $relationship->getForeignPivotKeyName(),
-                $relationship->getRelatedPivotKeyName()
+                $relationship->getRelatedPivotKeyName(),
             ]);
         }
 
@@ -84,7 +86,8 @@ if (!function_exists('get_unqualified_class')) {
     function get_unqualified_class($class)
     {
         $class = get_class($class);
-        return substr($class, strrpos($class, '\\')+1);
+
+        return substr($class, strrpos($class, '\\') + 1);
     }
 }
 
