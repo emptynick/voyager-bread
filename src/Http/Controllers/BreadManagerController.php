@@ -1,11 +1,12 @@
 <?php
+
 namespace Bread\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Bread\BreadFacade;
-use TCG\Voyager\Facades\Voyager;
-use TCG\Voyager\Database\Schema\SchemaManager;
 use Bread\Models\BreadRow;
+use Illuminate\Http\Request;
+use TCG\Voyager\Database\Schema\SchemaManager;
+use TCG\Voyager\Facades\Voyager;
 
 class BreadManagerController extends Controller
 {
@@ -38,6 +39,7 @@ class BreadManagerController extends Controller
     public function edit($name)
     {
         $bread = BreadFacade::model('Bread')->whereTableName($name)->first();
+
         return view('bread::manager.edit-add-bread', compact('bread'));
     }
 
@@ -63,6 +65,7 @@ class BreadManagerController extends Controller
         }
 
         $view = BreadFacade::model('BreadView')->create($request->except('_token', 'create_default'));
+
         return redirect(route('voyager.bread.edit.view', $view).$arg);
     }
 
@@ -76,10 +79,10 @@ class BreadManagerController extends Controller
             //Fake rows based on table
             $table_details = \TCG\Voyager\Database\Schema\SchemaManager::describeTable($view->bread->model->getTable());
             foreach ($table_details as $key => $column) {
-                $row = new BreadRow;
+                $row = new BreadRow();
                 if ($column['type'] == 'integer') {
                     $row->type = 'number';
-                } else if ($column['type'] == 'text') {
+                } elseif ($column['type'] == 'text') {
                     $row->type = 'text_area';
                 } else {
                     $row->type = 'text';
@@ -89,12 +92,12 @@ class BreadManagerController extends Controller
 
                 if ($view->view_type == 'list') {
                     $row->options = [
-                        'label' => title_case(str_replace(array('_', '-'), ' ', $row->field)),
+                        'label'      => title_case(str_replace(['_', '-'], ' ', $row->field)),
                         'searchable' => true,
-                        'orderable' => true,
+                        'orderable'  => true,
                     ];
                 } else {
-                    $row->options = ['label' => title_case(str_replace(array('_', '-'), ' ', $row->field))];
+                    $row->options = ['label' => title_case(str_replace(['_', '-'], ' ', $row->field))];
                 }
                 $rows[] = $row;
             }
@@ -120,14 +123,14 @@ class BreadManagerController extends Controller
                 }
 
                 $newrow = BreadFacade::model('BreadRow')->updateOrCreate([
-                    'id' => $row['id']
+                    'id' => $row['id'],
                 ], [
                     'bread_view_id'   => $request->view_id,
-                    'field'     	  => (str_contains($row['formfield'], 'relationship') ? 'relationship' : $row['column']),
-                    'type'      	  => $row['formfield'],
-					'width'      	  => (isset($row['width']) ? $row['width'] : null),
-                    'order'			  => $order,
-                    'options'		  => (isset($row['options']) ? $row['options'] : null),
+                    'field'     	     => (str_contains($row['formfield'], 'relationship') ? 'relationship' : $row['column']),
+                    'type'      	     => $row['formfield'],
+                    'width'      	    => (isset($row['width']) ? $row['width'] : null),
+                    'order'			        => $order,
+                    'options'		       => (isset($row['options']) ? $row['options'] : null),
                     'validation_rules'=> $validation,
                 ]);
 
@@ -135,8 +138,8 @@ class BreadManagerController extends Controller
             }
         }
         BreadFacade::model('BreadRow')->where('bread_view_id', $request->view_id)
-									  ->whereNotIn('id', $persistent_ids)
-									  ->delete();
+                                      ->whereNotIn('id', $persistent_ids)
+                                      ->delete();
 
         return redirect(route('voyager.bread.edit.view', $request->view_id));
     }
@@ -153,14 +156,14 @@ class BreadManagerController extends Controller
 
     public function renderFormfield(Request $request)
     {
-        $row = BreadFacade::model('BreadRow')->where('field', $request->field)->first();/** @todo: this is NOT unique **/
+        $row = BreadFacade::model('BreadRow')->where('field', $request->field)->first(); /* @todo: this is NOT unique **/
         if ($request->has('type')) {
             $type = $request->type;
 
             if ($type == 'input') {
                 return BreadFacade::formField($row->type)->createInput(null, array_merge($row->options, $request->options), $request->name);
             } else {
-                /** @todo: Add other things here. Currently only input is needed **/
+                /* @todo: Add other things here. Currently only input is needed **/
             }
         }
     }

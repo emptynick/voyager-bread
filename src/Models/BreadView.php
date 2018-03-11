@@ -2,8 +2,8 @@
 
 namespace Bread\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Bread\BreadFacade;
+use Illuminate\Database\Eloquent\Model;
 
 class BreadView extends Model
 {
@@ -15,46 +15,42 @@ class BreadView extends Model
         return $this->hasMany(BreadFacade::modelClass('BreadRow'))->orderBy('order');
     }
 
-	public function getVisibleRowsAttribute()
-	{
-		return $this->rows->filter(function($row)
-		{
-			return $row->is_visible;
-		});
-	}
+    public function getVisibleRowsAttribute()
+    {
+        return $this->rows->filter(function ($row) {
+            return $row->is_visible;
+        });
+    }
 
-	public function getInvisibleRowsAttribute()
-	{
-		return $this->rows->filter(function($row)
-		{
-			return !$row->is_visible;
-		});
-	}
+    public function getInvisibleRowsAttribute()
+    {
+        return $this->rows->filter(function ($row) {
+            return !$row->is_visible;
+        });
+    }
 
-	public function getSearchableRowsAttribute()
-	{
-		return $this->rows->filter(function($row)
-		{
-			return $row->is_searchable;
-		});
-	}
+    public function getSearchableRowsAttribute()
+    {
+        return $this->rows->filter(function ($row) {
+            return $row->is_searchable;
+        });
+    }
 
-	public function getNotOrderableRowsAttribute()
-	{
-		return $this->rows->filter(function($row)
-		{
-			return !$row->is_orderable;
-		});
-	}
+    public function getNotOrderableRowsAttribute()
+    {
+        return $this->rows->filter(function ($row) {
+            return !$row->is_orderable;
+        });
+    }
 
-	public function getFirstOrderableRowAttribute()
-	{
-		foreach ($this->visible_rows as $key => $row) {
-			if ($row->isOrderable) {
-				return $key;
-			}
-		}
-	}
+    public function getFirstOrderableRowAttribute()
+    {
+        foreach ($this->visible_rows as $key => $row) {
+            if ($row->isOrderable) {
+                return $key;
+            }
+        }
+    }
 
     public function getColumnDefinitions($array = false)
     {
@@ -69,7 +65,8 @@ class BreadView extends Model
         if ($array) {
             return json_encode($columns);
         }
-        return str_replace(array('[', ']'), '', json_encode($columns));
+
+        return str_replace(['[', ']'], '', json_encode($columns));
     }
 
     public function getValidationRules($messages = false, $skip_relationships = true, $prefix = '', $suffix = '')
@@ -92,6 +89,7 @@ class BreadView extends Model
                 }
             }
         }
+
         return $rules;
     }
 

@@ -2,8 +2,8 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
 use Bread\Traits\HasRelationships;
+use Illuminate\Database\Eloquent\Model;
 
 class Category extends Model
 {

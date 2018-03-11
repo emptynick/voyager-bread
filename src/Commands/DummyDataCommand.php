@@ -2,11 +2,10 @@
 
 namespace Bread\Commands;
 
-use Illuminate\Console\Command;
 use Bread\Bread;
-use Illuminate\Filesystem\Filesystem;
-use Illuminate\Database\Migrations\Migration;
+use Illuminate\Console\Command;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Schema;
 
 class DummyDataCommand extends Command
@@ -48,41 +47,42 @@ class DummyDataCommand extends Command
     public function handle(Filesystem $filesystem)
     {
         if (!Schema::hasTable('categories') || !Schema::hasTable('posts') || !Schema::hasTable('pages')) {
-			$this->info('Please run');
+            $this->info('Please run');
             $this->info('php artisan db:seed --class=VoyagerDummyDatabaseSeeder');
             $this->info('Before running this command!');
+
             return;
-		}
+        }
 
         $this->info('Copying models to /app');
-		$files = $filesystem->allFiles(__DIR__.'/../../stub');
+        $files = $filesystem->allFiles(__DIR__.'/../../stub');
 
-		foreach ($files as $file) {
-			$name = basename($file);
-			$filesystem->copy($file, base_path('app/'.$name));
-		}
+        foreach ($files as $file) {
+            $name = basename($file);
+            $filesystem->copy($file, base_path('app/'.$name));
+        }
 
-		$this->info('Creating pivot tables');
+        $this->info('Creating pivot tables');
 
         if (!Schema::hasTable('category_post')) {
-			Schema::create('category_post', function (Blueprint $table) {
-				$table->integer('category_id')->unsigned();
-				$table->integer('post_id')->unsigned();
-				$table->foreign('category_id')->references('id')->on('categories');
-				$table->foreign('post_id')->references('id')->on('posts');
-	        });
+            Schema::create('category_post', function (Blueprint $table) {
+                $table->integer('category_id')->unsigned();
+                $table->integer('post_id')->unsigned();
+                $table->foreign('category_id')->references('id')->on('categories');
+                $table->foreign('post_id')->references('id')->on('posts');
+            });
         }
 
         if (!Schema::hasTable('category_page')) {
-			Schema::create('category_page', function (Blueprint $table) {
-				$table->integer('category_id')->unsigned();
-				$table->integer('page_id')->unsigned();
-				$table->foreign('category_id')->references('id')->on('categories');
-				$table->foreign('page_id')->references('id')->on('pages');
-	        });
+            Schema::create('category_page', function (Blueprint $table) {
+                $table->integer('category_id')->unsigned();
+                $table->integer('page_id')->unsigned();
+                $table->foreign('category_id')->references('id')->on('categories');
+                $table->foreign('page_id')->references('id')->on('pages');
+            });
         }
 
-		$this->info('Seeding data');
+        $this->info('Seeding data');
 
         $this->seed('BreadDummySeeder');
 
