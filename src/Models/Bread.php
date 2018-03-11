@@ -26,7 +26,7 @@ class Bread extends Model
                 $q->where('id', auth()->user()->role->id)->where('action', $action);
             })->first();
 
-            return ((isset($view)) ? $view : $default_view);
+            return (isset($view)) ? $view : $default_view;
         }
     }
 
@@ -46,7 +46,7 @@ class Bread extends Model
                 $q->where('id', auth()->user()->role->id)->where('action', $action);
             })->first();
 
-            return ((isset($view)) ? $view : $default_view);
+            return (isset($view)) ? $view : $default_view;
         }
     }
 
