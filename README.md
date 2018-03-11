@@ -40,7 +40,7 @@ Views can contain the Relationships from its model.
 A List is used for Browsing BREAD-Content and displaying Relationships in a View.  
 It can contain its own fields, relationship fields and pivot fields.
 
-Both Views and Lists can have a free-name (~~and get assigned to different Roles~~)
+Both Views and Lists can have a free-name and get assigned to different Roles
 
 
 ## Read more about
@@ -48,7 +48,6 @@ Both Views and Lists can have a free-name (~~and get assigned to different Roles
 - [Formfields](/docs/Formfields.md)
 
 ## Todo:
-- [ ] Assign views to Roles *or* create a Permission for each view
 - [ ] Validate relationship
 - [ ] Implement various FormFields
 - [ ] Add `disabled` option to Formfields
