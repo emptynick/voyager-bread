@@ -22,9 +22,11 @@ class Bread extends Model
         if (!isset($action)) {
             return $default_view;
         } else {
-            return $this->views()->whereHas('roles', function ($q) use ($action) {
+            $view = $this->views()->whereHas('roles', function ($q) use ($action) {
                 $q->where('id', auth()->user()->role->id)->where('action', $action);
             })->first();
+
+            return ((isset($view)) ? $view : $default_view);
         }
     }
 
@@ -40,9 +42,11 @@ class Bread extends Model
         if (!isset($action)) {
             return $default_view;
         } else {
-            return $this->lists()->whereHas('roles', function ($q) use ($action) {
+            $view = $this->lists()->whereHas('roles', function ($q) use ($action) {
                 $q->where('id', auth()->user()->role->id)->where('action', $action);
             })->first();
+
+            return ((isset($view)) ? $view : $default_view);
         }
     }
 
