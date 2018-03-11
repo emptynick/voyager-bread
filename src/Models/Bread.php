@@ -15,9 +15,17 @@ class Bread extends Model
         return $this->hasMany(BreadFacade::modelClass('BreadView'))->whereViewType('view');
     }
 
-    public function view($id)
+    public function view($id, $action = null)
     {
-        return $this->views->find($id);
+        $default_view = $this->views->find($id);
+
+        if (!isset($action)) {
+            return $default_view;
+        } else {
+            return $this->views()->whereHas('roles', function($q) use($action) {
+                $q->where('id', auth()->user()->role->id)->where('action', $action);
+            })->first();
+        }
     }
 
     public function lists()
@@ -25,10 +33,20 @@ class Bread extends Model
         return $this->hasMany(BreadFacade::modelClass('BreadView'))->whereViewType('list');
     }
 
-    public function list($id)
+    public function list($id, $action = null)
     {
-        return $this->lists->find($id);
+        $default_view = $this->lists->find($id);
+
+        if (!isset($action)) {
+            return $default_view;
+        } else {
+            return $this->lists()->whereHas('roles', function($q) use($action) {
+                $q->where('id', auth()->user()->role->id)->where('action', $action);
+            })->first();
+        }
     }
+
+
 
     public function getModelAttribute()
     {

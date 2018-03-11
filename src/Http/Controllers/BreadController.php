@@ -11,7 +11,7 @@ class BreadController extends Controller
     {
         $bread = $this->getBread($request);
         // Get Browse List
-        $breadView = $bread->list($bread->browse_list);
+        $breadView = $bread->list($bread->browse_list, 'browse');
         if ($breadView === null) {
             throw new \Exception('Please assign a (default) Browse List!');
         }
@@ -49,7 +49,7 @@ class BreadController extends Controller
         // Check permission
         // $this->authorize('edit', app($bread->model_name));
         // Get Read View
-        $breadView = $bread->view($bread->read_view);
+        $breadView = $bread->view($bread->read_view, 'read');
 
         $view = 'bread::bread.read';
 
@@ -71,7 +71,7 @@ class BreadController extends Controller
         // Check permission
         //$this->authorize('edit', app($bread->model_name));
         // Get Edit View
-        $breadView = $bread->view($bread->edit_view);
+        $breadView = $bread->view($bread->edit_view, 'edit');
         if ($breadView === null) {
             throw new \Exception('Please assign a (default) Edit View!');
         }
@@ -138,7 +138,7 @@ class BreadController extends Controller
             $breadView = $bread->view($view);
             $compact = true;
         } else {
-            $breadView = $bread->view($bread->add_view);
+            $breadView = $bread->view($bread->add_view, 'add');
             $compact = false;
         }
 

@@ -26,4 +26,5 @@ return [
     'field'                         => 'Field',
     'type'                          => 'Type',
     'format'                        => 'Format',
+    'roles'                         => 'Roles',
 ];

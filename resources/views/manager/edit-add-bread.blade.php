@@ -144,16 +144,32 @@
                             <table class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
-                                        <th>{{ __('voyager.generic.name') }}</th>
-                                        <th>{{ __('bread::manager.rows') }}</th>
-                                        <th style="text-align:right">{{ __('voyager.generic.actions') }}</th>
+                                        <th width="20%">{{ __('voyager.generic.name') }}</th>
+                                        <th width="60%">{{ __('bread::generic.roles') }}</th>
+                                        <th width="20%" style="text-align:right">{{ __('voyager.generic.actions') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach($bread->views as $view)
                                     <tr>
                                         <td>{{ $view->name }}</td>
-                                        <td>{{ $view->rows->count() }}</td>
+                                        <td>
+                                            <select class="from-control select2" name="view_role[{{ $view->id }}][]" multiple>
+                                                @foreach(\TCG\Voyager\Models\Role::all() as $role)
+                                                <optgroup label="{{ $role->display_name }}">
+                                                    <option value="{{ $role->id }}_read"
+                                                        {{ $view->roles()->where('role_id', $role->id)->where('action', 'read')->count() > 0 ? 'selected' : '' }}
+                                                        >{{ $role->display_name }} Read</option>
+                                                    <option value="{{ $role->id }}_edit"
+                                                        {{ $view->roles()->where('role_id', $role->id)->where('action', 'edit')->count() > 0 ? 'selected' : '' }}
+                                                        >{{ $role->display_name }} Edit</option>
+                                                    <option value="{{ $role->id }}_add"
+                                                        {{ $view->roles()->where('role_id', $role->id)->where('action', 'add')->count() > 0 ? 'selected' : '' }}
+                                                        >{{ $role->display_name }} Add</option>
+                                                </optgroup>
+                                                @endforeach
+                                            </select>
+                                        </td>
                                         <td class="actions">
                                             <div class="pull-right">
                                                 <a href="{{ route('voyager.bread.edit.view', $view) }}" class="btn btn-sm btn-primary">
@@ -187,16 +203,24 @@
                             <table class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
-                                        <th>{{ __('voyager.generic.name') }}</th>
-                                        <th>{{ __('bread::manager.rows') }}</th>
-                                        <th style="text-align:right">{{ __('voyager.generic.actions') }}</th>
+                                        <th width="20%">{{ __('voyager.generic.name') }}</th>
+                                        <th width="60%">{{ __('bread::generic.roles') }}</th>
+                                        <th width="20%" style="text-align:right">{{ __('voyager.generic.actions') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach($bread->lists as $list)
                                     <tr>
                                         <td>{{ $list->name }}</td>
-                                        <td>{{ $list->rows->count() }}</td>
+                                        <td>
+                                            <select class="from-control select2" name="view_role[{{ $list->id }}][]" multiple>
+                                                @foreach(\TCG\Voyager\Models\Role::all() as $role)
+                                                <option value="{{ $role->id }}_browse"
+                                                    {{ $list->roles()->where('role_id', $role->id)->where('action', 'browse')->count() > 0 ? 'selected' : '' }}
+                                                    >{{ $role->display_name }} Browse</option>
+                                                @endforeach
+                                            </select>
+                                        </td>
                                         <td class="actions">
                                             <div class="pull-right">
                                                 <a href="{{ route('voyager.bread.edit.view', $list) }}" class="btn btn-sm btn-primary">

@@ -52,6 +52,11 @@ class BreadView extends Model
         }
     }
 
+    public function roles()
+    {
+        return $this->belongsToMany(\TCG\Voyager\Models\Role::class)->withPivot('action');
+    }
+
     public function getColumnDefinitions($array = false)
     {
         $columns = [];

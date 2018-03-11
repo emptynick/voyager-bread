@@ -30,7 +30,17 @@ class BreadManagerController extends Controller
     {
         $bread = BreadFacade::model('Bread')->updateOrCreate([
             'table_name' => $request->table_name,
-        ], $request->except('_token'));
+        ], $request->except('_token', 'view_role'));
+
+        //Create sync value
+        foreach ($request->view_role as $view_id => $view_role) {
+            $view = BreadFacade::model('BreadView')->find($view_id);
+            $view->roles()->detach();
+            foreach ($view_role as $relation) {
+                list($role_id, $action) = explode('_', $relation);
+                $view->roles()->attach($role_id, ['action' => $action]);
+            }
+        }
 
         return redirect(route('voyager.bread.edit', $bread->table_name));
     }
