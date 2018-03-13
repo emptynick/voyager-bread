@@ -33,12 +33,14 @@ class BreadManagerController extends Controller
         ], $request->except('_token', 'view_role'));
 
         //Create sync value
-        foreach ($request->view_role as $view_id => $view_role) {
-            $view = BreadFacade::model('BreadView')->find($view_id);
-            $view->roles()->detach();
-            foreach ($view_role as $relation) {
-                list($role_id, $action) = explode('_', $relation);
-                $view->roles()->attach($role_id, ['action' => $action]);
+        if ($request->has('view_role')) {
+            foreach ($request->view_role as $view_id => $view_role) {
+                $view = BreadFacade::model('BreadView')->find($view_id);
+                $view->roles()->detach();
+                foreach ($view_role as $relation) {
+                    list($role_id, $action) = explode('_', $relation);
+                    $view->roles()->attach($role_id, ['action' => $action]);
+                }
             }
         }
 
