@@ -12,9 +12,9 @@
                 <i class="voyager-plus"></i> <span>{{ __('voyager.generic.add_new') }}</span>
             </a>
         <!--endcan-->
-        @can('delete', app($bread->model_name))
+        <!--@can('delete', app($bread->model_name))-->
             @include('bread::bread.partials.bulk-delete')
-        @endcan
+        <!--@endcan-->
     </div>
 @stop
 
