@@ -7,14 +7,14 @@
         <h1 class="page-title">
             <i class="{{ $bread->icon }}"></i> {{ $bread->display_name_plural }}
         </h1>
-        <!--can('add', app($bread->model_name))-->
+        {{-- can('add', app($bread->model_name)) --}}
             <a href="{{ route('voyager.'.$bread->slug.'.create') }}" class="btn btn-success btn-add-new">
                 <i class="voyager-plus"></i> <span>{{ __('voyager.generic.add_new') }}</span>
             </a>
-        <!--endcan-->
-        <!--@can('delete', app($bread->model_name))-->
+        {{-- endcan-->
+        {{-- @can('delete', app($bread->model_name)) --}}
             @include('bread::bread.partials.bulk-delete')
-        <!--@endcan-->
+        {{-- @endcan --}}
     </div>
 @stop
 
