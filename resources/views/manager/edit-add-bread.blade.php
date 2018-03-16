@@ -12,10 +12,10 @@
 @section('breadcrumbs')
 <ol class="breadcrumb hidden-xs">
 	@if(count(Request::segments()) == 1)
-		<li class="active"><i class="voyager-boat"></i> {{ __('voyager.generic.dashboard') }}</li>
+		<li class="active"><i class="voyager-boat"></i> {{ __('voyager::generic.dashboard') }}</li>
 	@else
 		<li class="active">
-			<a href="{{ route('voyager.dashboard')}}"><i class="voyager-boat"></i> {{ __('voyager.generic.dashboard') }}</a>
+			<a href="{{ route('voyager.dashboard')}}"><i class="voyager-boat"></i> {{ __('voyager::generic.dashboard') }}</a>
 		</li>
 	@endif
 	<li class="active"><a href="{{ route('voyager.bread.index') }}">{{ __('bread::manager.bread_manager') }}</a></li>
@@ -80,7 +80,7 @@
                             </div>
                             <div class="col-md-3 form-group">
                                 <label>{{ __('bread::manager.icon_hint') }} <a
-                                                                                 href="{{ route('voyager.compass.index', [], false) }}#fonts"
+                                                                                 href="{{ route('voyager::compass.index', [], false) }}#fonts"
                                                                                  target="_blank">{{ __('bread::manager.icon_hint2') }}</a></label>
                                 <input type="text" class="form-control" name="icon" value="{{ (isset($bread) ? $bread->icon : '') }}" placeholder="{{ __('bread::manager.icon_class') }}">
                             </div>
@@ -144,9 +144,9 @@
                             <table class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
-                                        <th width="20%">{{ __('voyager.generic.name') }}</th>
+                                        <th width="20%">{{ __('voyager::generic.name') }}</th>
                                         <th width="60%">{{ __('bread::generic.roles') }}</th>
-                                        <th width="20%" style="text-align:right">{{ __('voyager.generic.actions') }}</th>
+                                        <th width="20%" style="text-align:right">{{ __('voyager::generic.actions') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -173,10 +173,10 @@
                                         <td class="actions">
                                             <div class="pull-right">
                                                 <a href="{{ route('voyager.bread.edit.view', $view) }}" class="btn btn-sm btn-primary">
-                                                    <i class="voyager-edit"></i> {{ __('voyager.generic.edit') }}
+                                                    <i class="voyager-edit"></i> {{ __('voyager::generic.edit') }}
                                                 </a>
                                                 <a href="{{ route('voyager.bread.delete.view', $view) }}" class="btn btn-sm btn-danger delete-view">
-                                                    <i class="voyager-edit"></i> {{ __('voyager.generic.delete') }}
+                                                    <i class="voyager-edit"></i> {{ __('voyager::generic.delete') }}
                                                 </a>
                                             </div>
                                         </td>
@@ -203,9 +203,9 @@
                             <table class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
-                                        <th width="20%">{{ __('voyager.generic.name') }}</th>
+                                        <th width="20%">{{ __('voyager::generic.name') }}</th>
                                         <th width="60%">{{ __('bread::generic.roles') }}</th>
-                                        <th width="20%" style="text-align:right">{{ __('voyager.generic.actions') }}</th>
+                                        <th width="20%" style="text-align:right">{{ __('voyager::generic.actions') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -224,10 +224,10 @@
                                         <td class="actions">
                                             <div class="pull-right">
                                                 <a href="{{ route('voyager.bread.edit.view', $list) }}" class="btn btn-sm btn-primary">
-                                                    <i class="voyager-edit"></i> {{ __('voyager.generic.edit') }}
+                                                    <i class="voyager-edit"></i> {{ __('voyager::generic.edit') }}
                                                 </a>
                                                 <a href="{{ route('voyager.bread.delete.view', $list) }}" class="btn btn-sm btn-danger delete-view">
-                                                    <i class="voyager-edit"></i> {{ __('voyager.generic.delete') }}
+                                                    <i class="voyager-edit"></i> {{ __('voyager::generic.delete') }}
                                                 </a>
                                             </div>
                                         </td>
@@ -242,7 +242,7 @@
             </div>
         </div>
         @endif
-        <button type="submit" class="btn pull-right btn-primary">{{ __('voyager.generic.save') }}</button>
+        <button type="submit" class="btn pull-right btn-primary">{{ __('voyager::generic.save') }}</button>
     </form>
 </div>
 
@@ -253,7 +253,7 @@
             <form method="post" action="{{ route('voyager.bread.store.view') }}">
                 <div class="modal-header">
                     <h5 class="modal-title" id="addviewmodallabel">{{ __('bread::manager.add_view') }}</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="{{ __('voyager.generic.close') }}">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="{{ __('voyager::generic.close') }}">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -262,12 +262,12 @@
                     <input type="hidden" name="bread_id" value="{{ $bread->id }}">
                     <input type="hidden" name="view_type" value="view">
                     <div class="form-group">
-                        <label class="col-form-label">{{ __('voyager.generic.name') }}:</label>
+                        <label class="col-form-label">{{ __('voyager::generic.name') }}:</label>
                         <input type="text" class="form-control" name="name">
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ __('voyager.generic.cancel') }}</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ __('voyager::generic.cancel') }}</button>
                     <button type="submit" name="create_default" value="true" class="btn btn-primary">{{ __('bread::manager.create_default') }}</button>
                     <button type="submit" class="btn btn-primary">{{ __('bread::generic.create') }}</button>
                 </div>
@@ -303,7 +303,7 @@ $('.add-view-modal').on('click', function(e) {
 $('.delete-view').on('click', function(e) {
     e.preventDefault();
     var url = $(this).prop('href');
-    toastr.info('{{ __('bread::manager.delete_view_question') }}<br /><br /><a href="'+url+'" class="btn btn-danger">{{ __('voyager.generic.yes') }}</button>', '{{ __('bread::manager.delete_view') }}');
+    toastr.info('{{ __('bread::manager.delete_view_question') }}<br /><br /><a href="'+url+'" class="btn btn-danger">{{ __('voyager::generic.yes') }}</button>', '{{ __('bread::manager.delete_view') }}');
     toastr.options = {
         'escapeHtml': false,
     };

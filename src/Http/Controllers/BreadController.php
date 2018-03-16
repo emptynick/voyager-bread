@@ -125,7 +125,7 @@ class BreadController extends Controller
         return redirect()
             ->route('voyager.'.$bread->slug.'.index')
             ->with([
-                'message'    => __('voyager.generic.successfully_updated').' '.$bread->display_name_singular,
+                'message'    => __('voyager::generic.successfully_updated').' '.$bread->display_name_singular,
                 'alert-type' => 'success',
         ]);
     }
@@ -179,7 +179,7 @@ class BreadController extends Controller
         return redirect()
             ->route('voyager.'.$bread->slug.'.index')
             ->with([
-                'message'    => __('voyager.generic.successfully_added_new').' '.$bread->display_name_singular,
+                'message'    => __('voyager::generic.successfully_added_new').' '.$bread->display_name_singular,
                 'alert-type' => 'success',
             ]);
     }
@@ -203,11 +203,11 @@ class BreadController extends Controller
         $displayName = count($ids) > 1 ? $bread->display_name_plural : $bread->display_name_singular;
         $data = $res
             ? [
-                'message'    => __('voyager.generic.successfully_deleted')." {$displayName}",
+                'message'    => __('voyager::generic.successfully_deleted')." {$displayName}",
                 'alert-type' => 'success',
             ]
             : [
-                'message'    => __('voyager.generic.error_deleting')." {$displayName}",
+                'message'    => __('voyager::generic.error_deleting')." {$displayName}",
                 'alert-type' => 'error',
             ];
         if ($res) {
@@ -343,16 +343,16 @@ class BreadController extends Controller
             if (!$compact) {
                 /** @todo: Test if user has permission to edit/display/delete */
                 $actions = '<a href="'.route('voyager.'.$bread->slug.'.delete', $result->{$result->getKeyName()}).'"
-                            title="'.__('voyager.generic.delete').'" class="btn btn-sm btn-danger pull-right edit">
-                            <i class="voyager-trash"></i> <span class="hidden-xs hidden-sm">'.__('voyager.generic.delete').'</span>
+                            title="'.__('voyager::generic.delete').'" class="btn btn-sm btn-danger pull-right edit">
+                            <i class="voyager-trash"></i> <span class="hidden-xs hidden-sm">'.__('voyager::generic.delete').'</span>
                             </a>
                             <a href="'.route('voyager.'.$bread->slug.'.edit', $result->{$result->getKeyName()}).'"
-                            title="'.__('voyager.generic.edit').'" class="btn btn-sm btn-primary pull-right edit">
-                            <i class="voyager-edit"></i> <span class="hidden-xs hidden-sm">'.__('voyager.generic.edit').'</span>
+                            title="'.__('voyager::generic.edit').'" class="btn btn-sm btn-primary pull-right edit">
+                            <i class="voyager-edit"></i> <span class="hidden-xs hidden-sm">'.__('voyager::generic.edit').'</span>
                             </a>
                             <a href="'.route('voyager.'.$bread->slug.'.show', $result->{$result->getKeyName()}).'"
-                            title="'.__('voyager.generic.view').'" class="btn btn-sm btn-warning pull-right">
-                            <i class="voyager-eye"></i> <span class="hidden-xs hidden-sm">'.__('voyager.generic.view').'</span>
+                            title="'.__('voyager::generic.view').'" class="btn btn-sm btn-warning pull-right">
+                            <i class="voyager-eye"></i> <span class="hidden-xs hidden-sm">'.__('voyager::generic.view').'</span>
                             </a>';
                 $nested[] = $actions;
             }

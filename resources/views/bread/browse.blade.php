@@ -1,6 +1,6 @@
 @extends('voyager::master')
 
-@section('page_title', __('voyager.generic.viewing').' '.$bread->display_name_plural)
+@section('page_title', __('voyager::generic.viewing').' '.$bread->display_name_plural)
 
 @section('page_header')
     <div class="container-fluid">
@@ -9,7 +9,7 @@
         </h1>
         {{-- can('add', app($bread->model_name)) --}}
             <a href="{{ route('voyager.'.$bread->slug.'.create') }}" class="btn btn-success btn-add-new">
-                <i class="voyager-plus"></i> <span>{{ __('voyager.generic.add_new') }}</span>
+                <i class="voyager-plus"></i> <span>{{ __('voyager::generic.add_new') }}</span>
             </a>
         {{-- endcan-->
         {{-- @can('delete', app($bread->model_name)) --}}
@@ -36,7 +36,7 @@
                                     	{{ $row->options['label'] }}
                                     </th>
                                     @endforeach
-                                    <th class="action text-right">{{ __('voyager.generic.actions') }}</th>
+                                    <th class="action text-right">{{ __('voyager::generic.actions') }}</th>
                                 </tr>
                                 <tr>
                                     <th></th>
@@ -87,7 +87,7 @@ $(document).ready(function() {
             {!! $breadView->getColumnDefinitions() !!},
             { name: 'table_actions', searchable: false, sortable: false },
         ],
-        'language': {!! json_encode(__('voyager.datatable')) !!},
+        'language': {!! json_encode(__('voyager::datatable')) !!},
     });
 
 	$('.searchable').on('keyup change', $.debounce(250, function(e) {

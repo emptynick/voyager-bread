@@ -1,11 +1,11 @@
 @extends('voyager::master')
 
-@section('page_title', __('voyager.generic.view').' '.$bread->display_name_singular)
+@section('page_title', __('voyager::generic.view').' '.$bread->display_name_singular)
 
 @section('page_header')
 <h1 class="page-title">
     <i class="{{ $bread->icon }}"></i>
-    {{ __('voyager.generic.view').' '.$bread->display_name_singular }}
+    {{ __('voyager::generic.view').' '.$bread->display_name_singular }}
 </h1>
 @include('voyager::multilingual.language-selector')
 @stop
@@ -78,7 +78,7 @@ $('document').ready(function () {
                 url :  $(this).data('src'),
                 type : 'POST',
             },
-            'language': {!! json_encode(__('voyager.datatable')) !!},
+            'language': {!! json_encode(__('voyager::datatable')) !!},
         });
         $('#'+relationship_id).find('.searchable').on('keyup change', $.debounce(250, function(e) {
     		var index = $(this).data('column');

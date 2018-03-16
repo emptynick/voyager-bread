@@ -11,17 +11,17 @@
 @section('breadcrumbs')
 <ol class="breadcrumb hidden-xs">
 	@if(count(Request::segments()) == 1)
-		<li class="active"><i class="voyager-boat"></i> {{ __('voyager.generic.dashboard') }}</li>
+		<li class="active"><i class="voyager-boat"></i> {{ __('voyager::generic.dashboard') }}</li>
 	@else
 		<li class="active">
-			<a href="{{ route('voyager.dashboard')}}"><i class="voyager-boat"></i> {{ __('voyager.generic.dashboard') }}</a>
+			<a href="{{ route('voyager.dashboard')}}"><i class="voyager-boat"></i> {{ __('voyager::generic.dashboard') }}</a>
 		</li>
 	@endif
 	<li class="active"><a href="{{ route('voyager.bread.index') }}">{{ __('bread::manager.bread_manager') }}</a></li>
 	<li class="active"><a href="{{ route('voyager.bread.edit', $view->bread->table_name) }}">{{ $view->bread->display_name_plural }}</a></li>
 	<li class="active"><a href="{{ route('voyager.bread.edit', $view->bread->table_name) }}#views">{{ __('bread::manager.lists') }}</a></li>
 	<li class="active">{{ $view->name }}</li>
-	<li>{{ __('voyager.generic.edit') }}</li>
+	<li>{{ __('voyager::generic.edit') }}</li>
 </ol>
 @endsection
 @section('content')
@@ -122,8 +122,8 @@
 												   class="form-check" name="row[0][options][invisible]" value="true">
 										</td>
 										<td>
-											<button class="btn btn-danger" data-remove><i class="voyager-x"></i> {{ __('voyager.generic.delete') }}</button>
-											<button class="btn btn-success" data-add><i class="voyager-plus"></i> {{ __('voyager.generic.add') }}</button>
+											<button class="btn btn-danger" data-remove><i class="voyager-x"></i> {{ __('voyager::generic.delete') }}</button>
+											<button class="btn btn-success" data-add><i class="voyager-plus"></i> {{ __('voyager::generic.add') }}</button>
 										</td>
 									</tr>
 									@empty
@@ -160,8 +160,8 @@
 											<input type="checkbox" class="form-check" name="row[0][options][invisible]" value="true">
 										</td>
 										<td>
-											<button class="btn btn-danger" data-remove><i class="voyager-x"></i> {{ __('voyager.generic.delete') }}</button>
-											<button class="btn btn-success" data-add><i class="voyager-plus"></i> {{ __('voyager.generic.add') }}</button>
+											<button class="btn btn-danger" data-remove><i class="voyager-x"></i> {{ __('voyager::generic.delete') }}</button>
+											<button class="btn btn-success" data-add><i class="voyager-plus"></i> {{ __('voyager::generic.add') }}</button>
 										</td>
 									</tr>
 									@endforelse
@@ -180,7 +180,7 @@
 								</tfoot>
 							</table>
 						</div>
-						<button type="submit" class="btn btn-success">{{ __('voyager.generic.save') }}</button>
+						<button type="submit" class="btn btn-success">{{ __('voyager::generic.save') }}</button>
 					</form>
 				</div>
 			</div>

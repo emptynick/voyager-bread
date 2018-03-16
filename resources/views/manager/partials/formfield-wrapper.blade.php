@@ -20,7 +20,7 @@
 				<input type="hidden" name="row[][id]" value="{{ $id or 'null' }}">
 				<input type="hidden" name="row[][width]" value="{{ $width or 12 }}" class="row-width">
 				<div class="form-group">
-					<label>{{ __('voyager.database.field') }}</label>
+					<label>{{ __('voyager::database.field') }}</label>
 					<select class="form-control column-select" name="row[][column]">
 						@foreach($columns as $column)
 						<option value="{{ $column }}"

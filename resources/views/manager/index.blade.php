@@ -67,14 +67,14 @@
                                         {{ csrf_field() }}
                                         <input name="_method" type="hidden" value="DELETE">
                                         <a href="{{ route('voyager.'.$bread->slug.'.index') }}" class="btn btn-sm btn-warning">
-                                           <i class="voyager-eye"></i> {{ __('voyager.generic.view') }}
+                                           <i class="voyager-eye"></i> {{ __('voyager::generic.view') }}
                                         </a>
                                         <a href="{{ route('voyager.bread.edit', $bread->table_name) }}" class="btn btn-sm btn-primary">
-                                           <i class="voyager-edit"></i> {{ __('voyager.generic.edit') }}
+                                           <i class="voyager-edit"></i> {{ __('voyager::generic.edit') }}
                                         </a>
 
                                         <button type="submit" class="btn btn-sm btn-danger delete-bread" style="padding: 5px 10px; font-size: 12px;">
-                                           <i class="voyager-trash"></i> {{ __('voyager.generic.delete') }}
+                                           <i class="voyager-trash"></i> {{ __('voyager::generic.delete') }}
                                         </button>
                                     </form>
 		                        </div>
@@ -127,7 +127,7 @@
             <form method="post" action="{{ route('voyager.bread.store.view') }}">
                 <div class="modal-header">
                     <h5 class="modal-title" id="addviewmodallabel">{{ __('bread::manager.add_view') }}</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="{{ __('voyager.generic.close') }}">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="{{ __('voyager::generic.close') }}">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -136,12 +136,12 @@
                     <input type="hidden" name="bread_id" value="">
                     <input type="hidden" name="view_type" value="view">
                     <div class="form-group">
-                        <label class="col-form-label">{{ __('voyager.generic.name') }}:</label>
+                        <label class="col-form-label">{{ __('voyager::generic.name') }}:</label>
                         <input type="text" class="form-control" name="name">
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ __('voyager.generic.cancel') }}</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ __('voyager::generic.cancel') }}</button>
                     <button type="submit" name="create_default" value="true" class="btn btn-primary">{{ __('bread::manager.create_default') }}</button>
                     <button type="submit" class="btn btn-primary">{{ __('bread::generic.create') }}</button>
                 </div>
@@ -173,7 +173,7 @@ $('.add-view-modal').on('click', function(e) {
 $('.delete-bread').on('click', function(e) {
     e.preventDefault();
     $form = $(this).closest('form');
-    toastr.info('{{ __('bread::manager.delete_bread_question') }}<br /><br /><button type="submit" class="btn btn-danger final-delete">{{ __('voyager.generic.yes') }}</button>', '{{ __('bread::manager.delete_bread') }}');
+    toastr.info('{{ __('bread::manager.delete_bread_question') }}<br /><br /><button type="submit" class="btn btn-danger final-delete">{{ __('voyager::generic.yes') }}</button>', '{{ __('bread::manager.delete_bread') }}');
     toastr.options = {
         'escapeHtml': false,
     };
