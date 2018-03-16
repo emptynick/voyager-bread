@@ -285,7 +285,7 @@ function selectRow($row, multiple, relationship_id)
 
                 var name = 'relationship['+relationship_id+'][0]['+el.name+']';
 
-                var jqxhr = $.post("{{ route('voyager.bread.render.formfield') }}", {
+                var jqxhr = $.post("{{ route('voyager.bread-hook.render.formfield') }}", {
                     type: 'input',
                     field: el.name,
                     name: name,

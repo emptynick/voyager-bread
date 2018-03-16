@@ -60,11 +60,11 @@ class BreadServiceProvider extends ServiceProvider
     {
         if ($menu->name == 'admin') {
             $toolsItem = $menu->items->where('title', 'Tools')->first();
-            $menuItem = $menu->items->where('route', 'voyager.bread.index')->first();
+            $menuItem = $menu->items->where('route', 'voyager.bread-hook.index')->first();
             if (is_null($menuItem)) {
                 $indexMenuItem = MenuItem::create([
                     'menu_id'    => $menu->id,
-                    'route'      => 'voyager.bread.index',
+                    'route'      => 'voyager.bread-hook.index',
                     'url'        => '',
                     'title'      => 'BREAD',
                     'target'     => '_self',
@@ -87,10 +87,10 @@ class BreadServiceProvider extends ServiceProvider
     {
         $namespacePrefix = '\\Bread\\Http\\Controllers\\';
 
-        $router->resource('bread', $namespacePrefix.'BreadManagerController', ['except' => ['show', 'create']]);
+        $router->resource('bread-hook', $namespacePrefix.'BreadManagerController', ['except' => ['show', 'create']]);
         $router->group([
-            'as'    => 'bread.',
-            'prefix'=> 'bread',
+            'as'    => 'bread-hook.',
+            'prefix'=> 'bread-hook',
         ], function () use ($namespacePrefix, $router) {
             $router->get('/create/{table}', [
                 'uses'  => $namespacePrefix.'BreadManagerController@create',
