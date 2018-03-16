@@ -13,10 +13,9 @@ class BreadManagerController extends Controller
     public function index()
     {
         $breads = BreadFacade::model('Bread')->orderBy('table_name')->get();
-        $bread_names = $breads->pluck('table_name')->toArray();
         $tables = array_diff(
             SchemaManager::listTableNames(),
-            $bread_names,
+            $breads->pluck('table_name')->toArray(),
             array_merge(
                 config('voyager.database.tables.hidden', []),
                 ['bread', 'bread_views', 'bread_rows', 'bread_view_role']
