@@ -80,7 +80,7 @@
                             </div>
                             <div class="col-md-3 form-group">
                                 <label>{{ __('bread::manager.icon_hint') }} <a
-                                                                                 href="{{ route('voyager::compass.index', [], false) }}#fonts"
+                                                                                 href="{{ route('voyager.compass.index', [], false) }}#fonts"
                                                                                  target="_blank">{{ __('bread::manager.icon_hint2') }}</a></label>
                                 <input type="text" class="form-control" name="icon" value="{{ (isset($bread) ? $bread->icon : '') }}" placeholder="{{ __('bread::manager.icon_class') }}">
                             </div>
