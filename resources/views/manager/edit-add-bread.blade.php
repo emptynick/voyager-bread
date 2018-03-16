@@ -18,7 +18,7 @@
 			<a href="{{ route('voyager.dashboard')}}"><i class="voyager-boat"></i> {{ __('voyager.generic.dashboard') }}</a>
 		</li>
 	@endif
-	<li class="active"><a href="{{ route('voyager.bread.index') }}">{{ __('bread::manager.bread_manager') }}</a></li>
+	<li class="active"><a href="{{ route('voyager.bread-hook.index') }}">{{ __('bread::manager.bread_manager') }}</a></li>
 	@if(isset($bread))
     <li class="active">{{ $bread->display_name_plural }}</li>
 	<li>Edit</li>
@@ -31,7 +31,7 @@
 
 @section('content')
 <div class="page-content container-fluid">
-    <form method="post" action="{{ route('voyager.bread.store') }}">
+    <form method="post" action="{{ route('voyager.bread-hook.store') }}">
         {{ csrf_field() }}
         <div class="row">
             <div class="col-md-12">
@@ -172,10 +172,10 @@
                                         </td>
                                         <td class="actions">
                                             <div class="pull-right">
-                                                <a href="{{ route('voyager.bread.edit.view', $view) }}" class="btn btn-sm btn-primary">
+                                                <a href="{{ route('voyager.bread-hook.edit.view', $view) }}" class="btn btn-sm btn-primary">
                                                     <i class="voyager-edit"></i> {{ __('voyager.generic.edit') }}
                                                 </a>
-                                                <a href="{{ route('voyager.bread.delete.view', $view) }}" class="btn btn-sm btn-danger delete-view">
+                                                <a href="{{ route('voyager.bread-hook.delete.view', $view) }}" class="btn btn-sm btn-danger delete-view">
                                                     <i class="voyager-edit"></i> {{ __('voyager.generic.delete') }}
                                                 </a>
                                             </div>
@@ -223,10 +223,10 @@
                                         </td>
                                         <td class="actions">
                                             <div class="pull-right">
-                                                <a href="{{ route('voyager.bread.edit.view', $list) }}" class="btn btn-sm btn-primary">
+                                                <a href="{{ route('voyager.bread-hook.edit.view', $list) }}" class="btn btn-sm btn-primary">
                                                     <i class="voyager-edit"></i> {{ __('voyager.generic.edit') }}
                                                 </a>
-                                                <a href="{{ route('voyager.bread.delete.view', $list) }}" class="btn btn-sm btn-danger delete-view">
+                                                <a href="{{ route('voyager.bread-hook.delete.view', $list) }}" class="btn btn-sm btn-danger delete-view">
                                                     <i class="voyager-edit"></i> {{ __('voyager.generic.delete') }}
                                                 </a>
                                             </div>
@@ -250,7 +250,7 @@
 <div class="modal fade" id="addviewmodal" tabindex="-1" role="dialog" aria-labelledby="addviewmodallabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <form method="post" action="{{ route('voyager.bread.store.view') }}">
+            <form method="post" action="{{ route('voyager.bread-hook.store.view') }}">
                 <div class="modal-header">
                     <h5 class="modal-title" id="addviewmodallabel">{{ __('bread::manager.add_view') }}</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="{{ __('voyager.generic.close') }}">

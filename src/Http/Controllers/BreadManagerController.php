@@ -44,7 +44,7 @@ class BreadManagerController extends Controller
             }
         }
 
-        return redirect(route('voyager.bread.edit', $bread->table_name));
+        return redirect(route('voyager.bread-hook.edit', $bread->table_name));
     }
 
     //Edit BREAD
@@ -66,7 +66,7 @@ class BreadManagerController extends Controller
 
         $bread->delete();
 
-        return redirect(route('voyager.bread.index'));
+        return redirect(route('voyager.bread-hook.index'));
     }
 
     public function storeView(Request $request)
@@ -78,7 +78,7 @@ class BreadManagerController extends Controller
 
         $view = BreadFacade::model('BreadView')->create($request->except('_token', 'create_default'));
 
-        return redirect(route('voyager.bread.edit.view', $view).$arg);
+        return redirect(route('voyager.bread-hook.edit.view', $view).$arg);
     }
 
     public function editView(Request $request, $view)
@@ -153,7 +153,7 @@ class BreadManagerController extends Controller
                                       ->whereNotIn('id', $persistent_ids)
                                       ->delete();
 
-        return redirect(route('voyager.bread.edit.view', $request->view_id));
+        return redirect(route('voyager.bread-hook.edit.view', $request->view_id));
     }
 
     public function deleteView(Request $request, $view)
@@ -163,7 +163,7 @@ class BreadManagerController extends Controller
         $view->rows()->delete();
         $view->delete();
 
-        return redirect(route('voyager.bread.edit', $bread->table_name));
+        return redirect(route('voyager.bread-hook.edit', $bread->table_name));
     }
 
     public function renderFormfield(Request $request)
