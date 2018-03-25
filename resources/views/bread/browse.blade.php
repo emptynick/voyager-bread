@@ -106,7 +106,7 @@ $(document).ready(function() {
 
 	$('.clear-filter').on('click', function(e) {
 		e.preventDefault();
-		$('.searchable').val('').trigger('change');
+		$('.searchable').val('').trigger('keyup change');
 	});
 
     $('#datatable').on('change', 'input[name="rows_all"]', function(e) {
