@@ -103,7 +103,7 @@ if (!function_exists('parse_validation')) {
     {
         $rules = [];
         foreach ($input as $rule) {
-            $rules[$rule['rule']] = $rule['message'];
+            $rules[$rule['rule']] = @$rule['message'];
         }
 
         return $rules;

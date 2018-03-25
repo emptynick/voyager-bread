@@ -98,7 +98,7 @@
 			$('> ' + settings.row, settings.rows).each(function(){
 				var $row = $(this);
 				current_index++;
-				$row.find(':input').each(function(){
+				$row.find(':input').each(function() {
 					$(this).attr('name', function(i, name) {
 						if (name === undefined) return true;
 						return name.replace(name_regex, function replacer(match, p1, p2, p3, offset, string){
@@ -136,6 +136,11 @@
 				$('select option', row).removeAttr('selected').find(':first').prop('selected', true);
 			}
 		}
+
+
+		$('.repeater').each(function() {
+			$(this).repeater();
+		});
 
 		updateFormNames();
 	};

@@ -217,6 +217,7 @@
 @endsection
 @section('javascript')
 <script src="{{ asset('vendor/bread/js/jquery.sortable.js') }}"></script>
+<script src="{{ asset('vendor/bread/js/repeater.js') }}"></script>
 <script src="{{ asset('vendor/bread/js/view-builder.js') }}"></script>
 <script>
 $('.bread-builder').breadBuilder({});

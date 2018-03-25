@@ -47,6 +47,7 @@
 										<th>{{ __('bread::generic.field') }}</th>
 										<th>{{ __('bread::generic.label') }}</th>
 										<th>{{ __('bread::generic.type') }}</th>
+										<th>{{ __('bread::manager.validation_rules') }}</th>
 										<th>{{ __('bread::manager.searchable') }}</th>
 										<th>{{ __('bread::manager.orderable') }}</th>
 										<th>{{ __('bread::manager.invisible') }}</th>
@@ -107,6 +108,9 @@
 											</select>
 										</td>
 										<td>
+											
+										</td>
+										<td>
 											<input type="checkbox"
 											   	   {{ ($row->isSearchable ? 'checked' : '') }}
 												   class="form-check" name="row[0][options][searchable]" value="true">
@@ -151,6 +155,9 @@
 											</select>
 										</td>
 										<td>
+
+										</td>
+										<td>
 											<input type="checkbox" class="form-check" checked name="row[0][options][searchable]" value="true" checked>
 										</td>
 										<td>
@@ -172,6 +179,7 @@
 										<th>{{ __('bread::generic.field') }}</th>
 										<th>{{ __('bread::generic.label') }}</th>
 										<th>{{ __('bread::generic.type') }}</th>
+										<th>{{ __('bread::manager.validation_rules') }}</th>
 										<th>{{ __('bread::manager.searchable') }}</th>
 										<th>{{ __('bread::manager.orderable') }}</th>
 										<th>{{ __('bread::manager.invisible') }}</th>
@@ -197,6 +205,7 @@
 @stop
 @section('javascript')
 <script src="{{ asset('vendor/bread/js/jquery.sortable.js') }}"></script>
+<script src="{{ asset('vendor/bread/js/repeater.js') }}"></script>
 <script src="{{ asset('vendor/bread/js/list-builder.js') }}"></script>
 <script>
 $(document).ready(function(){
