@@ -49,7 +49,7 @@
                             $type = get_unqualified_class($relationship);
                             ?>
                             <div class="panel-heading">
-                                <h3 class="panel-title">{{ $row->options['label'] or '' }}</h3>
+                                <h3 class="panel-title">{!! $row->options['label'] or '' !!}</h3>
                                 <div class="panel-actions">
                                     @if (isset($row->options['view_id']) && $row->options['view_id'] != 'null')
                                     <a href="{{ route('voyager.'.$breadRelView->bread->slug.'.create', $row->options['view_id']) }}"
@@ -69,7 +69,7 @@
                                 <div class="form-group has-feedback {{ ($errors->has($row->field) ? 'has-error' : '') }}">
 
                                     @if ($row->field == 'relationship')
-                                    <label><strong>{{ $row->options['helptext'] or '' }}</strong></label>
+                                    <label><strong>{!! $row->options['helptext'] or '' !!}</strong></label>
                                     @include('bread::bread.partials.relationship', [
                                         'breadRow'     => $row,
                                         'multiple'     => ($type != 'BelongsTo' && $type != 'HasOne'),
@@ -77,12 +77,12 @@
                                         'breadView'    => $breadRelView,
                                     ])
                                     @else
-                                    <label><strong>{{ $row->options['label'] or '&nbsp;' }}</strong></label>
+                                    <label><strong>{!! $row->options['label'] or '&nbsp;' !!}</strong></label>
                                     {!! $row->formfield->createInput(
                                         old($row->field, (isset($breadContent) ? $breadContent->{$row->field} : null)),
                                         $row->options, $row->field)
                                     !!}
-                                    <small>{{ $row->options['helptext'] or '&nbsp;' }}</small>
+                                    <small>{!! $row->options['helptext'] or '&nbsp;' !!}</small>
                                     @endif
                                     @if($errors->has($row->field))
                                     <small class="text-danger error-message">

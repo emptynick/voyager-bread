@@ -21,14 +21,14 @@
                     <div class="col-md-{{ $row->width or 12 }}">
                         <div class="panel panel-bordered">
                             <div class="panel-body">
-                                <label><strong>{{ $row->options['label'] or '' }}</strong></label>
+                                <label><strong>{!! $row->options['label'] or '' !!}</strong></label>
                                 @if ($row->field == 'relationship')
                                 <?php
                                 $relationship = $bread->model->relationships[$row->options['relationship']];
                                 $breadRelView = Bread::model('BreadView')->find($row->options['list_id']);
                                 $type = get_unqualified_class($relationship);
                                 ?>
-                                <br><small>{{ $row->options['helptext'] or '&nbsp;' }}</small>
+                                <br><small>{!! $row->options['helptext'] or '&nbsp;' !!}</small>
                                 @include('bread::bread.partials.relationship', [
                                     'breadRow'     => $row,
                                     'multiple'     => ($type != 'BelongsTo' && $type != 'HasOne'),
@@ -37,7 +37,7 @@
                                 ])
                                 @else
                                 {!! $row->formfield->createOutput($breadContent->{$row->field}, $row->options, $row->field) !!}
-                                <small>{{ $row->options['helptext'] or '&nbsp;' }}</small>
+                                <small>{!! $row->options['helptext'] or '&nbsp;' !!}</small>
                                 @endif
                                 <!-- Todo: Add AfterFormfields here -->
                             </div>
