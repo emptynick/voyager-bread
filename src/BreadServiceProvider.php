@@ -82,23 +82,33 @@ class BreadServiceProvider extends ServiceProvider
     public function addRoutes($router)
     {
         $namespacePrefix = '\\Bread\\Http\\Controllers\\';
-
-        $router->group([
-            'as'     => 'bread.',
-            'prefix' => 'bread',
-        ], function () use ($namespacePrefix, $router) {
-            $router->get('/', ['uses' => $namespacePrefix.'BreadManagerController@index',              'as' => 'index']);
-            $router->get('{table}/create', ['uses' => $namespacePrefix.'BreadManagerController@create',     'as' => 'create']);
-            $router->post('/', ['uses' => $namespacePrefix.'BreadManagerController@store',   'as' => 'store']);
-            $router->get('{table}/edit', ['uses' => $namespacePrefix.'BreadManagerController@edit', 'as' => 'edit']);
-            $router->put('{id}', ['uses' => $namespacePrefix.'BreadManagerController@update',  'as' => 'update']);
-            $router->delete('{id}', ['uses' => $namespacePrefix.'BreadManagerController@destroy',  'as' => 'destroy']);
-        });
+        if (starts_with(Voyager::getVersion(), '1.0')) {
+            $router->resource('bread', $namespacePrefix.'BreadManagerController', ['except' => ['show', 'create']]);
+        } else {
+            $router->group([
+                'as'     => 'bread.',
+                'prefix' => 'bread',
+            ], function () use ($namespacePrefix, $router) {
+                $router->get('/', ['uses' => $namespacePrefix.'BreadManagerController@index',              'as' => 'index']);
+                $router->get('{table}/create', ['uses' => $namespacePrefix.'BreadManagerController@create',     'as' => 'create']);
+                $router->post('/', ['uses' => $namespacePrefix.'BreadManagerController@store',   'as' => 'store']);
+                $router->get('{table}/edit', ['uses' => $namespacePrefix.'BreadManagerController@edit', 'as' => 'edit']);
+                $router->put('{id}', ['uses' => $namespacePrefix.'BreadManagerController@update',  'as' => 'update']);
+                $router->delete('{id}', ['uses' => $namespacePrefix.'BreadManagerController@destroy',  'as' => 'destroy']);
+            });
+        }
 
         $router->group([
             'as'    => 'bread.',
             'prefix'=> 'bread',
         ], function () use ($namespacePrefix, $router) {
+            if (starts_with(Voyager::getVersion(), '1.0')) {
+                $router->get('/create/{table}', [
+                    'uses'  => $namespacePrefix.'BreadManagerController@create',
+                    'as'    => 'create',
+                ]);
+            }
+
             $router->post('/store/view', [
                 'uses'  => $namespacePrefix.'BreadManagerController@storeView',
                 'as'    => 'store.view',
