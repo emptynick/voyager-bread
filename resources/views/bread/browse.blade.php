@@ -49,9 +49,11 @@
                                     	@endif
                                     </th>
                                     @endforeach
-                                    @if($i > 0)
-                                    <th class="text-right"><button type="button" class="btn btn-xs btn-primary clear-filter">Clear Filter</button></th>
-                                    @endif
+                                    <th class="text-right">
+                                        @if($i > 0)
+                                        <button type="button" class="btn btn-xs btn-primary clear-filter">Clear Filter</button>
+                                        @endif
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody></tbody>
