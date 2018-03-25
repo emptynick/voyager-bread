@@ -40,10 +40,6 @@ class BreadServiceProvider extends ServiceProvider
         app(Dispatcher::class)->listen('voyager.admin.routing.after', function ($router) {
             $this->addRoutes($router);
         });
-        /* @todo: This shouldn't be necessary, but it only works this way in L5.6 and Voyager 1.x */
-        app(Dispatcher::class)->listen('voyager.admin.routing', function ($router) {
-            $this->addRoutes($router);
-        });
 
         app(Dispatcher::class)->listen('voyager.menu.display', function ($menu) {
             $this->addMenuItem($menu);
@@ -87,15 +83,22 @@ class BreadServiceProvider extends ServiceProvider
     {
         $namespacePrefix = '\\Bread\\Http\\Controllers\\';
 
-        $router->resource('bread', $namespacePrefix.'BreadManagerController', ['except' => ['show', 'create']]);
+        $router->group([
+            'as'     => 'bread.',
+            'prefix' => 'bread',
+        ], function () use ($namespacePrefix, $router) {
+            $router->get('/', ['uses' => $namespacePrefix.'BreadManagerController@index',              'as' => 'index']);
+            $router->get('{table}/create', ['uses' => $namespacePrefix.'BreadManagerController@create',     'as' => 'create']);
+            $router->post('/', ['uses' => $namespacePrefix.'BreadManagerController@store',   'as' => 'store']);
+            $router->get('{table}/edit', ['uses' => $namespacePrefix.'BreadManagerController@edit', 'as' => 'edit']);
+            $router->put('{id}', ['uses' => $namespacePrefix.'BreadManagerController@update',  'as' => 'update']);
+            $router->delete('{id}', ['uses' => $namespacePrefix.'BreadManagerController@destroy',  'as' => 'destroy']);
+        });
+
         $router->group([
             'as'    => 'bread.',
             'prefix'=> 'bread',
         ], function () use ($namespacePrefix, $router) {
-            $router->get('/create/{table}', [
-                'uses'  => $namespacePrefix.'BreadManagerController@create',
-                'as'    => 'create',
-            ]);
             $router->post('/store/view', [
                 'uses'  => $namespacePrefix.'BreadManagerController@storeView',
                 'as'    => 'store.view',
