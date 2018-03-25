@@ -268,7 +268,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ __('voyager::generic.cancel') }}</button>
-                    <button type="submit" name="create_default" value="true" class="btn btn-primary">{{ __('bread::manager.create_default') }}</button>
+                    <button type="submit" name="create_prefill" value="true" class="btn btn-primary">{{ __('bread::manager.create_prefill') }}</button>
                     <button type="submit" class="btn btn-primary">{{ __('bread::generic.create') }}</button>
                 </div>
             </form>

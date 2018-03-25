@@ -66,7 +66,7 @@ return [
     'on_value'                      => 'On Value',
     'off_value'                     => 'Off Value',
     'checked'                       => 'Checked',
-    'create_default'                => 'Create with defaults',
+    'create_prefill'                => 'Create and prefill',
     'text_types'                    => [
         'text'                      => 'Text',
         'email'                     => 'E-Mail',

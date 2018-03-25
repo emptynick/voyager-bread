@@ -78,11 +78,11 @@ class BreadManagerController extends Controller
     public function storeView(Request $request)
     {
         $arg = '';
-        if ($request->has('create_default') && $request->create_default == 'true') {
-            $arg = '?default=true';
+        if ($request->has('create_prefill') && $request->create_prefill == 'true') {
+            $arg = '?prefill=true';
         }
 
-        $view = BreadFacade::model('BreadView')->create($request->except('_token', 'create_default'));
+        $view = BreadFacade::model('BreadView')->create($request->except('_token', 'create_prefill'));
 
         return redirect(route('voyager.bread.edit.view', $view).$arg);
     }
@@ -93,7 +93,7 @@ class BreadManagerController extends Controller
         $columns = get_model_fields($view->bread->model);
 
         $rows = [];
-        if ($request->has('default') && $request->default) {
+        if ($request->has('prefill') && $request->prefill) {
             //Fake rows based on table
             $table_details = \TCG\Voyager\Database\Schema\SchemaManager::describeTable($view->bread->model->getTable());
             foreach ($table_details as $key => $column) {
