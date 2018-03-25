@@ -39,15 +39,19 @@
                                     <th class="action text-right">{{ __('voyager::generic.actions') }}</th>
                                 </tr>
                                 <tr>
+                                    <?php $i = 0; ?>
                                     <th></th>
                                     @foreach($breadView->visible_rows as $index => $row)
+                                    <?php $i++; ?>
                                     <th>
                                     	@if ($row->is_searchable)
                                     	<input type="text" placeholder="Search {{ $row->options['label'] }}" class="form-control searchable" data-column="{{ $index }}">
                                     	@endif
                                     </th>
                                     @endforeach
+                                    @if($i > 0)
                                     <th class="text-right"><button type="button" class="btn btn-xs btn-primary clear-filter">Clear Filter</button></th>
+                                    @endif
                                 </tr>
                             </thead>
                             <tbody></tbody>
