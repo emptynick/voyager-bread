@@ -145,7 +145,7 @@ class BreadServiceProvider extends ServiceProvider
 
             $router->resource($bread->slug, $breadController);
             $router->post($bread->slug.'/data/{breadView?}/{breadRow?}', ['uses' => $breadController.'@data', 'as' => $bread->slug.'.data']);
-            $router->post($bread->slug.'/delete/{id?}', ['uses' => $breadController.'@delete', 'as' => $bread->slug.'.delete']);
+            $router->post($bread->slug.'/delete/{id?}', ['uses' => $breadController.'@destroy', 'as' => $bread->slug.'.delete']);
             $router->get($bread->slug.'/create/{view?}', ['uses' => $breadController.'@create', 'as' => $bread->slug.'.create']);
             $router->post($bread->slug.'/store/{view?}', ['uses' => $breadController.'@store', 'as' => $bread->slug.'.store']);
         }
