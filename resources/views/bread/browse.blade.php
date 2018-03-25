@@ -96,6 +96,23 @@ $(document).ready(function() {
         'language': {!! json_encode(__('voyager::datatable')) !!},
     });
 
+    datatable.on( 'draw', function () {
+        $('.delete').on('click', function(e) {
+            $entry = $(this);
+            e.preventDefault();
+            toastr.info('Do you really want to delete this Entry?<br /><br /><button type="button" class="btn btn-danger final-delete">Yes</button>', 'Delete Entry?');
+            toastr.options = {
+                'escapeHtml': false,
+            };
+            $('body').on('click', '.final-delete', function(e) {
+                e.preventDefault();
+                $('<form action="'+$entry.attr('href')+'" method="post">{{ method_field('DELETE') }}{{ csrf_field() }}</form>').appendTo('body').submit();
+            });
+
+            return false;
+        });
+    });
+
 	$('.searchable').on('keyup change', $.debounce(250, function(e) {
 		var index = $(this).data('column') + 1; // +1 for Checkbox
 		var col = datatable.column(index);

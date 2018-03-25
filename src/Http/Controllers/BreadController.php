@@ -184,7 +184,7 @@ class BreadController extends Controller
             ]);
     }
 
-    public function delete(Request $request, $id = null)
+    public function destroy(Request $request, $id = null)
     {
         $bread = $this->getBread($request);
 
@@ -348,8 +348,8 @@ class BreadController extends Controller
 
             if (!$compact) {
                 /** @todo: Test if user has permission to edit/display/delete */
-                $actions = '<a href="'.route('voyager.'.$bread->slug.'.delete', $result->{$result->getKeyName()}).'"
-                            title="'.__('voyager::generic.delete').'" class="btn btn-sm btn-danger pull-right edit">
+                $actions = '<a href="'.route('voyager.'.$bread->slug.'.destroy', $result->{$result->getKeyName()}).'"
+                            title="'.__('voyager::generic.delete').'" class="btn btn-sm btn-danger pull-right delete">
                             <i class="voyager-trash"></i> <span class="hidden-xs hidden-sm">'.__('voyager::generic.delete').'</span>
                             </a>
                             <a href="'.route('voyager.'.$bread->slug.'.edit', $result->{$result->getKeyName()}).'"
