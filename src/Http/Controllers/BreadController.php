@@ -239,6 +239,12 @@ class BreadController extends Controller
             //Global Search Query
             if ($request->has('search')) {
                 $global_query = $request->input('search.value');
+
+                $model = $model->where(function ($query) use ($breadView, $global_query) {
+                    foreach ($breadView->searchable_rows as $row) {
+                        $query->orWhere($row->field, 'like', '%'.$global_query.'%');
+                    }
+                });
             }
 
             //Order
