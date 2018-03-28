@@ -50,6 +50,7 @@
 										<th>{{ __('bread::manager.validation_rules') }}</th>
 										<th>{{ __('bread::manager.searchable') }}</th>
 										<th>{{ __('bread::manager.orderable') }}</th>
+										<th>{{ __('bread::manager.linked') }}</th>
 										<th>{{ __('bread::manager.invisible') }}</th>
 										<th>{{ __('bread::generic.actions') }}</th>
 									</tr>
@@ -108,7 +109,7 @@
 											</select>
 										</td>
 										<td>
-											
+
 										</td>
 										<td>
 											<input type="checkbox"
@@ -119,6 +120,11 @@
 											<input type="checkbox"
 													{{ ($row->isOrderable ? 'checked' : '') }}
 												   class="form-check" name="row[0][options][orderable]" value="true">
+										</td>
+										<td>
+											<input type="checkbox"
+													{{ ($row->isLinked ? 'checked' : '') }}
+												   class="form-check" name="row[0][options][linked]" value="true">
 										</td>
 										<td>
 											<input type="checkbox"
@@ -164,6 +170,9 @@
 											<input type="checkbox" class="form-check" checked name="row[0][options][orderable]" value="true" checked>
 										</td>
 										<td>
+											<input type="checkbox" class="form-check" checked name="row[0][options][linked]" value="true" checked>
+										</td>
+										<td>
 											<input type="checkbox" class="form-check" name="row[0][options][invisible]" value="true">
 										</td>
 										<td>
@@ -182,6 +191,7 @@
 										<th>{{ __('bread::manager.validation_rules') }}</th>
 										<th>{{ __('bread::manager.searchable') }}</th>
 										<th>{{ __('bread::manager.orderable') }}</th>
+										<th>{{ __('bread::manager.linked') }}</th>
 										<th>{{ __('bread::manager.invisible') }}</th>
 										<th>{{ __('bread::generic.actions') }}</th>
 									</tr>

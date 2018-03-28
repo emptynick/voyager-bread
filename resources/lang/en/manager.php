@@ -41,6 +41,7 @@ return [
     'searchable'                    => 'Searchable',
     'orderable'                     => 'Orderable',
     'invisible'                     => 'Invisible',
+    'linked'                        => 'Linked',
     'browse_list'                   => 'Browse List',
     'add_view'                      => 'Add View',
     'validation_rules'              => 'Validation Rules',

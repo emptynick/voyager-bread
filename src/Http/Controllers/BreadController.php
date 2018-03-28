@@ -242,12 +242,20 @@ class BreadController extends Controller
             } else {
                 $global_query = $request->input('search.value');
             }
-
-            $model = $model->where(function ($query) use ($breadView, $global_query) {
-                foreach ($breadView->searchable_rows as $row) {
-                    $query->orWhere($row->field, 'like', '%'.$global_query.'%');
-                }
-            });
+            if ($global_query != '') {
+                $model = $model->where(function ($query) use ($breadView, $global_query) {
+                    foreach ($breadView->searchable_rows as $row) {
+                        $details = parse_field_name($row->field);
+                        if ($details['type'] == 'pivot') {
+                            /*@todo: implement global pivot search*/
+                        } elseif ($details['type'] == 'relationship') {
+                            /*@todo: implement global relationship search*/
+                        } elseif ($details['type'] == 'attribute') {
+                            $query->orWhere($row->field, 'like', '%'.$global_query.'%');
+                        }
+                    }
+                });
+            }
         }
 
         if ($request->has('columns')) {
@@ -324,25 +332,25 @@ class BreadController extends Controller
             }
 
             foreach ($breadView->visible_rows as $key => $row) {
-                $parts = explode_field_name($row->field);
-
+                $details = parse_field_name($row->field);
                 $content = '';
-                if (count($parts) == 1) {
+
+                if ($details['type'] == 'attribute') {
                     //Standard Field
                     $content = $row->formfield->createOutput($result->{$row->field});
-                } elseif (count($parts) == 2) {
+                } elseif ($details['type'] == 'relationship') {
                     //Relationship
-                    list($relation, $attribute) = $parts;
+                    //list($relation, $attribute) = $parts;
 
-                    $relationship_content = $result->{$relation};
+                    $relationship_content = $result->{$details['relationship']};
                     if (isset($relationship_content)) {
                         if ($relationship_content instanceof \Illuminate\Support\Collection) { /** @todo: maybe invert this condition **/
-                            $content = $row->formfield->createOutput($relationship_content, true, $attribute);
+                            $content = $row->formfield->createOutput($relationship_content, true, $details['attribute']);
                         } else {
-                            $content = $row->formfield->createOutput($relationship_content->{$attribute});
+                            $content = $row->formfield->createOutput($relationship_content->{$details['attribute']});
                         }
                     }
-                } elseif (count($parts) == 3) {
+                } elseif ($details['type'] == 'pivot') {
                     // @todo: Add pivot display
                 }
                 if ($request->has('select2')) {
@@ -350,9 +358,25 @@ class BreadController extends Controller
                     $nested['text'] = strip_tags($content);
                 } else {
                     $nested['DT_RowId'] = $result->{$result->getKeyName()};
-                    if ($bread->model->getKeyName() == $row->field && !$compact) {
+                    if (!$compact && ($bread->model->getKeyName() == $row->field || $row->is_linked)) {
                         /* @todo: && user is allowed to display **/
-                        $nested[] = '<a href="'.route('voyager.'.$bread->slug.'.show', $result->{$result->getKeyName()}).'">'.
+                        $link_attr = '';
+                        if ($details['type'] == 'attribute') {
+                            $href = route('voyager.'.$bread->slug.'.show', $result->{$result->getKeyName()});
+                        } elseif($details['type'] == 'relationship' && isset($relationship_content)) {
+                            $relationship = $details['relationship'];
+                            $rel_bread = get_related_bread($bread->model->$relationship());
+                            if (isset($rel_bread)) {
+                                $attribute = $bread->model->$relationship()->getRelated()->getKeyName();
+                                $href = route('voyager.'.$rel_bread->slug.'.show', $relationship_content->{$attribute});
+                                $link_attr = 'target="_blank"';
+                            }
+                        } else {
+                            /*@todo: consider linking pivot to either foreign bread or pivot-bread if exists*/
+                            $href = '#';
+                        }
+
+                        $nested[] = '<a href="'.$href.'" '.$link_attr.'>'.
                                     $content.
                                     '</a>';
                     } else {

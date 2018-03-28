@@ -1,6 +1,6 @@
 @if(count($breadView->visible_rows) == 1)
 <select class="form-control relationship-select2"
-        name="relationship[{{ $row->id }}][0][id][]"
+        name="relationship[{{ $row->id }}][0][id]"
         data-src="{{ route('voyager.'.$breadView->bread->slug.'.data', [$breadView, $breadRow->id]) }}?select2=1"
         data-order="[[{{ $breadView->first_orderable_row }}, &quot;asc&quot;]]"
         {{ ((isset($multiple) && $multiple) ? 'multiple' : '') }}

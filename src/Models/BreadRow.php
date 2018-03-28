@@ -68,6 +68,11 @@ class BreadRow extends Model
         return $this->is_orderable ? 'true' : 'false';
     }
 
+    public function getIsLinkedAttribute()
+    {
+        return isset($this->options['linked']) && $this->options['linked'];
+    }
+
     public function getRelationshipBread()
     {
         return BreadFacade::model('BreadView')->find($this->options['list_id'])->bread;
