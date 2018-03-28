@@ -363,7 +363,7 @@ class BreadController extends Controller
                         $link_attr = '';
                         if ($details['type'] == 'attribute') {
                             $href = route('voyager.'.$bread->slug.'.show', $result->{$result->getKeyName()});
-                        } elseif($details['type'] == 'relationship' && isset($relationship_content)) {
+                        } elseif ($details['type'] == 'relationship' && isset($relationship_content)) {
                             $relationship = $details['relationship'];
                             $rel_bread = get_related_bread($bread->model->$relationship());
                             if (isset($rel_bread)) {
