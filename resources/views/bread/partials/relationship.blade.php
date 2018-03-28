@@ -1,13 +1,11 @@
-@if(count($breadView->visible_rows) == 99999999999999999999999999)
-@php
-$field = $breadView->visible_rows->first()->field;
-$key = $relationship->getRelated()->getKeyName();
-$selected = [];
-@endphp
-<select class="form-control" name="relationship[{{ $row->id }}][0][id][]" {{ ((isset($multiple) && $multiple) ? 'multiple' : '') }}>
-    @foreach($relationship->getRelated()->orderBy($field)->get() as $relation)
-    <option value="{{ $relation->{$key} }}" {{ (in_array($relation->{$key}, $selected) ? 'selected' : '') }}>{{ $relation->{$field} }}</option>
-    @endforeach
+@if(count($breadView->visible_rows) == 1)
+<select class="form-control relationship-select2"
+        name="relationship[{{ $row->id }}][0][id][]"
+        data-src="{{ route('voyager.'.$breadView->bread->slug.'.data', [$breadView, $breadRow->id]) }}?select2=1"
+        data-order="[[{{ $breadView->first_orderable_row }}, &quot;asc&quot;]]"
+        {{ ((isset($multiple) && $multiple) ? 'multiple' : '') }}
+>
+
 </select>
 @else
 <div class="table-responsive"><input type="hidden" name="relationship[{{ $breadRow->id }}][0][force]" value="null">

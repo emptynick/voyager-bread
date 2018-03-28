@@ -102,7 +102,9 @@
 		                @foreach($tables as $table)
 		                <tr>
 		                    <td>
-		                        <p class="name">{{ $table }}</p>
+		                        <p class="name">
+                                    <a href="{{ route('voyager.database.edit', $table) }}">{{ $table }}</a>
+                                </p>
 		                    </td>
 
 		                    <td>

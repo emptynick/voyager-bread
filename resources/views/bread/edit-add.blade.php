@@ -249,6 +249,30 @@ $('document').ready(function () {
             setInputNames($head);
         });
     });
+
+    $('.relationship-select2').each(function() {
+        $(this).select2({
+            ajax: {
+                url: $(this).data('src'),
+                data: function (params) {
+                    var query = {
+                        'search': 1,
+                        'search_value': params.term,
+                        'page': params.page || 1,
+                        'length': 10,
+                        'columns': { },
+                    }
+                    return query;
+                },
+                dataType: 'json',
+                method: 'POST',
+                delay: 250,
+            },
+            templateResult: function(state) {
+                return state.text;
+            }
+        });
+    });
 });
 
 function setInputNames($table_head)

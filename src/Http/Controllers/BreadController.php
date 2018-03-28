@@ -235,18 +235,22 @@ class BreadController extends Controller
         $model = $bread->model;
         $recordsTotal = $model->count();
 
-        if ($request->has('columns')) {
-            //Global Search Query
-            if ($request->has('search')) {
+        //Global Search Query
+        if ($request->has('search')) {
+            if ($request->has('search_value')) {
+                $global_query = $request->input('search_value');
+            } else {
                 $global_query = $request->input('search.value');
-
-                $model = $model->where(function ($query) use ($breadView, $global_query) {
-                    foreach ($breadView->searchable_rows as $row) {
-                        $query->orWhere($row->field, 'like', '%'.$global_query.'%');
-                    }
-                });
             }
 
+            $model = $model->where(function ($query) use ($breadView, $global_query) {
+                foreach ($breadView->searchable_rows as $row) {
+                    $query->orWhere($row->field, 'like', '%'.$global_query.'%');
+                }
+            });
+        }
+
+        if ($request->has('columns')) {
             //Order
             $order_column = -1;
             $order_relationship = null;
@@ -288,6 +292,8 @@ class BreadController extends Controller
                     }
                 }
             }
+        } elseif ($request->has('select2')) {
+            $compact = true;
         }
 
         $recordsFiltered = $model->count();
@@ -300,14 +306,18 @@ class BreadController extends Controller
             }
             $results = $results->slice($request->input('start'), $request->input('length'));
         } else {
-            $model = $model->skip($request->input('start'))->take($request->input('length'));
+            if ($request->has('select2')) {
+                $start = (intval($request->input('page')) - 1) * intval($request->input('length'));
+            } else {
+                $start = $request->input('start');
+            }
+            $model = $model->skip($start)->take($request->input('length'));
             $results = $model->get();
         }
 
         $tableData = [];
         foreach ($results as $num => $result) {
             $nested = [];
-
             if (!$compact) {
                 /* @todo: Hide checkbox ONLY here if the user has no permission to delete **/
                 $nested[] = '<input type="checkbox" name="row_id" id="checkbox_'.$result->getKey().'" value="'.$result->getKey().'">';
@@ -333,16 +343,21 @@ class BreadController extends Controller
                         }
                     }
                 } elseif (count($parts) == 3) {
-                    //Pivot
+                    // @todo: Add pivot display
                 }
-                $nested['DT_RowId'] = $result->{$result->getKeyName()};
-                if ($bread->model->getKeyName() == $row->field && !$compact) {
-                    /* @todo: && user is allowed to display **/
-                    $nested[] = '<a href="'.route('voyager.'.$bread->slug.'.show', $result->{$result->getKeyName()}).'">'.
-                                $content.
-                                '</a>';
+                if ($request->has('select2')) {
+                    $nested['id'] = $result->{$result->getKeyName()};
+                    $nested['text'] = strip_tags($content);
                 } else {
-                    $nested[] = $content;
+                    $nested['DT_RowId'] = $result->{$result->getKeyName()};
+                    if ($bread->model->getKeyName() == $row->field && !$compact) {
+                        /* @todo: && user is allowed to display **/
+                        $nested[] = '<a href="'.route('voyager.'.$bread->slug.'.show', $result->{$result->getKeyName()}).'">'.
+                                    $content.
+                                    '</a>';
+                    } else {
+                        $nested[] = $content;
+                    }
                 }
             }
 
@@ -364,12 +379,20 @@ class BreadController extends Controller
             }
             $tableData[] = $nested;
         }
-
-        return [
-                'draw'            => intval($request->input('draw')),
-                'recordsTotal'    => $recordsTotal,
-                'recordsFiltered' => $recordsFiltered,
-                'data'            => $tableData,
-        ];
+        if ($request->has('select2')) {
+            return [
+                'results'    => $tableData,
+                'pagination' => [
+                    'more'      => ($recordsFiltered > (intval($start) + intval($request->input('length')))),
+                ],
+            ];
+        } else {
+            return [
+                    'draw'            => intval($request->input('draw')),
+                    'recordsTotal'    => $recordsTotal,
+                    'recordsFiltered' => $recordsFiltered,
+                    'data'            => $tableData,
+            ];
+        }
     }
 }

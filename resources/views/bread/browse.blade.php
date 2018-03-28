@@ -132,3 +132,8 @@ $(document).ready(function() {
 });
 </script>
 @stop
+@section('css')
+<style>
+
+</style>
+@endsection
