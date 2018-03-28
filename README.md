@@ -47,6 +47,10 @@ Both Views and Lists can have a free-name and get assigned to different Roles
 - [Relationships](/docs/Relationships.md)
 - [Formfields](/docs/Formfields.md)
 
+## News
+#### 28th March 2018
+- You can now select wether a list-item is linked or not. Normal Attributes link to the Browse-Action of the entry, relationships to the corresponding item (in a new Tab)
+
 ## Todo:
 - [ ] Validate relationship
 - [ ] Implement various FormFields
