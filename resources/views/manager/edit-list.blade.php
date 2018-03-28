@@ -50,7 +50,7 @@
 										<th>{{ __('bread::manager.validation_rules') }}</th>
 										<th>{{ __('bread::manager.searchable') }}</th>
 										<th>{{ __('bread::manager.orderable') }}</th>
-										<th>{{ __('bread::manager.linked') }}</th>
+										<th>{{ __('bread::manager.linked_to') }}</th>
 										<th>{{ __('bread::manager.invisible') }}</th>
 										<th>{{ __('bread::generic.actions') }}</th>
 									</tr>
@@ -122,9 +122,16 @@
 												   class="form-check" name="row[0][options][orderable]" value="true">
 										</td>
 										<td>
-											<input type="checkbox"
-													{{ ($row->isLinked ? 'checked' : '') }}
-												   class="form-check" name="row[0][options][linked]" value="true">
+											<select name="row[0][options][linked]" class="form-control">
+												<option value=""
+												{{ !$row->is_linked ? 'selected' : '' }}>{{ __('voyager::generic.none') }}</option>
+												<option value="show"
+												{{ $row->is_linked && $row->linked_to == 'show' ? 'selected' : '' }}
+												>{{ __('voyager::generic.read') }}</option>
+												<option value="edit"
+												{{ $row->is_linked && $row->linked_to == 'edit' ? 'selected' : '' }}
+												>{{ __('voyager::generic.edit') }}</option>
+											</select>
 										</td>
 										<td>
 											<input type="checkbox"
@@ -170,7 +177,11 @@
 											<input type="checkbox" class="form-check" checked name="row[0][options][orderable]" value="true" checked>
 										</td>
 										<td>
-											<input type="checkbox" class="form-check" checked name="row[0][options][linked]" value="true" checked>
+											<select name="row[0][options][linked]" class="form-control">
+												<option value="">{{ __('voyager::generic.none') }}</option>
+												<option value="show">{{ __('voyager::generic.read') }}</option>
+												<option value="edit">{{ __('voyager::generic.edit') }}</option>
+											</select>
 										</td>
 										<td>
 											<input type="checkbox" class="form-check" name="row[0][options][invisible]" value="true">
@@ -191,7 +202,7 @@
 										<th>{{ __('bread::manager.validation_rules') }}</th>
 										<th>{{ __('bread::manager.searchable') }}</th>
 										<th>{{ __('bread::manager.orderable') }}</th>
-										<th>{{ __('bread::manager.linked') }}</th>
+										<th>{{ __('bread::manager.linked_to') }}</th>
 										<th>{{ __('bread::manager.invisible') }}</th>
 										<th>{{ __('bread::generic.actions') }}</th>
 									</tr>

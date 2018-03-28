@@ -360,22 +360,23 @@ class BreadController extends Controller
                     $nested['DT_RowId'] = $result->{$result->getKeyName()};
                     if (!$compact && ($bread->model->getKeyName() == $row->field || $row->is_linked)) {
                         /* @todo: && user is allowed to display **/
+                        $target = $row->is_linked ? $row->linked_to : 'show';
                         $link_attr = '';
                         if ($details['type'] == 'attribute') {
-                            $href = route('voyager.'.$bread->slug.'.show', $result->{$result->getKeyName()});
+                            $href = route('voyager.'.$bread->slug.'.'.$target, $result->{$result->getKeyName()});
                         } elseif ($details['type'] == 'relationship' && isset($relationship_content)) {
                             $relationship = $details['relationship'];
                             $rel_bread = get_related_bread($bread->model->$relationship());
                             if (isset($rel_bread)) {
                                 $attribute = $bread->model->$relationship()->getRelated()->getKeyName();
-                                $href = route('voyager.'.$rel_bread->slug.'.show', $relationship_content->{$attribute});
+                                $href = route('voyager.'.$rel_bread->slug.'.'.$target, $relationship_content->{$attribute});
                                 $link_attr = 'target="_blank"';
                             }
                         } else {
                             /*@todo: consider linking pivot to either foreign bread or pivot-bread if exists*/
                             $href = '#';
                         }
-
+                        /*@todo: Only link to target if user is allowed to BROWSE */
                         $nested[] = '<a href="'.$href.'" '.$link_attr.'>'.
                                     $content.
                                     '</a>';

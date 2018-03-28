@@ -70,7 +70,12 @@ class BreadRow extends Model
 
     public function getIsLinkedAttribute()
     {
-        return isset($this->options['linked']) && $this->options['linked'];
+        return isset($this->options['linked']) && !empty($this->options['linked']);
+    }
+
+    public function getLinkedToattribute()
+    {
+        return $this->is_linked ? $this->options['linked'] : null;
     }
 
     public function getRelationshipBread()
