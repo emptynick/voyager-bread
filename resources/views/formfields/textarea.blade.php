@@ -1,17 +1,9 @@
-@section('formfield-number')
+@section('formfield-textarea')
 <div>
     <div>
         <slot name="content"></slot>
         <label v-if="options.label">@{{ options.label }}</label>
-        <input
-            type="number"
-            class="form-control"
-            :value="options.value"
-            :placeholder="options.placeholder"
-            :disabled="true"
-            :min="options.min"
-            :max="options.max"
-            :step="options.step">
+        <textarea :value="options.value" :placeholder="options.placeholder" class="form-control" :disabled="true" :rows="options.rows"></textarea>
         <small v-if="options.help_text">@{{ options.help_text }}</small>
         <slot name="content_after"></slot>
     </div>
@@ -31,25 +23,11 @@
         </div>
         <div class="form-group">
             <label>Default Value</label>
-            <input
-                type="number"
-                :min="options.min"
-                :max="options.max"
-                :step="options.step"
-                class="form-control"
-                v-model="options.value">
+            <textarea class="form-control" v-model="options.value"></textarea>
         </div>
         <div class="form-group">
-            <label>Min</label>
-            <input type="number" class="form-control" v-model="options.min">
-        </div>
-        <div class="form-group">
-            <label>Max</label>
-            <input type="number" class="form-control" v-model="options.max">
-        </div>
-        <div class="form-group">
-            <label>Step</label>
-            <input type="number" class="form-control" v-model="options.step">
+            <label>Rows</label>
+            <input type="number" min="1" max="100" class="form-control" v-model="options.rows">
         </div>
         <slot name="options_after"></slot>
     </div>
@@ -57,8 +35,8 @@
 @endsection
 
 <script>
-Vue.component('formfield-number', {
-    template: `@yield('formfield-number')`,
+Vue.component('formfield-textarea', {
+    template: `@yield('formfield-textarea')`,
     props: ['field', 'options', 'mockup', 'read', 'edit', 'add', 'i'],
 });
 </script>

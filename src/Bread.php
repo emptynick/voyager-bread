@@ -2,55 +2,62 @@
 
 namespace Bread;
 
-use Bread\FormFields\HandlerInterface;
+use Bread\FormFields\AbstractFormfield;
+use Bread\Classes\Bread as BreadClass;
 
 class Bread
 {
-    protected $models = [
-        'Bread'		   => \Bread\Models\Bread::class,
-        'BreadView'	=> \Bread\Models\BreadView::class,
-        'BreadRow'	 => \Bread\Models\BreadRow::class,
-    ];
+    protected $formfields = [];
+    protected $breads = [];
 
-    protected $formFields = [];
-
-    public function model($name)
+    public function addFormfield($handler)
     {
-        return app($this->models[studly_case($name)]);
-    }
-
-    public function modelClass($name)
-    {
-        return $this->models[$name];
-    }
-
-    public function addFormField($handler)
-    {
-        if (!$handler instanceof HandlerInterface) {
+        if (!$handler instanceof AbstractFormfield) {
             $handler = app($handler);
         }
-        $this->formFields[$handler->getCodename()] = $handler;
+        $this->formfields[$handler->getCodename()] = $handler;
 
         return $this;
     }
 
-    public function formField($type)
+    public function formfield($type)
     {
-        return $this->formFields[$type];
+        return (isset($this->formfields[$type]) ? $this->formfields[$type] : null);
     }
 
-    public function formFields($type = 'formfield')
+    public function formfields()
     {
-        $connection = config('database.default');
-        $driver = config("database.connections.{$connection}.driver", 'mysql');
-
-        return collect($this->formFields)->filter(function ($after) use ($driver, $type) {
-            return $after->supports($driver) && $after->type == $type;
-        });
+        return collect($this->formfields);
     }
 
-    public function routes()
+    public function getBread($table)
     {
-        require __DIR__.'/../routes/bread.php';
+        if (ends_with(config('bread.bread_path'), '/')) {
+            $full_path = config('bread.bread_path').$table.'.json';
+        } else {
+            $full_path = config('bread.bread_path').'/'.$table.'.json';
+        }
+
+        if (file_exists($full_path)) {
+            $bread = new BreadClass(
+                json_decode(
+                    file_get_contents($full_path)
+                ));
+            $bread->name = $table;
+            return ($bread->validate() ? $bread : null);
+        } else {
+            return null;
+        }
+    }
+
+    public function hasBread($table)
+    {
+        if (ends_with(config('bread.bread_path'), '/')) {
+            $full_path = config('bread.bread_path').$table.'.json';
+        } else {
+            $full_path = config('bread.bread_path').'/'.$table.'.json';
+        }
+
+        return file_exists($full_path);
     }
 }
