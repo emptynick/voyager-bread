@@ -12,22 +12,18 @@ abstract class AbstractFormfield
 
     public function browse($content, $options, $multiple = false, $linked = false, $link_action = null)
     {
-
     }
 
     public function read($content, $options)
     {
-
     }
 
     public function edit($content, $options)
     {
-
     }
 
     public function add($options)
     {
-
     }
 
     public function mockup($render = false)
@@ -40,12 +36,10 @@ abstract class AbstractFormfield
     }
 
     /**
-     *
-     * Converts the input to be saved in the database
+     * Converts the input to be saved in the database.
      *
      * @param input   The plain object from a Request
      * @param options The options as defined in the Layoutbuilder
-     *
      */
     public function parseContent($input, $options)
     {
@@ -66,7 +60,7 @@ abstract class AbstractFormfield
     {
         foreach ($data as $key => $value) {
             if ($key == 'options') {
-                $this->options = array_merge($this->options, (array)$value);
+                $this->options = array_merge($this->options, (array) $value);
             } else {
                 $this->{$key} = $value;
             }
@@ -80,8 +74,7 @@ abstract class AbstractFormfield
 
     public function validate()
     {
-        return (
-            isset($this->field)
-        );
+        return
+            isset($this->field);
     }
 }
