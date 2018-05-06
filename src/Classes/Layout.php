@@ -1,15 +1,16 @@
 <?php
+
 namespace Bread\Classes;
 
 use Bread\BreadFacade;
 
 class Layout
 {
-    public $name,
-           $type,
-           $elements = [];
+    public $name;
+    public $type;
+    public $elements = [];
 
-    function __construct($data)
+    public function __construct($data)
     {
         foreach ($data as $key => $value) {
             if ($key == 'elements') {
@@ -20,11 +21,11 @@ class Layout
         }
     }
 
-    function parseElements($elements)
+    public function parseElements($elements)
     {
         foreach ($elements as $element) {
             $class = BreadFacade::formfield($element->type);
-            if (isset($class)){
+            if (isset($class)) {
                 $new_element = new $class();
                 $new_element->setData($element);
 
@@ -37,9 +38,8 @@ class Layout
 
     public function validate()
     {
-        return (
+        return
             isset($this->name)
-            && isset($this->type)
-        );
+            && isset($this->type);
     }
 }

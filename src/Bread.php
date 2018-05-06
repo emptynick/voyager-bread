@@ -2,8 +2,8 @@
 
 namespace Bread;
 
-use Bread\FormFields\AbstractFormfield;
 use Bread\Classes\Bread as BreadClass;
+use Bread\FormFields\AbstractFormfield;
 
 class Bread
 {
@@ -22,7 +22,7 @@ class Bread
 
     public function formfield($type)
     {
-        return (isset($this->formfields[$type]) ? $this->formfields[$type] : null);
+        return isset($this->formfields[$type]) ? $this->formfields[$type] : null;
     }
 
     public function formfields()
@@ -44,9 +44,10 @@ class Bread
                     file_get_contents($full_path)
                 ));
             $bread->name = $table;
-            return ($bread->validate() ? $bread : null);
+
+            return $bread->validate() ? $bread : null;
         } else {
-            return null;
+            return;
         }
     }
 

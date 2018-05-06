@@ -4,21 +4,21 @@ namespace Bread\Classes;
 
 class Bread
 {
-    public $name,
-           $slug,
-           $display_name_singular,
-           $display_name_plural,
-           $model,
-           $controller,
-           $policy,
-           $icon,
-           $layouts = [],
-           $browse_list,
-           $read_view,
-           $edit_view,
-           $add_view;
+    public $name;
+    public $slug;
+    public $display_name_singular;
+    public $display_name_plural;
+    public $model;
+    public $controller;
+    public $policy;
+    public $icon;
+    public $layouts = [];
+    public $browse_list;
+    public $read_view;
+    public $edit_view;
+    public $add_view;
 
-    function __construct($data)
+    public function __construct($data)
     {
         foreach ($data as $key => $value) {
             if ($key == 'layouts') {
@@ -62,11 +62,10 @@ class Bread
 
     public function validate()
     {
-        return (
+        return
             isset($this->slug)
             && isset($this->display_name_singular)
             && isset($this->display_name_plural)
-            && isset($this->model)
-        );
+            && isset($this->model);
     }
 }
