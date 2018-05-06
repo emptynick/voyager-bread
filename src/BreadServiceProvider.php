@@ -20,7 +20,6 @@ class BreadServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'bread');
-        $this->loadMigrationsFrom(__DIR__.'/../resources/database/migrations', 'bread');
         $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'bread');
 
         $this->publishes([
