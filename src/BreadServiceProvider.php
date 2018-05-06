@@ -37,7 +37,6 @@ class BreadServiceProvider extends ServiceProvider
      */
     public function register()
     {
-
         app(Dispatcher::class)->listen('voyager.admin.routing.after', function ($router) {
             $this->addRoutes($router);
         });
@@ -105,8 +104,6 @@ class BreadServiceProvider extends ServiceProvider
                 'as'    => 'delete.layout',
             ]);
         });
-
-
     }
 
     protected function checkPermissions()

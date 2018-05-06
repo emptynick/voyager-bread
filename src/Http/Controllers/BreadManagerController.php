@@ -3,7 +3,6 @@
 namespace Bread\Http\Controllers;
 
 use Bread\BreadFacade;
-use Bread\Models\BreadRow;
 use Illuminate\Http\Request;
 use TCG\Voyager\Database\Schema\SchemaManager;
 use TCG\Voyager\Facades\Voyager;
@@ -29,20 +28,19 @@ class BreadManagerController extends Controller
     //Store created or updates BREAD
     public function store(Request $request)
     {
-
     }
 
     //Edit BREAD
     public function edit($table)
     {
         $bread = BreadFacade::getBread($table);
+
         return view('bread::manager.edit-add', compact('bread', 'table'));
     }
 
     //Delete BREAD
     public function destroy(Request $request, $bread)
     {
-
     }
 
     //Edit Layout
@@ -50,11 +48,10 @@ class BreadManagerController extends Controller
     {
         $bread = BreadFacade::getBread($table);
         $layout = $bread->getLayout($layout);
-        
+
         if ($layout->type == 'view') {
             return view('bread::manager.edit-view', ['view' => $layout, 'bread' => $bread]);
-        }
-        elseif ($layout->type == 'list') {
+        } elseif ($layout->type == 'list') {
             return view('bread::manager.edit-list', ['list' => $layout, 'bread' => $bread]);
         }
     }
