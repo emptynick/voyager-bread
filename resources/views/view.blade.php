@@ -226,6 +226,7 @@ var builder = new Vue({
 .options-tooltip {
 	z-index: 10000 !important;
 	width: 150rem;
+    background-color: #353d47 !important;
 }
 </style>
 @endsection
