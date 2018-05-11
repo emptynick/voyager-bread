@@ -2,7 +2,6 @@
 
 namespace Bread\Http\Controllers;
 
-use Bread\BreadFacade;
 use Illuminate\Http\Request;
 
 class Controller
