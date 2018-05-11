@@ -12,7 +12,7 @@ class Bread
     public $controller;
     public $policy;
     public $icon;
-    public $layouts = [];
+    public $layouts;
     public $browse_list;
     public $read_view;
     public $edit_view;
@@ -20,12 +20,13 @@ class Bread
 
     public function __construct($data)
     {
+        $this->layouts = collect([]);
         foreach ($data as $key => $value) {
             if ($key == 'layouts') {
                 $this->parseLayouts($value);
-            } elseif ($key == 'model' && $value != '') {
+            } /*elseif ($key == 'model' && $value != '') {
                 $this->model = app($value);
-            } else {
+            } */else {
                 $this->{$key} = $value;
             }
         }
@@ -48,16 +49,20 @@ class Bread
 
     public function parseLayouts($layouts)
     {
-        foreach ($layouts as $name => $layout) {
+        foreach ($layouts as $layout) {
             $layout = new Layout($layout);
-            $layout->name = $name;
 
             if ($layout->validate()) {
-                $this->layouts[$layout->name] = $layout;
+                $this->layouts[] = $layout;
             }
         }
 
         $this->layouts = collect($this->layouts);
+    }
+
+    public function getModel()
+    {
+        return app($this->model);
     }
 
     public function validate()

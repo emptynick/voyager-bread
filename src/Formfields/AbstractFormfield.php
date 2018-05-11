@@ -6,7 +6,7 @@ abstract class AbstractFormfield
 {
     protected $name;
     protected $codename;
-    public $layout_type = 'formfield'; /* formfield or layout_element */
+    public $element_type = 'formfield'; /* formfield or layout_element */
     public $field;
     public $options = [];
 

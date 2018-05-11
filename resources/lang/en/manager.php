@@ -7,6 +7,7 @@ return [
     'add_bread'                     => 'Add Bread',
     'edit_bread'                    => 'Edit Bread',
     'delete_bread'                  => 'Delete Bread',
+    'edit_view_for'                 => 'Edit View for :bread',
     'display_name_singular'         => 'Display Name Singular',
     'display_name_plural'           => 'Display Name Plural',
     'read_view'                     => 'Read View',

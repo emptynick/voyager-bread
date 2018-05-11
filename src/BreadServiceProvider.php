@@ -40,42 +40,11 @@ class BreadServiceProvider extends ServiceProvider
             $this->addRoutes($router);
         });
 
-        app(Dispatcher::class)->listen('voyager.menu.display', function ($menu) {
-            $this->addMenuItem($menu);
-        });
-
         $this->registerFormFields();
 
         $this->mergeConfigFrom(
             dirname(__DIR__).'/resources/config/bread.php', 'bread'
         );
-    }
-
-    public function addMenuItem(Menu $menu)
-    {
-        if ($menu->name == 'admin') {
-            $toolsItem = $menu->items->where('title', 'Tools')->first();
-            $menuItem = $menu->items->where('route', 'voyager.bread.index')->first();
-            if (is_null($menuItem)) {
-                $indexMenuItem = MenuItem::create([
-                    'menu_id'    => $menu->id,
-                    'route'      => 'voyager.bread.index',
-                    'url'        => '',
-                    'title'      => 'BREAD',
-                    'target'     => '_self',
-                    'icon_class' => 'voyager-bread',
-                    'color'      => null,
-                    'parent_id'  => $toolsItem->id,
-                    'order'      => 99,
-                ]);
-
-                $menu->items->add($indexMenuItem);
-
-                $this->checkPermissions();
-            }
-
-            return $menu;
-        }
     }
 
     public function addRoutes($router)
@@ -96,6 +65,11 @@ class BreadServiceProvider extends ServiceProvider
             $router->get('{table}/edit/layout/{name}', [
                 'uses'  => $namespacePrefix.'BreadManagerController@editLayout',
                 'as'    => 'edit.layout',
+            ]);
+
+            $router->post('{table}/store/layout/{name}', [
+                'uses'  => $namespacePrefix.'BreadManagerController@storeLayout',
+                'as'    => 'store.layout',
             ]);
 
             $router->get('/delete/layout/{name}', [

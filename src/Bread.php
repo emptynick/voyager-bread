@@ -47,7 +47,7 @@ class Bread
 
             return $bread->validate() ? $bread : null;
         } else {
-            return;
+            return null;
         }
     }
 
@@ -60,5 +60,20 @@ class Bread
         }
 
         return file_exists($full_path);
+    }
+
+    public function saveBread($table, $content)
+    {
+        if (!is_dir(config('bread.bread_path'))) {
+            mkdir(config('bread.bread_path'));
+        }
+
+        if (ends_with(config('bread.bread_path'), '/')) {
+            $full_path = config('bread.bread_path').$table.'.json';
+        } else {
+            $full_path = config('bread.bread_path').'/'.$table.'.json';
+        }
+
+        file_put_contents($full_path, json_encode($content, JSON_PRETTY_PRINT));
     }
 }

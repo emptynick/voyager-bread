@@ -28,8 +28,51 @@
 <div class="page-content container-fluid">
 	<div class="row clearfix" id="view-builder">
 		<vue-snotify></vue-snotify>
+        <div class="col-md-12">
+            <div class="dropdown" style="display:inline">
+                <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                    Add Element
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li class="dropdown-header">Formfields</li>
+                    @foreach(\Bread\BreadFacade::formfields()->where('element_type', 'formfield') as $formfield)
+					<li>
+                        <a href="#" v-on:click="addFormfield('formfield', '{{ $formfield->getCodeName() }}')">
+                            {{ $formfield->getName() }}
+                        </a>
+                    </li>
+					@endforeach
+                    <li class="divider"></li>
+
+                    <li class="dropdown-header">Layout Elements</li>
+                    @foreach(\Bread\BreadFacade::formfields()->where('element_type', 'layout_element') as $formfield)
+					<li>
+                        <a href="#" v-on:click="addFormfield('layout_element', '{{ $formfield->getCodeName() }}')">
+                            {{ $formfield->getName() }}
+                        </a>
+                    </li>
+					@endforeach
+                    <li class="divider"></li>
+
+                    <li class="dropdown-header">Relationships</li>
+                </ul>
+            </div>
+            <div style="display:inline">
+                <form method="post" action="{{ route('voyager.bread.store.layout', ['table' => $table, 'name' => $name]) }}" style="display:inline">
+                    <input type="hidden" name="content" :value="JSON.stringify(this.layout)">
+                    {{ csrf_field() }}
+                    <button type="submit" class="btn btn-primary">Save View</button>
+                </form>
+            </div>
+        </div>
 		<div class="col-md-12">
-			<grid-layout :layout="layout.elements" :row-height="50">
+			<grid-layout
+                :layout="layout.elements"
+                :row-height="{{ config('bread.views.row_height', 50) }}"
+                :max-rows="{{ config('bread.views.max_rows', 'Infinity') }}"
+                :col-num="{{ config('bread.views.col_num', 12) }}"
+                :margin="[{{ config('bread.views.margin_x', 10) }}, {{ config('bread.views.margin_y', 10) }}]">
 				<grid-item v-for="element in layout.elements"
 				:x="element.x"
 				:y="element.y"
@@ -50,7 +93,7 @@
 						</div>
 					</div>
 					<div class="panel-body no-drag">
-						<component :is="element.layout_type+'-'+element.type" v-bind="element">
+						<component :is="element.element_type+'-'+element.type" v-bind="element">
 							<div slot="options">
 								<div class="pull-left">
 									<h4>Options</h4>
@@ -59,9 +102,13 @@
 									<span class="voyager-x" style="cursor:pointer;"></span>
 								</div>
 								<div class="clearfix"></div>
-								<div class="form-group" v-if="true"> <!-- Only for formfield -->
+								<div class="form-group" v-if="true"> <!-- Todo: Only for formfield -->
 						            <label>Field</label>
-						            <input type="text" class="form-control" v-model="element.field">
+                                    <select class="form-control" v-model="element.field">
+                                        <option v-for="field in fields">
+                                            @{{ field }}
+                                        </option>
+                                    </select>
 						        </div>
 								<div class="form-group">
 						            <label>Color</label>
@@ -94,24 +141,6 @@
 				</grid-item>
 			</grid-layout>
 		</div>
-		<div class="col-md-12">
-			<select class="form-control" v-model="new_formfield" v-on:change="addFormfield">
-				<optgroup label="Formfields">
-					@foreach(\Bread\BreadFacade::formfields()->where('layout_type', 'formfield') as $formfield)
-					<option value="formfield|{{ $formfield->getCodeName() }}">{{ $formfield->getName() }}</option>
-					@endforeach
-				</optgroup>
-				<optgroup label="Layout Elements">
-					@foreach(\Bread\BreadFacade::formfields()->where('layout_type', 'layout_element') as $formfield)
-					<option value="layout_element|{{ $formfield->getCodeName() }}">{{ $formfield->getName() }}</option>
-					@endforeach
-				</optgroup>
-				<optgroup label="Relationship">
-					<option value="text">Test</option>
-				</optgroup>
-			</select>
-		</div>
-		<textarea>@{{ layout }}</textarea>
 	</div>
 </div>
 @endsection
@@ -128,36 +157,32 @@ var builder = new Vue({
 	el: '#view-builder',
 	data: {
 		layout: {!! json_encode($view) !!},
-		new_formfield: '',
 		editing: true,
 		read: false,
 		edit: false,
 		add: false,
 		current_options: null,
 		current_options_el: null,
+        fields: {!! json_encode($fields) !!},
 	},
 	components: {
 
 	},
 	methods: {
-		addFormfield: function() {
-			if (this.new_formfield !== '') {
-				var i = this.layout.elements.length;
-				var type = this.new_formfield.split('|');
-				var item = {
-					"x": 0,
-					"y": 0,
-					"w": 6,
-					"h": 3,
-					"i": i,
-					"type": type[1],
-					"layout_type": type[0],
-					"class": "panel-primary",
-					"options": JSON.parse($('#'+type[1]+'_options').val())
-				};
-				this.layout.elements.push(item);
-				this.new_formfield = '';
-			}
+		addFormfield: function(type, codename) {
+            var i = this.layout.elements.length;
+			var item = {
+				"x": 0,
+				"y": 0,
+				"w": 6,
+				"h": 3,
+				"i": ""+i,
+				"type": codename,
+				"element_type": type,
+				"class": "panel-primary",
+				"options": JSON.parse($('#'+codename+'_options').val())
+			};
+			this.layout.elements.push(item);
 		},
 		is_options_open: function(i) {
 			return (this.current_options === i);
@@ -173,7 +198,7 @@ var builder = new Vue({
 				closeOnClick: false,
 				pauseOnHover: true,
 				buttons: [
-					{text: 'Yes', action: (toast) => this.layout.elements.splice(i, 1), bold: false},
+					{text: 'Yes', action: (toast) => { this.layout.elements.splice(i, 1); this.$snotify.remove(toast.id) }, bold: false},
 					{text: 'No', action: (toast) => this.$snotify.remove(toast.id) },
 				]
 			});

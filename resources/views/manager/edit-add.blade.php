@@ -66,12 +66,12 @@
                             <div class="col-md-3 form-group">
                                 <label>{{ __('voyager::bread.model_name') }}</label>
                                 <span class="voyager-question" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="{{ __('voyager::bread.model_name_ph') }}"></span>
-                                <input type="text" class="form-control" name="model_name" value="{{ (isset($bread) ? get_class($bread->model) : '') }}" placeholder="{{ __('voyager::bread.model_name') }}">
+                                <input type="text" class="form-control" name="model" value="{{ (isset($bread) ? $bread->model : 'App\\'.studly_case(str_singular($table))) }}" placeholder="{{ __('voyager::bread.model_name') }}">
                             </div>
                             <div class="col-md-3 form-group">
                                 <label>{{ __('voyager::bread.controller_name') }}</label>
                                 <span class="voyager-question" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="{{ __('voyager::bread.controller_name_hint') }}"></span>
-                                <input type="text" class="form-control" name="controller_name" value="{{ (isset($bread) ? $bread->controller : '') }}" placeholder="{{ __('voyager::bread.controller_name') }}">
+                                <input type="text" class="form-control" name="controller" value="{{ (isset($bread) ? $bread->controller : '') }}" placeholder="{{ __('voyager::bread.controller_name') }}">
                             </div>
                             <div class="col-md-3 form-group">
                                 <label>{{ __('voyager::bread.policy_name') }}</label>
@@ -135,6 +135,9 @@
                 <div class="panel panel-primary panel-bordered">
                     <div class="panel-heading">
                         <h3 class="panel-title">{{ __('bread::manager.lists') }}</h3>
+                        <div class="panel-actions">
+                            <a class="voyager-plus add-list" href="#"></a>
+                        </div>
                     </div>
                     <div class="panel-body">
                         <table class="table table-bordered table-striped">
@@ -214,5 +217,22 @@ $('input[data-slug-origin]').each(function(i, el) {
         forceupdate: true,
     });
 });
+
+$('.add-list').on('click', function(e) {
+    e.preventDefault();
+    this.$snotify.confirm('Are you sure you want to delete this element?', 'Delete Element?', {
+        timeout: 5000,
+        showProgressBar: true,
+        closeOnClick: false,
+        pauseOnHover: true,
+        buttons: [
+            {text: 'Yes', action: (toast) => this.layout.elements.splice(i, 1), bold: false},
+            {text: 'No', action: (toast) => this.$snotify.remove(toast.id) },
+        ]
+    });
+});
 </script>
+@endsection
+@section('javascript')
+<script src="{{ asset('vendor/bread/js/app.js') }}"></script>
 @endsection

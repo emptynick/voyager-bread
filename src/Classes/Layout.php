@@ -28,10 +28,7 @@ class Layout
             if (isset($class)) {
                 $new_element = new $class();
                 $new_element->setData($element);
-
-                if ($new_element->validate()) {
-                    $this->elements[] = $new_element;
-                }
+                $this->elements[] = $new_element;
             }
         }
     }
