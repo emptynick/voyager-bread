@@ -47,7 +47,7 @@ class Bread
 
             return $bread->validate() ? $bread : null;
         } else {
-            return null;
+            return;
         }
     }
 

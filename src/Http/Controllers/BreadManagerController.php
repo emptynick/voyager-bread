@@ -46,6 +46,7 @@ class BreadManagerController extends Controller
     public function edit($table)
     {
         $bread = BreadFacade::getBread($table);
+
         return view('bread::manager.edit-add', compact('bread', 'table'));
     }
 
