@@ -102,7 +102,7 @@
 									<span class="voyager-x" style="cursor:pointer;"></span>
 								</div>
 								<div class="clearfix"></div>
-								<div class="form-group" v-if="true"> <!-- Todo: Only for formfield -->
+								<div class="form-group" v-if=" v-if="element.element_type == 'formfield'"">
 						            <label>Field</label>
                                     <select class="form-control" v-model="element.field">
                                         <option v-for="field in fields">
@@ -127,13 +127,13 @@
 							</div>
 
 							<div slot="options_after">
-								<div class="form-group" v-if="true"> <!-- Only for input-elements -->
+                                <div class="checkbox" v-if="element.element_type == 'formfield'">
+									<label><input type="checkbox" v-model="element.translatable">Translatable</label>
+								</div>
+								<div class="form-group" v-if="element.element_type == 'formfield'">
 						            <label>Validation</label>
 						            <input type="text" class="form-control" v-model="element.title">
 						        </div>
-								<div class="checkbox">
-									<label><input type="checkbox" v-model="element.translatable">Translatable</label>
-								</div>
 							</div>
 						</component>
 					</div>

@@ -9,14 +9,12 @@
         "prod": "npm run production",
         "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
     },
-    "devDependencies": {
-        "laravel-mix": "^2.1.11"
-    },
     "dependencies": {
         "cross-env": "^5.1.4",
         "vue": "^2.5.16",
         "vue-directive-tooltip": "^1.4.5",
-        "vue-grid-layout": "^2.1.12",
-        "vue-multiselect": "^2.1.0"
+        "vue-grid-layout": "^2.1.13",
+        "vue-multiselect": "^2.1.0",
+        "laravel-mix": "^2.0"
     }
 }
