@@ -5,8 +5,6 @@ namespace Bread;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Support\ServiceProvider;
 use TCG\Voyager\Facades\Voyager;
-use TCG\Voyager\Models\Menu;
-use TCG\Voyager\Models\MenuItem;
 use TCG\Voyager\Models\Permission;
 use TCG\Voyager\Models\Role;
 
