@@ -4,15 +4,33 @@ return [
     'bread_path'    => storage_path('bread'),
 
     'views' => [
-        // Sets the height of a row in pixels, default = 50
-        'row_height'        => 50,
-        // Maximum amount of rows in a layout, default = Infinity
-        'max_rows'          => 'Infinity',
-        //Amount of columns in a row, default = 12
-        'col_num'           => 12,
-        // Horizontal margin between elements in pixels, default = 10
-        'margin_x'          => 10,
-        // Vertical margin between elements in pixels, default = 10
-        'margin_y'          => 10,
+        // Breakpoints
+        'breakpoints'       => [
+            'xl'    => [
+                'name'    => 'Extra large',
+                'width'   => 1200,
+                'columns' => 12,
+            ],
+            'lg'    => [
+                'name'    => 'Large',
+                'width'   => 992,
+                'columns' => 10,
+            ],
+            'md'    => [
+                'name'    => 'Medium',
+                'width'   => 768,
+                'columns' => 8,
+            ],
+            'sm'    => [
+                'name'    => 'Small',
+                'width'   => 576,
+                'columns' => 4,
+            ],
+            'xs'    => [
+                'name'    => 'Extra small',
+                'width'   => 0,
+                'columns' => 2,
+            ],
+        ]
     ],
 ];

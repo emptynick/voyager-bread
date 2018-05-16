@@ -10,31 +10,6 @@ abstract class AbstractFormfield
     public $field;
     public $options = [];
 
-    public function browse($content, $options, $multiple = false, $linked = false, $link_action = null)
-    {
-    }
-
-    public function read($content, $options)
-    {
-    }
-
-    public function edit($content, $options)
-    {
-    }
-
-    public function add($options)
-    {
-    }
-
-    public function mockup($render = false)
-    {
-        if ($render) {
-            return view($this->mockup(true));
-        } else {
-            return 'bread::formfields.'.$this->codename;
-        }
-    }
-
     /**
      * Converts the input to be saved in the database.
      *
@@ -69,7 +44,16 @@ abstract class AbstractFormfield
 
     public function getOptions()
     {
-        return json_encode($this->options);
+        return json_encode(collect($this->options)->merge(['title' => '']));
+    }
+
+    public function getComponent($render = false)
+    {
+        if ($render) {
+            return view('bread::vue.formfields.'.$this->codename);
+        } else {
+            return 'bread::vue.formfields.'.$this->codename;
+        }
     }
 
     public function validate()

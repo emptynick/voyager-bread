@@ -1,5 +1,20 @@
 window.Vue = require('vue');
 
+//Global events
+const EventBus = new Vue()
+
+Object.defineProperties(Vue.prototype, {
+    $bus: {
+        get: function () {
+            return EventBus
+        }
+    }
+});
+
+// Vue resources
+import VueResource from 'vue-resource';
+Vue.use(VueResource);
+
 //Tooltip
 import Tooltip from 'vue-directive-tooltip';
 import 'vue-directive-tooltip/css/index.css';
@@ -7,12 +22,11 @@ Vue.use(Tooltip, {
     placement: 'right',
 });
 
-//Grid Layout
-import {GridItem, GridLayout,ResponsiveGridLayout} from 'vue-grid-layout';
-[GridItem, GridLayout, ResponsiveGridLayout].map(
-  component => {
-  Vue.component(component.name, component);
-});
+//Responsive Grid Layout
+import {VueResponsiveGridLayout, VueGridItem } from 'vue-responsive-grid-layout'
+
+Vue.component('vue-responsive-grid-layout', VueResponsiveGridLayout)
+Vue.component('vue-grid-item', VueGridItem)
 
 //Vue Multi-Select
 import Multiselect from 'vue-multiselect'
@@ -40,3 +54,13 @@ Vue.filter('slugify', function(value) {
 
   return value;
 });
+
+//NL2BR
+import Nl2br from 'vue-nl2br'
+Vue.component('nl2br', Nl2br)
+
+// Formfields
+
+// Masked input
+import MaskedInput from 'vue-masked-input'
+Vue.component('masked-input', MaskedInput);

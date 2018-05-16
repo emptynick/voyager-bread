@@ -10,7 +10,7 @@ class Layout
     public $type;
     public $elements = [];
 
-    public function __construct($data)
+    public function __construct($data, $remove = true)
     {
         foreach ($data as $key => $value) {
             if ($key == 'elements') {
@@ -24,6 +24,9 @@ class Layout
     public function parseElements($elements)
     {
         foreach ($elements as $element) {
+            if (isset($element->deleted) && $element->deleted) {
+                continue;
+            }
             $class = BreadFacade::formfield($element->type);
             if (isset($class)) {
                 $new_element = new $class();

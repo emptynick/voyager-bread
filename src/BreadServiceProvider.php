@@ -3,6 +3,7 @@
 namespace Bread;
 
 use Illuminate\Events\Dispatcher;
+use Illuminate\Http\Request;
 use Illuminate\Support\ServiceProvider;
 use TCG\Voyager\Facades\Voyager;
 use TCG\Voyager\Models\Permission;
@@ -60,20 +61,33 @@ class BreadServiceProvider extends ServiceProvider
             $router->put('{id}', ['uses' => $namespacePrefix.'BreadManagerController@update',  'as' => 'update']);
             $router->delete('{id}', ['uses' => $namespacePrefix.'BreadManagerController@destroy',  'as' => 'destroy']);
 
-            $router->get('{table}/edit/layout/{name}', [
-                'uses'  => $namespacePrefix.'BreadManagerController@editLayout',
-                'as'    => 'edit.layout',
+            $router->get('{table}/views', [
+                'uses'  => $namespacePrefix.'BreadManagerController@views',
+                'as'    => 'views.edit',
+            ]);
+            $router->post('{table}/views', [
+                'uses'  => $namespacePrefix.'BreadManagerController@storeViews',
+                'as'    => 'views.store',
             ]);
 
-            $router->post('{table}/store/layout/{name}', [
-                'uses'  => $namespacePrefix.'BreadManagerController@storeLayout',
-                'as'    => 'store.layout',
+            $router->get('{table}/lists', [
+                'uses'  => $namespacePrefix.'BreadManagerController@lists',
+                'as'    => 'lists.edit',
+            ]);
+            $router->post('{table}/lists', [
+                'uses'  => $namespacePrefix.'BreadManagerController@storeLists',
+                'as'    => 'lists.store',
             ]);
 
-            $router->get('/delete/layout/{name}', [
-                'uses'  => $namespacePrefix.'BreadManagerController@deleteLayout',
-                'as'    => 'delete.layout',
-            ]);
+            $router->post('translation', function(Request $request) {
+                if (!isset($request->key))
+                    return; //Todo: header(no_content)?
+
+                $translation = __($request->key);
+                if (is_array($translation))
+                    return $key;
+                return $translation;
+            })->name('translation');
         });
     }
 
@@ -106,7 +120,9 @@ class BreadServiceProvider extends ServiceProvider
             \Bread\Formfields\Text::class,
             \Bread\Formfields\Textarea::class,
             \Bread\Formfields\Number::class,
-            \Bread\Formfields\Tab::class,
+            \Bread\Formfields\Heading::class,
+            \Bread\Formfields\Paragraph::class,
+            \Bread\Formfields\MaskedInput::class,
         ];
 
         foreach ($formFields as $formField) {

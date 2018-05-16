@@ -35,6 +35,12 @@
 		                    <td>
                                 <div class="actions pull-right">
     		                        @if (Bread\BreadFacade::hasBread($table))
+                                    <a href="{{ route('voyager.bread.views.edit', $table) }}" class="btn btn-sm btn-primary">
+    		                           <i class="voyager-lightbulb"></i> Views
+    		                        </a>
+                                    <a href="{{ route('voyager.bread.lists.edit', $table) }}" class="btn btn-sm btn-primary">
+    		                           <i class="voyager-list"></i> Lists
+    		                        </a>
                                     <a href="{{ route('voyager.bread.edit', ['table' => $table]) }}" class="btn btn-sm btn-primary">
     		                           <i class="voyager-edit"></i> {{ __('bread::manager.edit_bread') }}
     		                        </a>

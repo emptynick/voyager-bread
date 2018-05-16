@@ -1,9 +1,9 @@
-@section('formfield-text')
+@section('text')
 <div>
     <div>
         <slot name="content"></slot>
         <label v-if="options.label">@{{ options.label }}</label>
-        <input type="text" :value="options.value" :placeholder="options.placeholder" class="form-control" :disabled="true">
+        <input type="text" class="form-control" v-model="options.default_text" :placeholder="options.placeholder">
         <small v-if="options.help_text">@{{ options.help_text }}</small>
         <slot name="content_after"></slot>
     </div>
@@ -22,8 +22,8 @@
             <input type="text" class="form-control" v-model="options.help_text">
         </div>
         <div class="form-group">
-            <label>Default Value</label>
-            <input type="text" class="form-control" v-model="options.value">
+            <label>Default Text</label>
+            <input type="text" class="form-control" v-model="options.default_text">
         </div>
         <slot name="options_after"></slot>
     </div>
@@ -32,7 +32,14 @@
 
 <script>
 Vue.component('formfield-text', {
-    template: `@yield('formfield-text')`,
-    props: ['field', 'options', 'mockup', 'read', 'edit', 'add', 'i'],
+    template: `@yield('text')`,
+    props: {
+        options: {
+            required: true
+        },
+        i: {
+            required: true
+        }
+    },
 });
 </script>

@@ -55,26 +55,39 @@ class BreadManagerController extends Controller
     {
     }
 
-    //Edit Layout
-    public function editLayout($table, $layout)
+    //View-Builder
+    public function views($table)
     {
-        $name = $layout;
         $bread = BreadFacade::getBread($table);
-        $layout = $bread->getLayout($layout);
         $fields = SchemaManager::describeTable($table)->keys();
 
-        if ($layout->type == 'view') {
-            return view('bread::view', ['view' => $layout, 'bread' => $bread, 'fields' => $fields, 'table' => $table, 'name' => $name]);
-        } elseif ($layout->type == 'list') {
-            return view('bread::list', ['list' => $layout, 'bread' => $bread, 'fields' => $fields]);
-        }
+        $breakpoints = collect(config('bread.views.breakpoints'))->sortByDesc('width');
+
+        $bp_widths = $breakpoints->map(function ($bp) {
+            return $bp['width'];
+        });
+
+        $bp_cols = $breakpoints->map(function ($bp) {
+            return $bp['columns'];
+        });
+
+        return view('bread::view', [
+            'views'       => $bread->layouts->where('type', 'view'),
+            'bread'       => $bread,
+            'fields'      => $fields,
+            'table'       => $table,
+            'editing'     => true,
+            'breakpoints' => $breakpoints,
+            'highest_bp'  => $breakpoints->keys()->first(),
+            'bp_cols'     => $bp_cols,
+            'bp_widths'   => $bp_widths,
+        ]);
     }
 
-    //Store Layout
-    public function storeLayout(Request $request, $table, $name)
+    //Store Views
+    public function storeViews(Request $request, $table)
     {
         $layout = json_decode($request->input('content'));
-
         $bread = collect(BreadFacade::getBread($table));
         $bread['layouts'] = $bread['layouts']->where('name', '!=', $name);
 
@@ -92,5 +105,15 @@ class BreadManagerController extends Controller
                     'message'    => __('voyager::generic.successfully_updated'),
                     'alert-type' => 'success',
                 ]);
+    }
+
+    public function lists($table)
+    {
+
+    }
+
+    public function storeLists(Request $request, $table)
+    {
+
     }
 }

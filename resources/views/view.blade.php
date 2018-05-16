@@ -4,30 +4,37 @@
 
 @section('page_header')
 <h1 class="page-title">
-	<i class="voyager-bread"></i>
-	{{ __('bread::manager.edit_view_for', ['bread' => $bread->display_name_plural]) }}
+    <i class="voyager-lightbulb"></i>
+    {{ __('bread::manager.edit_views_for', ['bread' => $bread->display_name_plural]) }}
 </h1>
 @stop
 @section('breadcrumbs')
 <ol class="breadcrumb hidden-xs">
-	@if(count(Request::segments()) == 1)
-	<li class="active"><i class="voyager-boat"></i> {{ __('voyager::generic.dashboard') }}</li>
-	@else
-	<li class="active">
-		<a href="{{ route('voyager.dashboard')}}"><i class="voyager-boat"></i> {{ __('voyager::generic.dashboard') }}</a>
-	</li>
-	@endif
-	<li class="active"><a href="{{ route('voyager.bread.index') }}">{{ __('bread::manager.bread_manager') }}</a></li>
-	<li class="active"><a href="{{ route('voyager.bread.edit', $bread->name) }}">{{ $bread->display_name_plural }}</a></li>
-	<li class="active"><a href="{{ route('voyager.bread.edit', $bread->name) }}#views">{{ __('bread::manager.views') }}</a></li>
-	<li class="active">{{ $view->name }}</li>
-	<li>{{ __('voyager::generic.edit') }}</li>
+    @if(count(Request::segments()) == 1)
+    <li class="active"><i class="voyager-boat"></i> {{ __('voyager::generic.dashboard') }}</li>
+    @else
+    <li class="active">
+        <a href="{{ route('voyager.dashboard')}}"><i class="voyager-boat"></i> {{ __('voyager::generic.dashboard') }}</a>
+    </li>
+    @endif
+    <li class="active"><a href="{{ route('voyager.bread.index') }}">{{ __('bread::manager.bread_manager') }}</a></li>
+    <li class="active"><a href="{{ route('voyager.bread.edit', $bread->name) }}">{{ $bread->display_name_plural }}</a></li>
+    <li class="active"><a href="{{ route('voyager.bread.views.edit', $bread->name) }}">{{ __('bread::manager.views') }}</a></li>
 </ol>
 @endsection
 @section('content')
 <div class="page-content container-fluid">
-	<div class="row clearfix" id="view-builder">
-		<vue-snotify></vue-snotify>
+    <div id="view-builder">
+        <div class="alerts" v-if="{{ $editing }} && this.breakpointWarning">
+            <div class="alert alert-warning">
+                <strong>Warning</strong>
+                <p>
+                    Your current browser resolution is smaller than the highest breakpoint.<br>
+                    This might be a problem when editing bigger Views!
+                </p>
+            </div>
+        </div>
+        <vue-snotify></vue-snotify>
         <div class="col-md-12">
             <div class="dropdown" style="display:inline">
                 <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
@@ -38,184 +45,377 @@
                     <li class="dropdown-header">Formfields</li>
                     @foreach(\Bread\BreadFacade::formfields()->where('element_type', 'formfield') as $formfield)
 					<li>
-                        <a href="#" v-on:click="addFormfield('formfield', '{{ $formfield->getCodeName() }}')">
+                        <a href="#" v-on:click="addElement('formfield', '{{ $formfield->getCodeName() }}')">
                             {{ $formfield->getName() }}
                         </a>
                     </li>
 					@endforeach
-                    <li class="divider"></li>
-
                     <li class="dropdown-header">Layout Elements</li>
                     @foreach(\Bread\BreadFacade::formfields()->where('element_type', 'layout_element') as $formfield)
 					<li>
-                        <a href="#" v-on:click="addFormfield('layout_element', '{{ $formfield->getCodeName() }}')">
+                        <a href="#" v-on:click="addElement('layout_element', '{{ $formfield->getCodeName() }}')">
                             {{ $formfield->getName() }}
                         </a>
                     </li>
 					@endforeach
-                    <li class="divider"></li>
-
                     <li class="dropdown-header">Relationships</li>
                 </ul>
             </div>
+            <div class="dropdown" style="display:inline">
+                <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                    View (@{{ this.currentLayoutsName }})
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li v-for="(view, key) in this.layouts" v-if="view.type == 'view'">
+                        <a href="#" v-on:click="changeLayout(view.name)">
+                            <strong v-if="view.name == currentLayoutsName">
+                                @{{ view.name }}
+                            </strong>
+                            <span v-else>
+                                @{{ view.name }}
+                            </span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="dropdown" style="display:inline" v-if="this.breakpoints_all.length > 1">
+                <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                    Breakpoint (@{{ this.breakpoint }})
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li v-for="(bp, key) in this.breakpoints_all">
+                        <a href="#" v-on:click="setBreakpoint(key)">
+                            <strong v-if="key == breakpoint">
+                                @{{ bp.name }} (@{{ key }})
+                            </strong>
+                            <span v-else>
+                                @{{ bp.name }} (@{{ key }})
+                            </span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <button @click="gridMode()" class="btn btn-primary">Grid</button>
+            <button @click="listMode()" class="btn btn-primary">List</button>
+            <button @click="createNewViewPrompt()" class="btn btn-primary">New View</button>
             <div style="display:inline">
-                <form method="post" action="{{ route('voyager.bread.store.layout', ['table' => $table, 'name' => $name]) }}" style="display:inline">
-                    <input type="hidden" name="content" :value="JSON.stringify(this.layout)">
+                <form method="post" action="{{ route('voyager.bread.views.store', ['table' => $table]) }}" style="display:inline">
+                    <input type="hidden" name="content" :value="JSON.stringify(this.layouts)">
                     {{ csrf_field() }}
-                    <button type="submit" class="btn btn-primary">Save View</button>
+                    <button type="submit" class="btn btn-primary">Save Views</button>
                 </form>
             </div>
         </div>
-		<div class="col-md-12">
-			<grid-layout
-                :layout="layout.elements"
-                :row-height="{{ config('bread.views.row_height', 50) }}"
-                :max-rows="{{ config('bread.views.max_rows', 'Infinity') }}"
-                :col-num="{{ config('bread.views.col_num', 12) }}"
-                :margin="[{{ config('bread.views.margin_x', 10) }}, {{ config('bread.views.margin_y', 10) }}]">
-				<grid-item v-for="element in layout.elements"
-				:x="element.x"
-				:y="element.y"
-				:w="element.w"
-				:h="element.h"
-				:i="element.i"
-				:key="element.i"
-				drag-ignore-from=".no-drag"
-				drag-allow-from=".draggable-handle">
-				<div :class="'panel panel-bordered '+element.class"
-					 style="height:100%;"
-					 v-tooltip.notrigger="{ html: element.i+'_options', visible: is_options_open(element.i), class: 'options-tooltip' }">
-					<div class="panel-heading draggable-handle">
-						<h3 class="panel-title">@{{ element.title }}</h3>
-						<div class="panel-actions">
-							<a class="panel-action voyager-trash" @click="delete_element(element.i)"></a>
-							<a class="panel-action voyager-settings open-settings" @click="open_options(element.i)"></a>
-						</div>
-					</div>
-					<div class="panel-body no-drag">
-						<component :is="element.element_type+'-'+element.type" v-bind="element">
-							<div slot="options">
-								<div class="pull-left">
-									<h4>Options</h4>
-								</div>
-								<div class="pull-right" @click="open_options(null)">
-									<span class="voyager-x" style="cursor:pointer;"></span>
-								</div>
-								<div class="clearfix"></div>
-								<div class="form-group" v-if=" v-if="element.element_type == 'formfield'"">
-						            <label>Field</label>
-                                    <select class="form-control" v-model="element.field">
-                                        <option v-for="field in fields">
-                                            @{{ field }}
-                                        </option>
-                                    </select>
-						        </div>
-								<div class="form-group">
-						            <label>Color</label>
-						            <select class="form-control" v-model="element.class">
-										<option value="panel-primary">Blue</option>
-										<option value="panel-danger">Red</option>
-										<option value="panel-warning">Yellow</option>
-										<option value="panel-success">Green</option>
-										<option value="">None</option>
-									</select>
-						        </div>
-								<div class="form-group">
-						            <label>Title</label>
-						            <input type="text" class="form-control" v-model="element.title">
-						        </div>
-							</div>
+        <div class="clearfix"></div>
+        <div style="align-items: stretch;width: 100%; height: 100%;">
+            <div style="position:relative;width:100%;height:100%; ">
+                <vue-responsive-grid-layout
+                @layout-update="updateLayout"
+                @layout-init="initLayout"
+                @width-init="initWidth"
+                @width-change="changeWidth"
+                @breakpoint-change="changeBreakpoint"
+                :layouts="currentLayouts"
+                :cols="cols"
+                :compact-type="'vertical'"
+                :vertical-compact="true"
+                :init-on-start="true"
+                :breakpoint="breakpoint"
+                :breakpoints="breakpoints"
+                :cols-all="colsAll"
+                ref="layout"
+                >
+                <template slot-scope="props">
+                    <vue-grid-item
+                    v-for="element in props.layout"
+                    v-if="element.i && props"
+                    :key="element.i"
+                    :x="element.x"
+                    :y="element.y"
+                    :w="element.w"
+                    :h="element.h"
+                    :i="element.i"
+                    :cols="props.cols"
+                    :container-width="props.containerWidth"
+                    :component="'element-wrapper'"
+                    :component-props="{ element: getLayoutElement(element.i) }"
+                    :default-size="2"
+                    :is-draggable="isDraggable"
+                    :is-resizable="isResizable"
+                    :height-from-children="true" {{-- Only false for relationships --}}
+                    :can-be-resized-with-all="true"
+                    >
+                </vue-grid-item>
+            </template>
+        </vue-responsive-grid-layout>
+    </div>
+</div>
 
-							<div slot="options_after">
-                                <div class="checkbox" v-if="element.element_type == 'formfield'">
-									<label><input type="checkbox" v-model="element.translatable">Translatable</label>
-								</div>
-								<div class="form-group" v-if="element.element_type == 'formfield'">
-						            <label>Validation</label>
-						            <input type="text" class="form-control" v-model="element.title">
-						        </div>
-							</div>
-						</component>
-					</div>
-				</div>
-				</grid-item>
-			</grid-layout>
-		</div>
-	</div>
+</div>
+</div>
+
 </div>
 @endsection
 @section('javascript')
 <script src="{{ asset('vendor/bread/js/app.js') }}"></script>
 
-@foreach(\Bread\BreadFacade::formfields() as $formfield)
-@include($formfield->mockup())
-<input type="hidden" id="{{ $formfield->getCodeName() }}_options" value="{{ $formfield->getOptions() }}">
-@endforeach
-@include($formfield->mockup())
-<script>
-var builder = new Vue({
-	el: '#view-builder',
-	data: {
-		layout: {!! json_encode($view) !!},
-		editing: true,
-		read: false,
-		edit: false,
-		add: false,
-		current_options: null,
-		current_options_el: null,
-        fields: {!! json_encode($fields) !!},
-	},
-	components: {
+@include('bread::vue.element-wrapper')
 
-	},
-	methods: {
-		addFormfield: function(type, codename) {
-            var i = this.layout.elements.length;
-			var item = {
-				"x": 0,
-				"y": 0,
-				"w": 6,
-				"h": 3,
-				"i": ""+i,
-				"type": codename,
-				"element_type": type,
-				"class": "panel-primary",
-				"options": JSON.parse($('#'+codename+'_options').val())
-			};
-			this.layout.elements.push(item);
-		},
-		is_options_open: function(i) {
-			return (this.current_options === i);
-		},
-		open_options: function(i) {
-			this.current_options = (this.is_options_open(i) ? null : i);
-			this.current_options_el = document.getElementById(this.current_options+'_options');
-		},
-		delete_element: function(i) {
-			this.$snotify.confirm('Are you sure you want to delete this element?', 'Delete Element?', {
+@foreach(\Bread\BreadFacade::formfields() as $formfield)
+@include($formfield->getComponent())
+<input type="hidden" id="{{ $formfield->getCodeName() }}_default_options" value="{{ $formfield->getOptions() }}">
+@endforeach
+<script>
+window.Event = new Vue();
+var builder = new Vue({
+    el: "#view-builder",
+    data: {
+        editing: {{ $editing }},
+        layouts: {!! json_encode($views, JSON_PRETTY_PRINT) !!},
+        currentLayoutsName: "{{ $views->first()->name }}",
+        breakpoint: "{{ $highest_bp }}",/*Always the highest...*/
+        breakpointWarning: false,
+        cols: 10,
+        breakpoints: {!! json_encode($bp_widths, JSON_PRETTY_PRINT) !!},
+        breakpoints_all: {!! json_encode($breakpoints, JSON_PRETTY_PRINT) !!},
+        colsAll: {!! json_encode($bp_cols, JSON_PRETTY_PRINT) !!},
+        isDraggable: true,
+        isResizable: true,
+        currentOptions: null,
+		currentOptionsEl: null,
+        fields: {!! json_encode($fields) !!},
+    },
+    computed: {
+        currentLayouts() {
+            return this.layouts[this.currentLayoutsId];
+        },
+        currentLayout() {
+            return this.layouts[this.currentLayoutsId][this.breakpoint];
+        },
+        currentLayoutsId() {
+            var name = this.currentLayoutsName;
+            var id;
+            this.layouts.forEach(function(element, i) {
+                if(element.name === name)
+                    id = i;
+            });
+            return id;
+        }
+    },
+    methods: {
+        getLayoutElement(i) {
+            return this.currentLayout.find(obj => {
+                return (obj.i === i)
+            });
+        },
+        initLayout({layout, cols}) {
+            this.cols = cols;
+        },
+        initWidth({width}) {
+            this.containerWidth = width;
+            this.$refs.layout.initLayout();
+        },
+        changeWidth({width, newCols}) {
+            this.containerWidth = width;
+            this.cols = newCols;
+            this.$nextTick( ()=> {
+                this.$refs.layout.updateItemsHeight();
+            });
+        },
+        updateLayout({layout, breakpoint}) {
+            var vm = this;
+            layout.forEach(function(element, i) {
+                vm.currentLayout[i].x = element.x;
+                vm.currentLayout[i].y = element.y;
+                vm.currentLayout[i].w = element.w;
+                vm.currentLayout[i].h = element.h;
+            });
+        },
+        changeBreakpoint({breakpoint, cols}) {
+            if (!this.editing) {
+                this.cols = cols;
+                this.breakpoint = breakpoint;
+            } else {
+                if (breakpoint != "{{ $highest_bp }}")
+                    this.breakpointWarning = true;
+                else
+                    this.breakpointWarning = false;
+            }
+        },
+        setBreakpoint(breakpoint)
+        {
+            this.cols = this.colsAll[breakpoint];
+            this.breakpoint = breakpoint;
+        },
+        changeLayout(name) {
+            this.currentLayoutsName = name;
+            this.$refs.layout.switchLayout(this.currentLayouts);
+        },
+        gridMode() {
+            this.$snotify.warning('This will rearrange all elements. Are you sure you want to continue?', 'Warning', {
 				timeout: 5000,
 				showProgressBar: true,
 				closeOnClick: false,
 				pauseOnHover: true,
 				buttons: [
-					{text: 'Yes', action: (toast) => { this.layout.elements.splice(i, 1); this.$snotify.remove(toast.id) }, bold: false},
+					{text: 'Yes', action: (toast) => {
+                        this.$refs.layout.resizeAllItems(false, false);
+                        this.$snotify.remove(toast.id);
+                    }},
 					{text: 'No', action: (toast) => this.$snotify.remove(toast.id) },
 				]
 			});
-		}
-	},
-	mounted: function() {
-		var vm = this;
-		window.addEventListener('keyup', function(event) {
-			if (event.keyCode == 27) {
-				vm.open_options(null);
-			}
-		});
-		window.addEventListener('click', function(event) {
-			if (!event.target.className.includes('open-settings') && vm.current_options_el !== null && event.path.indexOf(vm.current_options_el) == -1) {
-				vm.open_options(null);
-			}
-		});
+        },
+        listMode() {
+            this.$snotify.warning('This will rearrange all elements. Are you sure you want to continue?', 'Warning', {
+				timeout: 5000,
+				showProgressBar: true,
+				closeOnClick: false,
+				pauseOnHover: true,
+				buttons: [
+					{text: 'Yes', action: (toast) => {
+                        this.$refs.layout.resizeAllItems(true, false);
+                        this.$snotify.remove(toast.id);
+                    }},
+					{text: 'No', action: (toast) => this.$snotify.remove(toast.id) },
+				]
+			});
+        },
+        deleteElement(id) {
+            this.$snotify.confirm('Are you sure you want to delete this element?', 'Delete Element?', {
+				timeout: 5000,
+				showProgressBar: true,
+				closeOnClick: false,
+				pauseOnHover: true,
+				buttons: [
+					{text: 'Yes', action: (toast) => {
+                        this.$refs.layout.currentLayout = this.$refs.layout.currentLayout.filter(obj => {
+                            return (obj.i !== id);
+                        });
+                        this.layouts[this.currentLayoutsId][this.breakpoint] = this.currentLayout.filter(obj => {
+                            return (obj.i !== id);
+                        });
+                        this.$snotify.remove(toast.id);
+                        this.updateItemsHeight();
+                    }, bold: false},
+					{text: 'No', action: (toast) => this.$snotify.remove(toast.id) },
+				]
+			});
+        },
+        addElement: function(type, codename) {
+            let options = JSON.parse($('#'+codename+'_default_options').val());
+            let newitem = {
+                x: 0,
+                y: 999999,
+                w: 6,
+                h: 0,
+                i: ""+this.$refs.layout.currentLayout.length,
+                options: options,
+                type: codename,
+                element: type,
+                field: null,
+                class: 'panel-primary',
+            };
+            this.$refs.layout.currentLayout.push(newitem);
+            this.layouts[this.currentLayoutsId][this.breakpoint].push(newitem);
+            this.updateItemsHeight();
+        },
+        isOptionsOpen: function(i) {
+			return (this.currentOptions === i);
+		},
+		openOptions: function(i) {
+			this.currentOptions = (this.isOptionsOpen(i) ? null : i);
+			this.currentOptionsEl = document.getElementById(this.currentOptions+'_options');
+		},
+
+        updateItemsHeight: function() {
+            this.$nextTick( ()=> {
+                this.$refs.layout.updateItemsHeight();
+            });
+        },
+        createNewViewPrompt: function() {
+            this.$snotify.html(`<div class="snotifyToast__title">New View</div>
+  <div class="snotifyToast__body">Name:<input id="view-name" type="text" class="form-control"></div> `, {
+                timeout: 5000,
+                showProgressBar: true,
+                closeOnClick: false,
+                pauseOnHover: true,
+                type: 'confirm',
+                buttons: [
+                    {text: 'Save', action: (toast) => {
+                        var value = document.getElementById('view-name').value;
+                        if (value != "") {
+                            this.createNewView(value);
+                            this.$snotify.remove(toast.id);
+                        }
+                    }},
+                    {text: 'Cancel', action: (toast) => this.$snotify.remove(toast.id)},
+                ]
+            });
+        },
+        createNewView: function(name) {
+            let layout = {
+                name: name,
+                type: "view",
+            };
+            for (var key in this.breakpoints) {
+                layout[key] = [];
+            }
+            let layoutExists = false;
+            this.layouts.forEach(function(layout) {
+                if (layout.name == name)
+                    layoutExists = true;
+            });
+
+            if (layoutExists) {
+                this.$snotify.error('This name already exists. Please choose another.', 'Error', {
+                    timeout: 5000,
+                    showProgressBar: false,
+                    closeOnClick: false,
+                    pauseOnHover: true,
+                    buttons: [
+                        {text: 'Ok', action: (toast) => {
+                            this.createNewViewPrompt();
+                            this.$snotify.remove(toast.id);
+                        }
+                        },
+                        {text: 'Cancel', action: (toast) => this.$snotify.remove(toast.id)},
+                    ]
+                });
+                return;
+            }
+            this.layouts.push(layout);
+        },
+        getTranslation: function(key) {
+            this.$http.post('{{ route('voyager.bread.translation') }}', {
+                key: key,
+                _token: "{{ csrf_token() }}"
+            }).then(response => {
+                if (key != response.body)
+                    this.$bus.$emit('translationReceived', key, response.body);
+            });
+        },
+    },
+    mounted: function() {
+
+        this.$bus.$on('translationRequested', (key) => this.getTranslation(key));
+        this.$bus.$on('updateItemsHeight', () => this.updateItemsHeight());
+        
+        var vm = this;
+        window.addEventListener('keyup', function(event) {
+            if (event.keyCode == 27) {
+                vm.openOptions(null);
+            }
+            vm.updateItemsHeight();
+        });
+        window.addEventListener('click', function(event) {
+            if (!event.target.className.includes('open-settings') && vm.currentOptionsEl !== null && event.path.indexOf(vm.currentOptionsEl) == -1) {
+                vm.openOptions(null);
+            }
+        });
+        window.addEventListener('change', vm.updateItemsHeight);
     }
 });
 </script>
@@ -224,9 +424,57 @@ var builder = new Vue({
 <link rel="stylesheet" href="{{ asset('vendor/bread/css/app.css') }}">
 <style>
 .options-tooltip {
-	z-index: 10000 !important;
-	width: 150rem;
+    z-index: 10000 !important;
+    width: 150rem;
     background-color: #353d47 !important;
+}
+.resizable-handle {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    bottom: 0;
+    right: 0px;
+    text-align: right;
+}
+
+.resizable-handle::after {
+    content: "";
+    position: absolute;
+    right: 3px;
+    bottom: 3px;
+    width: 5px;
+    height: 5px;
+    border-right: 2px solid #FFFFFF;
+    border-bottom: 2px solid #FFFFFF;
+}
+
+.floating-actions {
+    position: absolute;
+    top: 25px;
+    right: 5px;
+    text-align: right;
+}
+
+.floating-actions .panel-action {
+    color: #a3afb7;
+}
+
+.panel-100-height {
+    height: 100%;
+}
+
+.vue-responsive-grid-layout {
+    display:block;
+    position:relative;
+}
+
+.dropdown .dropdown-header {
+    font-weight: bold;
+    padding-left: 10px;
+}
+
+.dropdown strong {
+    font-weight: bold;
 }
 </style>
 @endsection

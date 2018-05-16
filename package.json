@@ -11,10 +11,15 @@
     },
     "dependencies": {
         "cross-env": "^5.1.4",
+        "debounce": "^1.1.0",
+        "laravel-mix": "^2.0",
         "vue": "^2.5.16",
         "vue-directive-tooltip": "^1.4.5",
-        "vue-grid-layout": "^2.1.13",
+        "vue-masked-input": "^0.5.2",
         "vue-multiselect": "^2.1.0",
-        "laravel-mix": "^2.0"
+        "vue-nl2br": "0.0.5",
+        "vue-resource": "^1.5.0",
+        "vue-responsive-grid-layout": "^1.0.15",
+        "vue-snotify": "^3.0.4"
     }
 }

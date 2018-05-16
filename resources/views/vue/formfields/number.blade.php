@@ -1,4 +1,4 @@
-@section('formfield-number')
+@section('number')
 <div>
     <div>
         <slot name="content"></slot>
@@ -6,9 +6,7 @@
         <input
             type="number"
             class="form-control"
-            :value="options.value"
-            :placeholder="options.placeholder"
-            :disabled="true"
+            v-model="options.default_value"
             :min="options.min"
             :max="options.max"
             :step="options.step">
@@ -31,21 +29,20 @@
         </div>
         <div class="form-group">
             <label>Default Value</label>
-            <input
-                type="number"
+            <input type="number"
                 :min="options.min"
                 :max="options.max"
                 :step="options.step"
                 class="form-control"
-                v-model="options.value">
+                v-model="options.default_value">
         </div>
         <div class="form-group">
-            <label>Min</label>
-            <input type="number" class="form-control" v-model="options.min">
+            <label>Minimum</label>
+            <input type="number" :max="options.max" :step="options.step" class="form-control" v-model="options.min">
         </div>
         <div class="form-group">
-            <label>Max</label>
-            <input type="number" class="form-control" v-model="options.max">
+            <label>Maximum</label>
+            <input type="number" :min="options.min" :step="options.step" class="form-control" v-model="options.max">
         </div>
         <div class="form-group">
             <label>Step</label>
@@ -58,7 +55,14 @@
 
 <script>
 Vue.component('formfield-number', {
-    template: `@yield('formfield-number')`,
-    props: ['field', 'options', 'mockup', 'read', 'edit', 'add', 'i'],
+    template: `@yield('number')`,
+    props: {
+        options: {
+            required: true
+        },
+        i: {
+            required: true
+        }
+    },
 });
 </script>
