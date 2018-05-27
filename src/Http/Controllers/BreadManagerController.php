@@ -53,13 +53,16 @@ class BreadManagerController extends Controller
     //Delete BREAD
     public function destroy(Request $request, $bread)
     {
+        dd('Hello');
     }
 
     //View-Builder
     public function views($table)
     {
         $bread = BreadFacade::getBread($table);
-        $fields = SchemaManager::describeTable($table)->keys();
+        $fields = SchemaManager::describeTable($table)
+                               ->keys()
+                               ->merge($this->getAttributes($bread));
 
         $breakpoints = collect(config('bread.views.breakpoints'))->sortByDesc('width');
 
@@ -72,15 +75,16 @@ class BreadManagerController extends Controller
         });
 
         return view('bread::view', [
-            'views'       => $bread->layouts->where('type', 'view'),
-            'bread'       => $bread,
-            'fields'      => $fields,
-            'table'       => $table,
-            'editing'     => true,
-            'breakpoints' => $breakpoints,
-            'highest_bp'  => $breakpoints->keys()->first(),
-            'bp_cols'     => $bp_cols,
-            'bp_widths'   => $bp_widths,
+            'views'         => $bread->layouts->where('type', 'view'),
+            'bread'         => $bread,
+            'fields'        => $fields,
+            'relationships' => $this->getRelationships($bread),
+            'table'         => $table,
+            'editing'       => true,
+            'breakpoints'   => $breakpoints,
+            'highest_bp'    => $breakpoints->keys()->first(),
+            'bp_cols'       => $bp_cols,
+            'bp_widths'     => $bp_widths,
         ]);
     }
 
@@ -109,7 +113,18 @@ class BreadManagerController extends Controller
 
     public function lists($table)
     {
-
+        $bread = BreadFacade::getBread($table);
+        $fields = SchemaManager::describeTable($table)
+                               ->keys()
+                               ->merge($this->getAttributes($bread));
+        return view('bread::manager.list', [
+            'lists'         => $bread->layouts->where('type', 'list'),
+            'bread'         => $bread,
+            'fields'        => $fields,
+            'relationships' => $this->getRelationships($bread),
+            'table'         => $table,
+            'editing'       => true,
+        ]);
     }
 
     public function storeLists(Request $request, $table)

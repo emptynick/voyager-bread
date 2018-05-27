@@ -59,6 +59,13 @@
                     </li>
 					@endforeach
                     <li class="dropdown-header">Relationships</li>
+                    @foreach($relationships as $relationship)
+                    <li>
+                        <a href="#" v-on:click="addElement('relationship', '{{ $relationship }}')">
+                            {{ $relationship }}
+                        </a>
+                    </li>
+                    @endforeach
                 </ul>
             </div>
             <div class="dropdown" style="display:inline">
@@ -109,8 +116,9 @@
             </div>
         </div>
         <div class="clearfix"></div>
-        <div style="align-items: stretch;width: 100%; height: 100%;">
-            <div style="position:relative;width:100%;height:100%; ">
+        <div id="wrapper" style="align-items: stretch;width: 100%; height: 100%;">
+
+            <div style="position:relative;width:100%;height:100%;">
                 <vue-responsive-grid-layout
                 @layout-update="updateLayout"
                 @layout-init="initLayout"
@@ -148,6 +156,13 @@
                     :can-be-resized-with-all="true"
                     >
                 </vue-grid-item>
+                <div v-if="props.layout.length == 0">
+                    <div class="panel panel-bordered">
+                        <div class="panel-body" style="text-align:center">
+                            <h3>Add new Formfields by choosing one from the "Add Element" dropdown</h3>
+                        </div>
+                    </div>
+                </div>
             </template>
         </vue-responsive-grid-layout>
     </div>
@@ -155,10 +170,10 @@
 
 </div>
 </div>
-
-</div>
+<div class="row clearfix"></div>
 @endsection
 @section('javascript')
+<script src="{{ asset('vendor/bread/js/translatable.js') }}"></script>
 <script src="{{ asset('vendor/bread/js/app.js') }}"></script>
 
 @include('bread::vue.element-wrapper')
@@ -167,14 +182,16 @@
 @include($formfield->getComponent())
 <input type="hidden" id="{{ $formfield->getCodeName() }}_default_options" value="{{ $formfield->getOptions() }}">
 @endforeach
+
 <script>
-window.Event = new Vue();
+Vue.prototype.$type = 'view';
+
 var builder = new Vue({
     el: "#view-builder",
     data: {
         editing: {{ $editing }},
         layouts: {!! json_encode($views, JSON_PRETTY_PRINT) !!},
-        currentLayoutsName: "{{ $views->first()->name }}",
+        currentLayoutsName: "{{ @$views->first()->name }}",
         breakpoint: "{{ $highest_bp }}",/*Always the highest...*/
         breakpointWarning: false,
         cols: 10,
@@ -299,6 +316,7 @@ var builder = new Vue({
                         });
                         this.$snotify.remove(toast.id);
                         this.updateItemsHeight();
+                        //Todo: recalc all ids
                     }, bold: false},
 					{text: 'No', action: (toast) => this.$snotify.remove(toast.id) },
 				]
@@ -310,7 +328,7 @@ var builder = new Vue({
                 x: 0,
                 y: 999999,
                 w: 6,
-                h: 0,
+                h: 10,
                 i: ""+this.$refs.layout.currentLayout.length,
                 options: options,
                 type: codename,
@@ -387,22 +405,26 @@ var builder = new Vue({
                 return;
             }
             this.layouts.push(layout);
+            //Todo: select this view
         },
-        getTranslation: function(key) {
-            this.$http.post('{{ route('voyager.bread.translation') }}', {
-                key: key,
-                _token: "{{ csrf_token() }}"
-            }).then(response => {
-                if (key != response.body)
-                    this.$bus.$emit('translationReceived', key, response.body);
-            });
+        getTranslation: function(key, item) {
+            if (key && item) {
+                this.$http.post('{{ route('voyager.bread.translation') }}', {
+                    key: key,
+                    _token: "{{ csrf_token() }}"
+                }).then(response => {
+                    if (key != response.body)
+                        this.$bus.$emit('translationReceived', key, response.body, item);
+                }, response => {
+                    // Do nothing
+                });
+            }
         },
     },
     mounted: function() {
-
-        this.$bus.$on('translationRequested', (key) => this.getTranslation(key));
+        this.$bus.$on('requestTranslation', (key, item) => this.getTranslation(key, item));
         this.$bus.$on('updateItemsHeight', () => this.updateItemsHeight());
-        
+
         var vm = this;
         window.addEventListener('keyup', function(event) {
             if (event.keyCode == 27) {
@@ -416,6 +438,7 @@ var builder = new Vue({
             }
         });
         window.addEventListener('change', vm.updateItemsHeight);
+
     }
 });
 </script>
@@ -475,6 +498,14 @@ var builder = new Vue({
 
 .dropdown strong {
     font-weight: bold;
+}
+
+.vue-swatches--inline {
+    background-color: transparent !important;
+}
+
+.panel-body .vue-swatches--inline {
+    text-align: center;
 }
 </style>
 @endsection

@@ -2,14 +2,14 @@
 <div>
     <div>
         <slot name="content"></slot>
-        <component :is="options.size">@{{ text }}</component>
+        <component :is="options.size" v-bind:style="{ textAlign: options.align, color: options.color }">@{{ text }}</component>
         <slot name="content_after"></slot>
     </div>
     <div class="options" :id="i+'_options'">
         <slot name="options"></slot>
         <div class="form-group">
             <label>Text</label>
-            <input type="text" class="form-control" v-model="options.text" v-on:keyup="requestTranslation()">
+            <input type="text" class="form-control" v-model="options.text" v-on:change="updateItemsHeight()">
         </div>
         <div class="form-group">
             <label>Size</label>
@@ -22,6 +22,18 @@
                 <option value="h6">H6</option>
             </select>
         </div>
+        <div class="form-group">
+            <label>Align</label>
+            <select class="form-control" v-model="options.align">
+                <option value="left">Left</option>
+                <option value="center">Center</option>
+                <option value="right">Right</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Color</label>
+            <vue-swatches v-model="options.color" :colors="{!! config_get_colors() !!}" inline />
+        </div>
         <slot name="options_after"></slot>
     </div>
 </div>
@@ -30,6 +42,7 @@
 <script>
 Vue.component('heading', {
     template: `@yield('heading')`,
+    mixins: [ Translatable ],
     props: {
         options: {
             required: true
@@ -40,34 +53,14 @@ Vue.component('heading', {
     },
     data: function() {
         return {
-            translation: ''
-        }
-    },
-    computed: {
-        text: function()
-        {
-            if (this.translation != '')
-                return this.translation;
-            return this.options.text;
+            text: '',
+            translatable: ['text'],
         }
     },
     methods: {
-        requestTranslation: _.debounce(function (e) {
-            if (this.options.text != '')
-                this.$bus.$emit('translationRequested', this.options.text);
-            else
-                this.translation = '';
-        }, 500),
         updateItemsHeight: function() {
             this.$bus.$emit('updateItemsHeight');
         }
-    },
-    mounted: function() {
-        this.$bus.$on('translationReceived', (key, data) => {
-            if (data != "" && key == this.options.text && data != key)
-                this.translation = data;
-        });
-        this.requestTranslation();
-    },
+    }
 });
 </script>

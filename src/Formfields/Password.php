@@ -2,28 +2,24 @@
 
 namespace Bread\Formfields;
 
-class Text extends AbstractFormfield
+class Password extends AbstractFormfield
 {
     public $element_type = 'formfield';
-    protected $codename = 'formfield-text';
-    protected $name = 'Text';
+    protected $codename = 'formfield-password';
+    protected $name = 'Password';
     public $options = [
         'label'         => '',
         'placeholder'   => '',
         'help_text'     => '',
-        'default_text'  => '',
-    ];
-
-    public $list_options = [
-        'default_text'  => '',
+        'preserve'      => true,
     ];
 
     public function getComponent($render = false)
     {
         if ($render) {
-            return view('bread::vue.formfields.text');
+            return view('bread::vue.formfields.password');
         } else {
-            return 'bread::vue.formfields.text';
+            return 'bread::vue.formfields.password';
         }
     }
 }

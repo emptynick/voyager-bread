@@ -1,9 +1,9 @@
-@section('textarea')
+@section('password')
 <div>
-    <div v-if="this.$type != 'list'">
+    <div>
         <slot name="content"></slot>
         <label v-if="options.label">@{{ options.label }}</label>
-        <textarea class="form-control" v-model="options.default_text" :rows="options.rows"></textarea>
+        <input type="password" class="form-control" :placeholder="options.placeholder">
         <small v-if="options.help_text">@{{ options.help_text }}</small>
         <slot name="content_after"></slot>
     </div>
@@ -14,37 +14,29 @@
             <input type="text" class="form-control" v-model="options.label">
         </div>
         <div class="form-group">
+            <label>Placeholder</label>
+            <input type="text" class="form-control" v-model="options.placeholder">
+        </div>
+        <div class="form-group">
             <label>Help Text</label>
             <input type="text" class="form-control" v-model="options.help_text">
         </div>
         <div class="form-group">
-            <label>Default Text</label>
-            <input type="text" class="form-control" v-model="options.default_text">
-        </div>
-        <div class="form-group">
-            <label>Rows</label>
-            <input type="number" min="1" max="100" class="form-control" v-model="options.rows">
+            <input type="checkbox" value="true" v-model="options.preserve">
+            <label>Preserve Value</label>
         </div>
         <slot name="options_after"></slot>
     </div>
 </div>
 @endsection
-<script>
 
-Vue.component('formfield-textarea', {
-    template: `@yield('textarea')`,
+<script>
+Vue.component('formfield-password', {
+    template: `@yield('password')`,
     mixins: [ Translatable ],
-    props: {
-        options: {
-            required: true
-        },
-        i: {
-            required: true
-        }
-    },
+    props: [ 'options', 'i' ],
     data: function() {
         return {
-            title: '',
             translatable: ['title'],
         }
     },

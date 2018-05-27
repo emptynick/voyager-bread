@@ -42,9 +42,13 @@ abstract class AbstractFormfield
         }
     }
 
-    public function getOptions()
+    public function getOptions($view = true)
     {
-        return json_encode(collect($this->options)->merge(['title' => '']));
+        if (!$view && isset($this->list_options)) {
+            return json_encode(collect($this->list_options));
+        } else {
+            return json_encode(collect($this->options)->merge(['title' => '']));
+        }
     }
 
     public function getComponent($render = false)

@@ -10,5 +10,7 @@ class Heading extends AbstractFormfield
     public $options = [
         'text'       => '',
         'size'       => 'h2',
+        'align'      => 'left',
+        'color'      => '',
     ];
 }

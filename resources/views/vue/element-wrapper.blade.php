@@ -15,7 +15,7 @@
                 <a class="panel-action voyager-trash" @click="deleteElement()"></a>
                 <a class="panel-action voyager-settings open-settings" @click="openOptions()"></a>
             </div>
-            <component :is="element.type" v-bind="element">
+            <component :is="element.type" v-bind="element" key="el">
                 <div slot="options">
 					<div class="pull-left">
 						<h4>Options</h4>
@@ -44,12 +44,12 @@
 			        </div>
 					<div class="form-group" v-if="element.element == 'formfield' && element.class != ''">
 			            <label>Title</label>
-			            <input type="text" class="form-control" v-model="element.options.title" v-on:keyup="requestTranslation()">
+			            <input type="text" class="form-control" v-model="element.options.title">
 			        </div>
 				</div>
 
 				<div slot="options_after">
-                    <div class="checkbox" v-if="element.element == 'formfield'">
+                    <div class="checkbox" v-if="element.element == 'formfield' && element.type != 'colorpicker'">
 						<label><input type="checkbox" v-model="element.translatable">Translatable</label>
 					</div>
 					<div class="form-group" v-if="element.element == 'formfield' || element.element == 'relationship'">
@@ -63,12 +63,13 @@
 </div>
 @endsection
 <script>
+
 Vue.component('element-wrapper', {
     template: `@yield('element-wrapper')`,
     props: [ 'element' ],
     data: function() {
         return {
-            translation: ''
+            title: '',
         }
     },
     computed: {
@@ -77,11 +78,6 @@ Vue.component('element-wrapper', {
         },
         isOptionsOpen() {
             return builder.isOptionsOpen(this.element.i);
-        },
-        title: function() {
-            if (this.translation != '')
-                return this.translation;
-            return this.element.options.title;
         },
     },
     methods: {
@@ -93,34 +89,10 @@ Vue.component('element-wrapper', {
         },
         deleteElement() {
             builder.deleteElement(this.element.i);
-        },
-        requestTranslation: _.debounce(function (e) {
-            if (this.element.options.title != '')
-                this.$bus.$emit('translationRequested', this.element.options.title);
-            else
-                this.translation = '';
-        }, 500)
+        }
     },
     mounted: function() {
-        var childOptions = this.$children[0].$props.options;
 
-        this.$bus.$on('translationReceived', (key, data) => {
-            if (data != "") {
-                if (key == this.element.options.title)
-                    this.translation = data;
-
-                if (childOptions) {
-                    if (childOptions.text ) {
-
-                    }
-                }
-            }
-        });
-        this.requestTranslation();
-
-        //Request translations for generic option-fields
-
-        console.log(childOptions);
-    },
+    }
 });
 </script>

@@ -9,5 +9,8 @@ class Paragraph extends AbstractFormfield
     protected $name = 'Paragraph';
     public $options = [
         'text'       => '',
+        'size'       => '12',
+        'align'      => 'left',
+        'color'      => '',
     ];
 }

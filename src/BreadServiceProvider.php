@@ -81,11 +81,11 @@ class BreadServiceProvider extends ServiceProvider
 
             $router->post('translation', function(Request $request) {
                 if (!isset($request->key))
-                    return; //Todo: header(no_content)?
+                    return;
 
                 $translation = __($request->key);
                 if (is_array($translation))
-                    return $key;
+                    return $request->key;
                 return $translation;
             })->name('translation');
         });
@@ -123,6 +123,9 @@ class BreadServiceProvider extends ServiceProvider
             \Bread\Formfields\Heading::class,
             \Bread\Formfields\Paragraph::class,
             \Bread\Formfields\MaskedInput::class,
+            \Bread\Formfields\ColorPicker::class,
+            \Bread\Formfields\Password::class,
+            \Bread\Formfields\RichTextEditor::class,
         ];
 
         foreach ($formFields as $formField) {

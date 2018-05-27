@@ -10,16 +10,18 @@
         "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
     },
     "dependencies": {
-        "cross-env": "^5.1.4",
+        "cross-env": "^5.1.6",
         "debounce": "^1.1.0",
         "laravel-mix": "^2.0",
         "vue": "^2.5.16",
         "vue-directive-tooltip": "^1.4.5",
         "vue-masked-input": "^0.5.2",
         "vue-multiselect": "^2.1.0",
-        "vue-nl2br": "0.0.5",
-        "vue-resource": "^1.5.0",
-        "vue-responsive-grid-layout": "^1.0.15",
-        "vue-snotify": "^3.0.4"
+        "vue-resource": "^1.5.1",
+        "vue-responsive-grid-layout": "^1.0.20",
+        "vue-snotify": "^3.0.4",
+        "vue-swatches": "^1.0.1",
+        "vue2-editor": "^2.4.4",
+        "vuedraggable": "^2.16.0"
     }
 }

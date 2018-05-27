@@ -28,6 +28,10 @@ import {VueResponsiveGridLayout, VueGridItem } from 'vue-responsive-grid-layout'
 Vue.component('vue-responsive-grid-layout', VueResponsiveGridLayout)
 Vue.component('vue-grid-item', VueGridItem)
 
+//Vue Draggable
+import draggable from 'vuedraggable'
+Vue.component('draggable', draggable)
+
 //Vue Multi-Select
 import Multiselect from 'vue-multiselect'
 Vue.component('multiselect', Multiselect)
@@ -55,9 +59,14 @@ Vue.filter('slugify', function(value) {
   return value;
 });
 
-//NL2BR
-import Nl2br from 'vue-nl2br'
-Vue.component('nl2br', Nl2br)
+//Swatches
+import Swatches from 'vue-swatches'
+import "vue-swatches/dist/vue-swatches.min.css"
+Vue.component('vue-swatches', Swatches)
+
+//Quill Editor
+import { VueEditor, Quill } from 'vue2-editor'
+Vue.component('vue-editor', VueEditor)
 
 // Formfields
 

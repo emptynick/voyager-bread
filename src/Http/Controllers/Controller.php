@@ -10,4 +10,14 @@ class Controller
     {
         return explode('.', $request->route()->getName())[1];
     }
+
+    public function getRelationships($bread)
+    {
+        return collect(['rl1']);
+    }
+
+    public function getAttributes($bread)
+    {
+        return collect(['ble']);
+    }
 }
