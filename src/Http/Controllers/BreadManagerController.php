@@ -3,7 +3,6 @@
 namespace Bread\Http\Controllers;
 
 use Bread\BreadFacade;
-use Bread\Classes\Layout;
 use Illuminate\Http\Request;
 use TCG\Voyager\Database\Schema\SchemaManager;
 use TCG\Voyager\Facades\Voyager;
@@ -104,6 +103,7 @@ class BreadManagerController extends Controller
         $fields = SchemaManager::describeTable($table)
                                ->keys()
                                ->merge($this->getAttributes($bread));
+
         return view('bread::manager.list', [
             'lists'         => $bread->layouts->where('type', 'list'),
             'bread'         => $bread,
