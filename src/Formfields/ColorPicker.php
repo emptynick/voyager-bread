@@ -9,6 +9,6 @@ class ColorPicker extends AbstractFormfield
     protected $name = 'Color Picker';
     public $options = [
         'palette'       => 'basic',
-        'custom_colors' => [ ],
+        'custom_colors' => [],
     ];
 }

@@ -79,13 +79,16 @@ class BreadServiceProvider extends ServiceProvider
                 'as'    => 'lists.store',
             ]);
 
-            $router->post('translation', function(Request $request) {
-                if (!isset($request->key))
+            $router->post('translation', function (Request $request) {
+                if (!isset($request->key)) {
                     return;
+                }
 
                 $translation = __($request->key);
-                if (is_array($translation))
+                if (is_array($translation)) {
                     return $request->key;
+                }
+
                 return $translation;
             })->name('translation');
         });

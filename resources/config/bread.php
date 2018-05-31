@@ -31,7 +31,7 @@ return [
                 'width'   => 0,
                 'columns' => 2,
             ],
-        ]
+        ],
     ],
 
     /* Default palette of the color-picker.

@@ -8,7 +8,7 @@ class RichTextEditor extends AbstractFormfield
     protected $codename = 'richtexteditor';
     protected $name = 'Rich Text Editor';
     public $options = [
-        'content' => '',
-        'placeholder' => 'Test'
+        'content'     => '',
+        'placeholder' => 'Test',
     ];
 }
