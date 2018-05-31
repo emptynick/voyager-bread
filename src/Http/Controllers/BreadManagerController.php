@@ -30,7 +30,7 @@ class BreadManagerController extends Controller
     public function store(Request $request)
     {
         $bread = collect(BreadFacade::getBread($request->table_name));
-        $bread->merge($request->except('_token'));
+        $bread = $bread->merge(collect($request->except('_token')));
 
         BreadFacade::saveBread($request->table_name, $bread);
 
@@ -53,7 +53,7 @@ class BreadManagerController extends Controller
     //Delete BREAD
     public function destroy(Request $request, $bread)
     {
-        dd('Hello');
+        //
     }
 
     //View-Builder
@@ -91,24 +91,11 @@ class BreadManagerController extends Controller
     //Store Views
     public function storeViews(Request $request, $table)
     {
-        $layout = json_decode($request->input('content'));
+        $views = json_decode($request->input('views'));
         $bread = collect(BreadFacade::getBread($table));
-        $bread['layouts'] = $bread['layouts']->where('name', '!=', $name);
-
-        $new_layout = new Layout($layout);
-
-        if ($new_layout->validate()) {
-            $bread['layouts'][] = $new_layout;
-        }
+        $bread['layouts'] = $bread['layouts']->where('type', '!=', 'view')->merge($views);
 
         BreadFacade::saveBread($table, $bread);
-
-        return redirect()
-                ->route('voyager.bread.edit.layout', ['table' => $table, 'name' => $name])
-                ->with([
-                    'message'    => __('voyager::generic.successfully_updated'),
-                    'alert-type' => 'success',
-                ]);
     }
 
     public function lists($table)
@@ -129,6 +116,10 @@ class BreadManagerController extends Controller
 
     public function storeLists(Request $request, $table)
     {
+        $lists = json_decode($request->input('lists'));
+        $bread = collect(BreadFacade::getBread($table));
+        $bread['layouts'] = $bread['layouts']->where('type', '!=', 'list')->merge($lists);
 
+        BreadFacade::saveBread($table, $bread);
     }
 }

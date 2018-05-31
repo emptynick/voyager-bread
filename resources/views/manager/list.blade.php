@@ -1,11 +1,11 @@
 @extends('voyager::master')
 
-@section('page_title', __('bread::manager.edit_view_for', ['bread' => $bread->display_name_plural]))
+@section('page_title', __('bread::manager.edit_lists_for', ['bread' => $bread->display_name_plural]))
 
 @section('page_header')
 <h1 class="page-title">
     <i class="voyager-lightbulb"></i>
-    {{ __('bread::manager.edit_views_for', ['bread' => $bread->display_name_plural]) }}
+    {{ __('bread::manager.edit_lists_for', ['bread' => $bread->display_name_plural]) }}
 </h1>
 @stop
 @section('breadcrumbs')
@@ -87,7 +87,7 @@
                         <div class="col-xs-1">Linked to</div>
                         <div class="col-xs-2">Actions</div>
                     </div>
-                    <draggable v-model="this.currentList.elements">
+                    <draggable v-model="currentList.elements">
                         <div class="row row-dd"
                              v-for="element in currentList.elements"
                              :key="element.id"
@@ -104,7 +104,7 @@
                             <div class="col-xs-2">
                                 <input type="text" class="form-control" v-model="element.label">
                             </div>
-                            <div class="col-xs-1">@{{ element.type }}</div>
+                            <div class="col-xs-1">@{{ element.type }} - @{{ element.id }}</div>
                             <div class="col-xs-1"><input type="checkbox" v-model="element.searchable"></div>
                             <div class="col-xs-1"><input type="checkbox" v-model="element.orderable"></div>
                             <div class="col-xs-1">
@@ -137,8 +137,6 @@
                             </div>
                         </div>
                     </draggable>
-
-                    <textarea>@{{ this.currentList }}</textarea>
                 </div>
             </div>
         </div>
@@ -167,8 +165,13 @@ var builder = new Vue({
         currentOptionId: null,
     },
     computed: {
-        currentList: function() {
-            return this.lists[this.currentListId];
+        currentList: {
+            get: function() {
+                return this.lists[this.currentListId];
+            },
+            set: function(list) {
+                this.lists[this.currentListId] = list;
+            }
         },
     },
     methods: {
@@ -181,6 +184,14 @@ var builder = new Vue({
         },
         openOptions: function(id) {
             this.currentOptionId = id;
+        },
+
+        changeList: function(name) {
+            var vm = this;
+            this.lists.forEach(function(list, key) {
+                if (list.name == name)
+                    vm.currentListId = key;
+            });
         },
         createNewListPrompt: function() {
             this.$snotify.html(`<div class="snotifyToast__title">New List</div>
@@ -246,11 +257,26 @@ var builder = new Vue({
             this.currentList.elements.push(newitem);
         },
         saveLists: function() {
-            
+            this.$http.post('{{ route('voyager.bread.lists.store', ['table' => $table]) }}', {
+                lists: JSON.stringify(this.lists),
+                _token: "{{ csrf_token() }}"
+            }).then(response => {
+                this.$snotify.success('Lists were successfully saved.');
+            }, response => {
+                this.$snotify.error('Saving lists failed: ' + response.body);
+            });
         },
     },
     mounted: function() {
-
+        var vm = this;
+        window.addEventListener('keyup', function(event) {
+            if (event.keyCode == 27) {
+                vm.openOptions(null);
+            }
+        });
+        window.addEventListener('click', function(event) {
+            
+        });
     }
 });
 </script>

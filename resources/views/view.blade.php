@@ -1,6 +1,6 @@
 @extends('voyager::master')
 
-@section('page_title', __('bread::manager.edit_view_for', ['bread' => $bread->display_name_plural]))
+@section('page_title', __('bread::manager.edit_views_for', ['bread' => $bread->display_name_plural]))
 
 @section('page_header')
 <h1 class="page-title">
@@ -36,7 +36,7 @@
         </div>
         <vue-snotify></vue-snotify>
         <div class="col-md-12">
-            <div class="dropdown" style="display:inline">
+            <div class="dropdown" style="display:inline" v-if="this.layouts.length > 0">
                 <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
                     Add Element
                     <span class="caret"></span>
@@ -68,7 +68,7 @@
                     @endforeach
                 </ul>
             </div>
-            <div class="dropdown" style="display:inline">
+            <div class="dropdown" style="display:inline" v-if="this.layouts.length > 0">
                 <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
                     View (@{{ this.currentLayoutsName }})
                     <span class="caret"></span>
@@ -86,7 +86,7 @@
                     </li>
                 </ul>
             </div>
-            <div class="dropdown" style="display:inline" v-if="this.breakpoints_all.length > 1">
+            <div class="dropdown" style="display:inline" v-if="this.breakpoints_all.length > 1 && this.layouts.length > 0">
                 <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
                     Breakpoint (@{{ this.breakpoint }})
                     <span class="caret"></span>
@@ -104,22 +104,17 @@
                     </li>
                 </ul>
             </div>
-            <button @click="gridMode()" class="btn btn-primary">Grid</button>
-            <button @click="listMode()" class="btn btn-primary">List</button>
+            <button @click="gridMode()" class="btn btn-primary" v-if="this.layouts.length > 0">Grid</button>
+            <button @click="listMode()" class="btn btn-primary" v-if="this.layouts.length > 0">List</button>
             <button @click="createNewViewPrompt()" class="btn btn-primary">New View</button>
-            <div style="display:inline">
-                <form method="post" action="{{ route('voyager.bread.views.store', ['table' => $table]) }}" style="display:inline">
-                    <input type="hidden" name="content" :value="JSON.stringify(this.layouts)">
-                    {{ csrf_field() }}
-                    <button type="submit" class="btn btn-primary">Save Views</button>
-                </form>
-            </div>
+            <button @click="saveLayouts()" class="btn btn-primary">Save Views</button>
         </div>
         <div class="clearfix"></div>
         <div id="wrapper" style="align-items: stretch;width: 100%; height: 100%;">
 
             <div style="position:relative;width:100%;height:100%;">
                 <vue-responsive-grid-layout
+                v-if="this.layouts.length > 0"
                 @layout-update="updateLayout"
                 @layout-init="initLayout"
                 @width-init="initWidth"
@@ -347,7 +342,16 @@ var builder = new Vue({
 			this.currentOptions = (this.isOptionsOpen(i) ? null : i);
 			this.currentOptionsEl = document.getElementById(this.currentOptions+'_options');
 		},
-
+        saveLayouts: function() {
+            this.$http.post('{{ route('voyager.bread.views.store', ['table' => $table]) }}', {
+                views: JSON.stringify(this.layouts),
+                _token: "{{ csrf_token() }}"
+            }).then(response => {
+                this.$snotify.success('Views were successfully saved.');
+            }, response => {
+                this.$snotify.error('Saving views failed: ' + response.body);
+            });
+        },
         updateItemsHeight: function() {
             this.$nextTick( ()=> {
                 this.$refs.layout.updateItemsHeight();
@@ -405,7 +409,7 @@ var builder = new Vue({
                 return;
             }
             this.layouts.push(layout);
-            //Todo: select this view
+            this.changeLayout(name);
         },
         getTranslation: function(key, item) {
             if (key && item) {
@@ -430,7 +434,8 @@ var builder = new Vue({
             if (event.keyCode == 27) {
                 vm.openOptions(null);
             }
-            vm.updateItemsHeight();
+            if (vm.layouts.length > 0)
+                vm.updateItemsHeight();
         });
         window.addEventListener('click', function(event) {
             if (!event.target.className.includes('open-settings') && vm.currentOptionsEl !== null && event.path.indexOf(vm.currentOptionsEl) == -1) {
