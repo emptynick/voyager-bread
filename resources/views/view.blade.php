@@ -111,8 +111,14 @@
         </div>
         <div class="clearfix"></div>
         <div id="wrapper" style="align-items: stretch;width: 100%; height: 100%;">
-
             <div style="position:relative;width:100%;height:100%;">
+                <div v-if="this.layouts.length == 0">
+                    <div class="panel panel-bordered">
+                        <div class="panel-body" style="text-align:center">
+                            <h3>Add a new View by clicking "New View"</h3>
+                        </div>
+                    </div>
+                </div>
                 <vue-responsive-grid-layout
                 v-if="this.layouts.length > 0"
                 @layout-update="updateLayout"
@@ -151,19 +157,18 @@
                     :can-be-resized-with-all="true"
                     >
                 </vue-grid-item>
-                <div v-if="props.layout.length == 0">
-                    <div class="panel panel-bordered">
-                        <div class="panel-body" style="text-align:center">
-                            <h3>Add new Formfields by choosing one from the "Add Element" dropdown</h3>
+                    <div v-if="props.layout.length == 0">
+                        <div class="panel panel-bordered">
+                            <div class="panel-body" style="text-align:center">
+                                <h3>Add new Formfields by choosing one from the "Add Element" dropdown</h3>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </template>
-        </vue-responsive-grid-layout>
+                </template>
+                </vue-responsive-grid-layout>
+            </div>
+        </div>
     </div>
-</div>
-
-</div>
 </div>
 <div class="row clearfix"></div>
 @endsection
@@ -443,7 +448,9 @@ var builder = new Vue({
             }
         });
         window.addEventListener('change', vm.updateItemsHeight);
-
+        $('.hamburger').on('click', function() {
+            //Todo: Force resize when menu is toggled
+        });
     }
 });
 </script>

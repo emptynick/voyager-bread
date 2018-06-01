@@ -18,7 +18,7 @@ var Translatable = {
                 });
 
                 vm[attr] = vm.options[attr];
-                if (!vm[attr].includes(" ") && vm[attr] != "") {
+                if (vm[attr] !== undefined && !vm[attr].includes(" ") && vm[attr] != "") {
                     vm.$bus.$emit("requestTranslation", vm[attr], attr);
                 }
             });

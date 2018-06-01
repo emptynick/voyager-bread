@@ -29,8 +29,9 @@
             <div class="panel panel-bordered">
                 <div id="list-builder">
                     <vue-snotify></vue-snotify>
+                    <div class="clearfix">&nbsp;</div>
                     <div class="col-md-12">
-                        <div class="dropdown" style="display:inline">
+                        <div class="dropdown" style="display:inline" v-if="lists.length > 0">
                             <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
                                 Add Element
                                 <span class="caret"></span>
@@ -54,7 +55,7 @@
             					@endforeach
                             </ul>
                         </div>
-                        <div class="dropdown" style="display:inline">
+                        <div class="dropdown" style="display:inline" v-if="lists.length > 0">
                             <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
                                 List (@{{ this.currentList.name }})
                                 <span class="caret"></span>
@@ -75,23 +76,36 @@
                         <button @click="createNewListPrompt()" class="btn btn-primary">New List</button>
                         <button @click="saveLists()" class="btn btn-primary">Save Lists</button>
                     </div>
-                    <div class="clearfix"></div>
-                    <div class="row fake-table-hd">
+                    <div class="clearfix">&nbsp;</div>
+                    <div v-if="this.lists.length == 0">
+                        <div class="panel panel-bordered">
+                            <div class="panel-body" style="text-align:center">
+                                <h3>Add a new List by clicking "New List"</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row fake-table-hd" v-if="lists.length > 0 && currentList.elements.length > 0">
                         <div class="col-xs-2">Field</div>
-                        <div class="col-xs-2">Label</div>
+                        <div class="col-xs-3">Label</div>
                         <div class="col-xs-1">Type</div>
                         <div class="col-xs-1">Searchable</div>
                         <div class="col-xs-1">Orderable</div>
                         <div class="col-xs-1">Initial Order</div>
                         <div class="col-xs-1">Invisible</div>
-                        <div class="col-xs-1">Linked to</div>
                         <div class="col-xs-2">Actions</div>
                     </div>
-                    <draggable v-model="currentList.elements">
+                    <div v-if="lists.length >0 && currentList.elements.length == 0">
+                        <div class="panel panel-bordered">
+                            <div class="panel-body" style="text-align:center">
+                                <h3>Add new Formfields by choosing one from the "Add Element" dropdown</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <draggable v-model="currentList.elements" v-if="lists.length > 0">
                         <div class="row row-dd"
                              v-for="element in currentList.elements"
                              :key="element.id"
-                             v-tooltip.notrigger="{ html: element.id+'_options', visible: isOptionsOpen(element.id), class: 'options-tooltip' }">
+                             v-tooltip.notrigger.bottom="{ html: element.id+'_options', visible: isOptionsOpen(element.id), class: 'options-tooltip' }">
                             <div class="col-xs-2">
                                 <select class="form-control" v-model="element.field">
                                     <optgroup label="test">
@@ -101,10 +115,10 @@
                                     </optgroup>
                                 </select>
                             </div>
-                            <div class="col-xs-2">
+                            <div class="col-xs-3">
                                 <input type="text" class="form-control" v-model="element.label">
                             </div>
-                            <div class="col-xs-1">@{{ element.type }} - @{{ element.id }}</div>
+                            <div class="col-xs-1">@{{ element.type }}</div>
                             <div class="col-xs-1"><input type="checkbox" v-model="element.searchable"></div>
                             <div class="col-xs-1"><input type="checkbox" v-model="element.orderable"></div>
                             <div class="col-xs-1">
@@ -113,10 +127,9 @@
                             <div class="col-xs-1">
                                 <input type="checkbox" v-model="element.invisible">
                             </div>
-                            <div class="col-xs-1">@{{ element.id }}</div>
                             <div class="col-xs-2">
                                 <button class="btn btn-primary" v-on:click="openOptions(element.id)">Options</button>
-                                <button class="btn btn-danger">Delete</button>
+                                <button class="btn btn-danger" v-on:click="deleteElement(element.id)">Delete</button>
                             </div>
                             <div :id="element.id+'_options'">
                                 <component :is="element.type" v-bind="element" :i="element.id">
@@ -151,6 +164,7 @@
 @include($formfield->getComponent())
 <input type="hidden" id="{{ $formfield->getCodeName() }}_default_options" value="{{ $formfield->getOptions(false) }}">
 @endforeach
+<input type="hidden" id="relationship_default_options" value="[]">
 
 <script>
 Vue.prototype.$type = 'list';
@@ -256,6 +270,24 @@ var builder = new Vue({
             };
             this.currentList.elements.push(newitem);
         },
+        deleteElement: function(id) {
+            this.$snotify.confirm('Are you sure you want to delete this element?', 'Delete Element?', {
+				timeout: 5000,
+				showProgressBar: true,
+				closeOnClick: false,
+				pauseOnHover: true,
+				buttons: [
+					{text: 'Yes', action: (toast) => {
+                        this.currentList.elements = this.currentList.elements.filter(obj => {
+                            return (obj.id !== id);
+                        });
+                        this.$snotify.remove(toast.id);
+                        //Todo: recalc all ids
+                    }, bold: false},
+					{text: 'No', action: (toast) => this.$snotify.remove(toast.id) },
+				]
+			});
+        },
         saveLists: function() {
             this.$http.post('{{ route('voyager.bread.lists.store', ['table' => $table]) }}', {
                 lists: JSON.stringify(this.lists),
@@ -275,7 +307,7 @@ var builder = new Vue({
             }
         });
         window.addEventListener('click', function(event) {
-            
+
         });
     }
 });

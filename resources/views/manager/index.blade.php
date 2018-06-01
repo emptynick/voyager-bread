@@ -44,7 +44,7 @@
                                     <a href="{{ route('voyager.bread.edit', ['table' => $table]) }}" class="btn btn-sm btn-primary">
     		                           <i class="voyager-edit"></i> {{ __('bread::manager.edit_bread') }}
     		                        </a>
-                                    <a href="{{ route('voyager.bread.destroy', $table) }}" class="btn btn-sm btn-danger">
+                                    <a href="{{ route('voyager.bread.delete', $table) }}" class="btn btn-sm btn-danger">
     		                           <i class="voyager-trash"></i> {{ __('bread::manager.delete_bread') }}
     		                        </a>
                                     @else

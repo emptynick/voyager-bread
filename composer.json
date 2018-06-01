@@ -1,5 +1,5 @@
 {
-    "name": "bread",
+    "name": "voyager-bread",
     "description": "Extended BREAD functionality for Laravel Voyager",
     "license": "MIT",
     "version": "0.1.1",

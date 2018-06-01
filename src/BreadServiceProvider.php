@@ -59,7 +59,7 @@ class BreadServiceProvider extends ServiceProvider
             $router->post('/', ['uses' => $namespacePrefix.'BreadManagerController@store',   'as' => 'store']);
             $router->get('{table}/edit', ['uses' => $namespacePrefix.'BreadManagerController@edit', 'as' => 'edit']);
             $router->put('{id}', ['uses' => $namespacePrefix.'BreadManagerController@update',  'as' => 'update']);
-            $router->delete('{id}', ['uses' => $namespacePrefix.'BreadManagerController@destroy',  'as' => 'destroy']);
+            $router->delete('{id}', ['uses' => $namespacePrefix.'BreadManagerController@destroy',  'as' => 'delete']);
 
             $router->get('{table}/views', [
                 'uses'  => $namespacePrefix.'BreadManagerController@views',
