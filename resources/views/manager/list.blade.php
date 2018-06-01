@@ -26,11 +26,10 @@
 <div class="page-content container-fluid">
     <div class="row">
         <div class="col-md-12">
-            <div class="panel panel-bordered">
-                <div id="list-builder">
+
+            <div id="list-builder">
+                <div class="panel panel-bordered">
                     <vue-snotify></vue-snotify>
-                    <div class="clearfix">&nbsp;</div>
-                    <div class="col-md-12">
                         <div class="dropdown" style="display:inline" v-if="lists.length > 0">
                             <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
                                 Add Element
@@ -39,20 +38,20 @@
                             <ul class="dropdown-menu">
                                 <li class="dropdown-header">Formfields</li>
                                 @foreach(\Bread\BreadFacade::formfields()->where('element_type', 'formfield') as $formfield)
-            					<li>
+                                <li>
                                     <a href="#" v-on:click="addElement('formfield', '{{ $formfield->getCodeName() }}')">
                                         {{ $formfield->getName() }}
                                     </a>
                                 </li>
-            					@endforeach
+                                @endforeach
                                 <li class="dropdown-header">Relationships</li>
                                 @foreach($relationships as $relationship)
-            					<li>
+                                <li>
                                     <a href="#" v-on:click="addElement('relationship', '{{ $relationship }}')">
                                         {{ $relationship }}
                                     </a>
                                 </li>
-            					@endforeach
+                                @endforeach
                             </ul>
                         </div>
                         <div class="dropdown" style="display:inline" v-if="lists.length > 0">
@@ -75,8 +74,9 @@
                         </div>
                         <button @click="createNewListPrompt()" class="btn btn-primary">New List</button>
                         <button @click="saveLists()" class="btn btn-primary">Save Lists</button>
-                    </div>
-                    <div class="clearfix">&nbsp;</div>
+                </div>
+                <div class="clearfix">&nbsp;</div>
+                <div class="panel panel-bordered">
                     <div v-if="this.lists.length == 0">
                         <div class="panel panel-bordered">
                             <div class="panel-body" style="text-align:center">
@@ -134,24 +134,52 @@
                             <div :id="element.id+'_options'">
                                 <component :is="element.type" v-bind="element" :i="element.id">
                                     <div slot="options">
-                    					<div class="pull-left">
-                    						<h4>Options</h4>
-                    					</div>
-                    					<div class="pull-right" @click="openOptions(null)">
-                    						<span class="voyager-x" style="cursor:pointer;"></span>
-                    					</div>
-                    					<div class="clearfix"></div>
-                    				</div>
+                                        <div class="pull-left">
+                                            <h4>Options</h4>
+                                        </div>
+                                        <div class="pull-right" @click="openOptions(null)">
+                                            <span class="voyager-x" style="cursor:pointer;"></span>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div>
 
-                    				<div slot="options_after">
+                                    <div slot="options_after">
 
-                    				</div>
+                                    </div>
                                 </component>
                             </div>
                         </div>
                     </draggable>
                 </div>
+                <div class="clearfix">&nbsp;</div>
+                <div class="panel panel-bordered">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            <i class="voyager-data"></i> Data
+                            <span class="panel-desc"> The Data to be shown in this list</span>
+                        </h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="radio">
+                            <label>
+                                <input type="radio" value="all" v-model="currentList.data">All Data
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" value="scope" v-model="currentList.data">Method/Scope
+                            </label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                :disabled="currentList.data != 'scope'"
+                                v-model="currentList.scope"
+                                placeholder="Method/Scope Name">
+                        </div>
+                    </div>
+                </div>
             </div>
+
         </div>
     </div>
 </div>
@@ -231,6 +259,7 @@ var builder = new Vue({
             let layout = {
                 name: name,
                 type: "list",
+                data: "all",
                 elements: [],
             };
             let layoutExists = false;
