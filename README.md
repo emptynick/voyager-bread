@@ -1,7 +1,7 @@
 # Voyager Bread Builder
 Voyager hook which allows you to build extensive BREAD Views and Lists.
 This is currently heavy **WIP**!  
-https://emptynick.github.io/voyager-bread/
+https://christoph-schweppe.gitbook.io/voyager-bread
 
 ## Installation
 
