@@ -13,7 +13,7 @@
 * [Views](core-concepts/views.md)
 * [Lists](core-concepts/lists.md)
 
-## Formfield
+## Formfields
 
-* [Text](formfield/text.md)
+* [Text](formfields/text.md)
 
