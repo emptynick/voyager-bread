@@ -4,8 +4,8 @@ namespace Bread\Formfields;
 
 class Textarea extends Text
 {
-    protected $name = "Textarea";
-    protected $codename = "textarea";
+    protected $name = 'Textarea';
+    protected $codename = 'textarea';
 
     public $options = [
         'length'         => null,

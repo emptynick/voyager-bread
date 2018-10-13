@@ -4,7 +4,6 @@ namespace Bread;
 
 use Bread\Classes\Bread as BreadClass;
 use Bread\Formfields\BaseFormfield;
-use TCG\Voyager\Database\Schema\SchemaManager;
 
 class Bread
 {
@@ -17,6 +16,7 @@ class Bread
             $handler = app($handler);
         }
         $this->formfields[$handler->getCodename()] = $handler;
+
         return $this;
     }
 
@@ -43,6 +43,7 @@ class Bread
                     file_get_contents($full_path)
                 ), $simple);
             $bread->name = $table;
+
             return $bread->validate() ? $bread : null;
         } else {
             return;
@@ -73,6 +74,7 @@ class Bread
         } else {
             $full_path = config('bread.bread_path').'/'.$table.'.json';
         }
+
         return file_exists($full_path);
     }
 
@@ -86,6 +88,7 @@ class Bread
         } else {
             $full_path = config('bread.bread_path').'/'.$table.'.json';
         }
+
         return file_put_contents($full_path, json_encode($content, JSON_PRETTY_PRINT));
     }
 
@@ -102,6 +105,7 @@ class Bread
         if (!file_exists($full_path)) {
             return false;
         }
+
         return unlink($full_path);
     }
 }

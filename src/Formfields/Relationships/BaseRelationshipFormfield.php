@@ -23,6 +23,5 @@ class BaseRelationshipFormfield extends BaseFormfield
 
     public function store($input)
     {
-        return null;
     }
 }

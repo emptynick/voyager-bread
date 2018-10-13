@@ -4,8 +4,8 @@ namespace Bread\Formfields;
 
 class Text extends BaseFormfield
 {
-    protected $name = "Text";
-    protected $codename = "text";
+    protected $name = 'Text';
+    protected $codename = 'text';
 
     public $options = [
         'length'         => null,

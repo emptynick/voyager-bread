@@ -2,11 +2,6 @@
 
 namespace Bread\Http\Controllers;
 
-use Bread\BreadFacade;
-use Illuminate\Http\Request;
-use TCG\Voyager\Database\Schema\SchemaManager;
-use TCG\Voyager\Facades\Voyager;
-
 class AssetController extends Controller
 {
     public function styles()

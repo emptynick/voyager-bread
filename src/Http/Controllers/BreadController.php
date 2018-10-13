@@ -12,7 +12,7 @@ use TCG\Voyager\Facades\Voyager;
 
 class BreadController extends Controller
 {
-    function __construct(Request $request)
+    public function __construct(Request $request)
     {
         $this->bread = BreadFacade::getBread($this->getSlug($request));
         if ($this->bread) {
@@ -20,7 +20,7 @@ class BreadController extends Controller
         }
     }
 
-    function index()
+    public function index()
     {
         $this->authorize('browse', app($this->bread->model));
 
@@ -37,7 +37,7 @@ class BreadController extends Controller
         ]);
     }
 
-    function show($id)
+    public function show($id)
     {
         //Todo: check if id is accessible by the user
         //Get browse-list, check if scopes are applied, if yes, check if $model->scope->where(id, $id)->findOrFail()
@@ -57,7 +57,7 @@ class BreadController extends Controller
         ]);
     }
 
-    function edit($id)
+    public function edit($id)
     {
         //Todo: check if id is accessible by the user
         //Get browse-list, check if scopes are applied, if yes, check if $model->scope->where(id, $id)->findOrFail()
@@ -77,7 +77,7 @@ class BreadController extends Controller
         ]);
     }
 
-    function update(Request $request, $id)
+    public function update(Request $request, $id)
     {
         $content = $this->model->findOrFail($id);
         $this->authorize('edit', $content);
@@ -120,7 +120,7 @@ class BreadController extends Controller
                 ]);
     }
 
-    function create()
+    public function create()
     {
         $this->authorize('add', $this->model);
         $layout = $this->prepareLayout($this->getLayout('add')->translate(), $this->model);
@@ -146,7 +146,7 @@ class BreadController extends Controller
         ]);
     }
 
-    function store(Request $request)
+    public function store(Request $request)
     {
         $this->authorize('add', $this->model);
         $layout = $this->getLayout('add');
@@ -156,7 +156,7 @@ class BreadController extends Controller
 
         $data = $this->getProcessedInput($request, $layout)->toArray();
 
-        $content = new $this->model;
+        $content = new $this->model();
         foreach ($data as $key => $field) {
             if ($key) {
                 $content->{$key} = $field;
@@ -181,6 +181,7 @@ class BreadController extends Controller
                         ]);
             }
         }
+
         return redirect()
                 ->route("voyager.{$this->bread->slug}.index")
                 ->with([
@@ -189,7 +190,7 @@ class BreadController extends Controller
                     ]);
     }
 
-    function destroy(Request $request, $id)
+    public function destroy(Request $request, $id)
     {
         $this->authorize('delete', $this->model);
 
@@ -206,7 +207,7 @@ class BreadController extends Controller
         $data->destroy($ids);
     }
 
-    function data(Request $request)
+    public function data(Request $request)
     {
         $layout = $this->getLayout('browse');
         if ($request->has('list')) {
@@ -230,8 +231,7 @@ class BreadController extends Controller
                         if (is_string($term)) {
                             if ($fields->contains($field)) {
                                 $q->where($field, 'LIKE', "%{$term}%");
-                            } else if (in_array($field, $attributes)) {
-
+                            } elseif (in_array($field, $attributes)) {
                             } else {
                                 $parts = explode('|', $field, 2);
                                 if (in_array($parts[0], $relationships)) {
@@ -255,7 +255,7 @@ class BreadController extends Controller
             $direction = $ascending == 1 ? 'ASC' : 'DESC';
             if ($fields->contains($orderBy)) {
                 $data->orderBy($orderBy, $direction);
-            }  else if (in_array($orderBy, $attributes)) {
+            } elseif (in_array($orderBy, $attributes)) {
                 //
             } else {
                 $parts = explode('|', $orderBy, 2);
@@ -294,12 +294,12 @@ class BreadController extends Controller
                                 }
                             }
                             if (count($relationship) > 3) {
-                                $data .= " and ".(count($relationship) - 3)." more";
+                                $data .= ' and '.(count($relationship) - 3).' more';
                             }
                             if (count($relationship) == 0) {
                                 $data = __('voyager::generic.none');
                             }
-                        } else if (!isset($relationship)) {
+                        } elseif (!isset($relationship)) {
                             $data = '-';
                         } else {
                             $data = $relationship->{$parts[1]};
@@ -325,7 +325,7 @@ class BreadController extends Controller
         }
 
         return [
-            'data' => collect($final)->values(),
+            'data'  => collect($final)->values(),
             'count' => $count,
         ];
     }

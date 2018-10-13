@@ -4,8 +4,8 @@ namespace Bread\Formfields;
 
 class DateTime extends BaseFormfield
 {
-    protected $name = "DateTime";
-    protected $codename = "datetime";
+    protected $name = 'DateTime';
+    protected $codename = 'datetime';
 
     public $options = [
         'field2'         => '',
@@ -20,7 +20,7 @@ class DateTime extends BaseFormfield
         if ($this->options->range) {
             return [
                 $this->options->field  => '',
-                $this->options->field2 => ''
+                $this->options->field2 => '',
             ];
         } else {
             return $input;

@@ -4,8 +4,8 @@ namespace Bread\Formfields;
 
 class MaskedInput extends BaseFormfield
 {
-    protected $name = "Masked Input";
-    protected $codename = "maskedinput";
+    protected $name = 'Masked Input';
+    protected $codename = 'maskedinput';
 
     public $options = [
         'length'         => null,

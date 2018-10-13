@@ -4,8 +4,8 @@ namespace Bread\Formfields;
 
 class Richtextbox extends BaseFormfield
 {
-    protected $name = "Richtextbox";
-    protected $codename = "richtextbox";
+    protected $name = 'Richtextbox';
+    protected $codename = 'richtextbox';
 
     public $options = [
         'length'         => null,

@@ -4,7 +4,8 @@ namespace Bread\Traits;
 
 trait Translatable
 {
-    public function __construct() {
+    public function __construct()
+    {
         if ($this->translatable && is_array($this->translatable) && count($this->translatable) > 0) {
             $this->isTranslatable = true;
         } else {
@@ -12,8 +13,9 @@ trait Translatable
         }
     }
 
-    public function isFieldTranslatable($field) {
-        return ($this->translatable && in_array($field, $this->translatable));
+    public function isFieldTranslatable($field)
+    {
+        return $this->translatable && in_array($field, $this->translatable);
     }
 
     public function __get($key)
@@ -34,6 +36,7 @@ trait Translatable
                 }
             }
         }
+
         return $this->getAttribute($key);
     }
 }
