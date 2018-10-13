@@ -2,12 +2,28 @@
 
 namespace Bread\Formfields;
 
-class DateTime extends AbstractFormfield
+class DateTime extends BaseFormfield
 {
-    public $element_type = 'formfield';
-    protected $codename = 'datetime';
-    protected $name = 'DateTime';
+    protected $name = "DateTime";
+    protected $codename = "datetime";
+
     public $options = [
-        'type'       => '',
+        'field2'         => '',
+        'type'           => 'datetime',
+        'range'          => false,
+        'help_text'      => '',
+        'title'          => '',
     ];
+
+    public function store($input)
+    {
+        if ($this->options->range) {
+            return [
+                $this->options->field  => '',
+                $this->options->field2 => ''
+            ];
+        } else {
+            return $input;
+        }
+    }
 }

@@ -2,24 +2,28 @@
 
 namespace Bread\Formfields;
 
-class Password extends AbstractFormfield
+class Password extends BaseFormfield
 {
-    public $element_type = 'formfield';
-    protected $codename = 'formfield-password';
-    protected $name = 'Password';
+    protected $name = "Password";
+    protected $codename = "password";
+
     public $options = [
-        'label'         => '',
-        'placeholder'   => '',
-        'help_text'     => '',
-        'preserve'      => true,
+        'placeholder'    => '',
+        'title'          => '',
+        'help_text'      => '',
+        'keep_password'  => true,
     ];
 
-    public function getComponent($render = false)
+    public function browse($input)
     {
-        if ($render) {
-            return view('bread::vue.formfields.password');
-        } else {
-            return 'bread::vue.formfields.password';
+        return '********';
+    }
+
+    public function store($input)
+    {
+        if ($this->options->keep_password && (!$input || $input == '')) {
+            return null; //Returning null will exclude the field from the update-query
         }
+        return bcrypt($input ?: '');
     }
 }

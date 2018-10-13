@@ -2,15 +2,13 @@
 
 namespace Bread\Formfields;
 
-class Heading extends AbstractFormfield
+class Heading extends BaseFormfield
 {
-    public $element_type = 'layout_element';
-    protected $codename = 'heading';
     protected $name = 'Heading';
+    protected $codename = 'heading';
+    public $group = 'layout';
     public $options = [
-        'text'       => '',
-        'size'       => 'h2',
-        'align'      => 'left',
-        'color'      => '',
+        'text'         => '',
+        'size'         => 'h2'
     ];
 }

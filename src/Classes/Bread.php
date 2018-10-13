@@ -4,7 +4,7 @@ namespace Bread\Classes;
 
 class Bread
 {
-    public $name;
+    public $table_name;
     public $slug;
     public $display_name_singular;
     public $display_name_plural;
@@ -18,15 +18,13 @@ class Bread
     public $edit_view;
     public $add_view;
 
-    public function __construct($data)
+    public function __construct($data, $simple = false)
     {
         $this->layouts = collect([]);
         foreach ($data as $key => $value) {
-            if ($key == 'layouts') {
+            if ($key == 'layouts' && !$simple) {
                 $this->parseLayouts($value);
-            } /*elseif ($key == 'model' && $value != '') {
-                $this->model = app($value);
-            } */else {
+            } else {
                 $this->{$key} = $value;
             }
         }
@@ -50,13 +48,11 @@ class Bread
     public function parseLayouts($layouts)
     {
         foreach ($layouts as $layout) {
-            $layout = new Layout($layout);
-
+            $layout = new Layout($layout, $this);
             if ($layout->validate()) {
                 $this->layouts[] = $layout;
             }
         }
-
         $this->layouts = collect($this->layouts);
     }
 

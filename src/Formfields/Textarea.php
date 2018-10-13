@@ -2,24 +2,27 @@
 
 namespace Bread\Formfields;
 
-class Textarea extends AbstractFormfield
+class Textarea extends Text
 {
-    public $element_type = 'formfield';
-    protected $codename = 'formfield-textarea';
-    protected $name = 'Textarea';
+    protected $name = "Textarea";
+    protected $codename = "textarea";
+
     public $options = [
-        'label'         => '',
-        'help_text'     => '',
-        'default_text'  => '',
-        'rows'          => 5,
+        'length'         => null,
+        'placeholder'    => '',
+        'default_value'  => '',
+        'title'          => '',
+        'help_text'      => '',
+        'rows'           => 5,
     ];
 
-    public function getComponent($render = false)
+    public function browse($input)
     {
-        if ($render) {
-            return view('bread::vue.formfields.textarea');
-        } else {
-            return 'bread::vue.formfields.textarea';
-        }
+        return substr($input, 0, $this->options['length'] ?: 50);
+    }
+
+    public function store($input)
+    {
+        return $input;
     }
 }

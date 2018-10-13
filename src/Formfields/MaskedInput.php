@@ -2,17 +2,28 @@
 
 namespace Bread\Formfields;
 
-class MaskedInput extends AbstractFormfield
+class MaskedInput extends BaseFormfield
 {
-    public $element_type = 'formfield';
-    protected $codename = 'maskedinput';
-    protected $name = 'Masked Input';
+    protected $name = "Masked Input";
+    protected $codename = "maskedinput";
+
     public $options = [
-        'label'             => '',
-        'placeholder'       => '',
-        'help_text'         => '',
-        'default_value'     => '',
-        'mask'              => [],
-        'placeholder_char'  => '',
+        'length'         => null,
+        'placeholder'    => '',
+        'default_value'  => '',
+        'title'          => '',
+        'help_text'      => '',
+        'mask'           => '+',
+        'mask_char'      => '-',
     ];
+
+    public function browse($input)
+    {
+        return substr($input, 0, $this->options['length'] ?: 50);
+    }
+
+    public function store($input)
+    {
+        return $input;
+    }
 }

@@ -2,28 +2,27 @@
 
 namespace Bread\Formfields;
 
-class Text extends AbstractFormfield
+class Text extends BaseFormfield
 {
-    public $element_type = 'formfield';
-    protected $codename = 'formfield-text';
-    protected $name = 'Text';
+    protected $name = "Text";
+    protected $codename = "text";
+
     public $options = [
-        'label'         => '',
-        'placeholder'   => '',
-        'help_text'     => '',
-        'default_text'  => '',
+        'length'         => null,
+        'placeholder'    => '',
+        'default_value'  => '',
+        'title'          => '',
+        'help_text'      => '',
+        'slug_from'      => null,
     ];
 
-    public $list_options = [
-        'default_text'  => '',
-    ];
-
-    public function getComponent($render = false)
+    public function browse($input)
     {
-        if ($render) {
-            return view('bread::vue.formfields.text');
-        } else {
-            return 'bread::vue.formfields.text';
-        }
+        return substr($input, 0, $this->options['length'] ?: 50);
+    }
+
+    public function store($input)
+    {
+        return $input;
     }
 }

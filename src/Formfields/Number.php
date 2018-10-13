@@ -2,27 +2,46 @@
 
 namespace Bread\Formfields;
 
-class Number extends AbstractFormfield
+class Number extends BaseFormfield
 {
-    public $element_type = 'formfield';
-    protected $codename = 'formfield-number';
-    protected $name = 'Number';
+    protected $name = "Number";
+    protected $codename = "number";
+
     public $options = [
-        'label'         => '',
-        'placeholder'   => '',
-        'help_text'     => '',
-        'default_value' => '',
-        'min'           => '',
-        'max'           => '',
-        'step'          => '',
+        'prefix'        => '',
+        'suffix'        => '',
+        'decimals'      => 0,
+        'dec_point'     => '.',
+        'thousands_sep' => ',',
+        'min'           => null,
+        'max'           => null,
+        'step'          => null,
+        'placeholder'    => '',
+        'default_value'  => '',
+        'title'          => '',
+        'help_text'      => '',
     ];
 
-    public function getComponent($render = false)
+    public function browse($input)
     {
-        if ($render) {
-            return view('bread::vue.formfields.number');
-        } else {
-            return 'bread::vue.formfields.number';
+        $input = number_format($this->store((float)$input), $this->options['decimals'], $this->options['dec_point'], $this->options['thousands_sep']);
+        return $this->options['prefix'].$input.$this->options['suffix'];
+    }
+
+    public function store($input)
+    {
+        if ($this->options['min'] && $this->options['min'] != '') {
+            if ($input < $this->options['min']) {
+                $input = $this->options['min'];
+            }
         }
+
+        if ($this->options['max'] && $this->options['max'] != '') {
+            if ($input > $this->options['max']) {
+                $input = $this->options['max'];
+            }
+        }
+        $input = number_format((float)$input, $this->options['decimals']);
+        return $input;
     }
 }

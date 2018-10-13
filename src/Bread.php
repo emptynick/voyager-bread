@@ -3,7 +3,8 @@
 namespace Bread;
 
 use Bread\Classes\Bread as BreadClass;
-use Bread\FormFields\AbstractFormfield;
+use Bread\Formfields\BaseFormfield;
+use TCG\Voyager\Database\Schema\SchemaManager;
 
 class Bread
 {
@@ -12,11 +13,10 @@ class Bread
 
     public function addFormfield($handler)
     {
-        if (!$handler instanceof AbstractFormfield) {
+        if (!$handler instanceof BaseFormfield) {
             $handler = app($handler);
         }
         $this->formfields[$handler->getCodename()] = $handler;
-
         return $this;
     }
 
@@ -30,25 +30,40 @@ class Bread
         return collect($this->formfields);
     }
 
-    public function getBread($table)
+    public function getBread($table, $simple = false)
     {
         if (ends_with(config('bread.bread_path'), '/')) {
             $full_path = config('bread.bread_path').$table.'.json';
         } else {
             $full_path = config('bread.bread_path').'/'.$table.'.json';
         }
-
         if (file_exists($full_path)) {
             $bread = new BreadClass(
                 json_decode(
                     file_get_contents($full_path)
-                ));
+                ), $simple);
             $bread->name = $table;
-
             return $bread->validate() ? $bread : null;
         } else {
             return;
         }
+    }
+
+    public function getBreads($simple = false)
+    {
+        $breads = collect();
+        $files = scandir(config('bread.bread_path'));
+        foreach ($files as $bread) {
+            if (ends_with($bread, '.json')) {
+                $bread = $this->getBread(str_replace('.json', '', $bread), $simple);
+                if ($bread) {
+                    $breads[] = $bread;
+                }
+                $bread = null;
+            }
+        }
+
+        return $breads;
     }
 
     public function hasBread($table)
@@ -58,7 +73,6 @@ class Bread
         } else {
             $full_path = config('bread.bread_path').'/'.$table.'.json';
         }
-
         return file_exists($full_path);
     }
 
@@ -67,13 +81,27 @@ class Bread
         if (!is_dir(config('bread.bread_path'))) {
             mkdir(config('bread.bread_path'));
         }
-
         if (ends_with(config('bread.bread_path'), '/')) {
             $full_path = config('bread.bread_path').$table.'.json';
         } else {
             $full_path = config('bread.bread_path').'/'.$table.'.json';
         }
+        return file_put_contents($full_path, json_encode($content, JSON_PRETTY_PRINT));
+    }
 
-        file_put_contents($full_path, json_encode($content, JSON_PRETTY_PRINT));
+    public function deleteBread($table)
+    {
+        if (!is_dir(config('bread.bread_path'))) {
+            mkdir(config('bread.bread_path'));
+        }
+        if (ends_with(config('bread.bread_path'), '/')) {
+            $full_path = config('bread.bread_path').$table.'.json';
+        } else {
+            $full_path = config('bread.bread_path').'/'.$table.'.json';
+        }
+        if (!file_exists($full_path)) {
+            return false;
+        }
+        return unlink($full_path);
     }
 }

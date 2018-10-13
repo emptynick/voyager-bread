@@ -2,15 +2,12 @@
 
 namespace Bread\Formfields;
 
-class Paragraph extends AbstractFormfield
+class Paragraph extends BaseFormfield
 {
-    public $element_type = 'layout_element';
-    protected $codename = 'paragraph';
     protected $name = 'Paragraph';
+    protected $codename = 'paragraph';
+    public $group = 'layout';
     public $options = [
-        'text'       => '',
-        'size'       => '12',
-        'align'      => 'left',
-        'color'      => '',
+        'text'         => '',
     ];
 }

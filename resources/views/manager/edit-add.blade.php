@@ -11,20 +11,20 @@
 
 @section('breadcrumbs')
 <ol class="breadcrumb hidden-xs">
-	@if(count(Request::segments()) == 1)
-		<li class="active"><i class="voyager-boat"></i> {{ __('voyager::generic.dashboard') }}</li>
-	@else
-		<li class="active">
-			<a href="{{ route('voyager.dashboard')}}"><i class="voyager-boat"></i> {{ __('voyager::generic.dashboard') }}</a>
-		</li>
-	@endif
-	<li class="active"><a href="{{ route('voyager.bread.index') }}">{{ __('bread::manager.bread_manager') }}</a></li>
-	@if(isset($bread))
-    <li class="active">{{ $bread->display_name_plural }}</li>
-	<li>Edit</li>
+    @if(count(Request::segments()) == 1)
+        <li><i class="voyager-boat"></i> {{ __('voyager::generic.dashboard') }}</li>
     @else
-    <li class="active">{{ ucfirst($table) }}</li>
-	<li>Add</li>
+        <li>
+            <a href="{{ route('voyager.dashboard')}}"><i class="voyager-boat"></i> {{ __('voyager::generic.dashboard') }}</a>
+        </li>
+    @endif
+    <li><a href="{{ route('voyager.bread.index') }}">{{ __('bread::manager.bread_manager') }}</a></li>
+    @if(isset($bread))
+        <li>{{ $bread->display_name_plural }}</li>
+        <li>Edit</li>
+    @else
+        <li>{{ ucfirst($table) }}</li>
+        <li>Add</li>
     @endif
 </ol>
 @endsection
@@ -32,6 +32,7 @@
 @section('content')
 <div class="page-content container-fluid">
     <form method="post" action="{{ route('voyager.bread.store') }}">
+        <input type="hidden" name="table_name" value="{{ $table }}">
         {{ csrf_field() }}
         <div class="row">
             <div class="col-md-12">
@@ -41,13 +42,6 @@
                     </div>
 
                     <div class="panel-body">
-                        <div class="row clearfix">
-                            <div class="col-md-6 form-group">
-                                <label for="name">{{ __('bread::manager.table_name') }}</label>
-                                <input type="text" class="form-control" name="table_name" placeholder="{{ __('voyager::generic.table_name') }}"
-                                       value="{{ $table }}"><!-- @todo: placeholder?! -->
-                            </div>
-                        </div>
                         <div class="row clearfix">
                             <div class="col-md-4 form-group">
                                 <label>{{ __('voyager::bread.display_name_singular') }}</label>
@@ -80,84 +74,68 @@
                             </div>
                             <div class="col-md-3 form-group">
                                 <label>{{ __('voyager::bread.icon_hint') }} <a
-                                                                                 href="{{ route('voyager.compass.index', [], false) }}#fonts"
-                                                                                 target="_blank">{{ __('voyager::bread.icon_hint') }}</a></label>
-                                <input type="text" class="form-control" name="icon" value="{{ (isset($bread) ? $bread->icon : '') }}" placeholder="{{ __('voyager::bread.icon_hint2') }}">
+                                    href="{{ route('voyager.compass.index', [], false) }}#fonts"
+                                    target="_blank">{{ __('voyager::bread.icon_hint') }}</a></label>
+                                    <input type="text" class="form-control" name="icon" value="{{ (isset($bread) ? $bread->icon : '') }}" placeholder="{{ __('voyager::bread.icon_hint2') }}">
+                                </div>
                             </div>
+                            @if (isset($bread))
+                            <div class="row clearfix">
+                                <div class="col-md-3 form-group">
+                                    <label>{{ __('bread::manager.browse_list') }}</label>
+                                    <select class="form-control select2" data-placeholder="{{ __('bread::manager.select_list') }}" name="browse_list">
+                                        <option></option>
+                                        @foreach($bread->getLists() as $list)
+                                        <option value="{{ $list->name }}" {{ ($bread->browse_list == $list->name) ? 'selected' : '' }}>{{ $list->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-3 form-group">
+                                    <label>{{ __('bread::manager.read_view') }}</label>
+                                    <select class="form-control select2" data-placeholder="{{ __('bread::manager.select_view') }}" name="read_view">
+                                        <option></option>
+                                        @foreach($bread->getViews() as $view)
+                                        <option value="{{ $view->name }}" {{ ($bread->read_view == $view->name) ? 'selected' : '' }}>{{ $view->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-3 form-group">
+                                    <label>{{ __('bread::manager.edit_view') }}</label>
+                                    <select class="form-control select2" data-placeholder="{{ __('bread::manager.select_view') }}" name="edit_view">
+                                        <option></option>
+                                        @foreach($bread->getViews() as $view)
+                                        <option value="{{ $view->name }}" {{ ($bread->edit_view == $view->name) ? 'selected' : '' }}>{{ $view->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-3 form-group">
+                                    <label>{{ __('bread::manager.add_view') }}</label>
+                                    <select class="form-control select2" data-placeholder="{{ __('bread::manager.select_view') }}" name="add_view">
+                                        <option></option>
+                                        @foreach($bread->getViews() as $view)
+                                        <option value="{{ $view->name }}" {{ ($bread->add_view == $view->name) ? 'selected' : '' }}>{{ $view->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            @endif
                         </div>
-                        @if (isset($bread))
-                        <div class="row clearfix">
-                            <div class="col-md-3 form-group">
-                                <label>{{ __('bread::manager.browse_list') }}</label>
-                                <select class="form-control select2" data-placeholder="{{ __('bread::manager.select_list') }}" name="browse_list">
-                                    <option></option>
-                                    @foreach($bread->getLists() as $list)
-                                    <option value="{{ $list->name }}" {{ ($bread->browse_list == $list->name) ? 'selected' : '' }}>{{ $list->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="col-md-3 form-group">
-                                <label>{{ __('bread::manager.read_view') }}</label>
-                                <select class="form-control select2" data-placeholder="{{ __('bread::manager.select_view') }}" name="read_view">
-                                    <option></option>
-                                    @foreach($bread->getViews() as $view)
-                                    <option value="{{ $view->name }}" {{ ($bread->read_view == $view->name) ? 'selected' : '' }}>{{ $view->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="col-md-3 form-group">
-                                <label>{{ __('bread::manager.edit_view') }}</label>
-                                <select class="form-control select2" data-placeholder="{{ __('bread::manager.select_view') }}" name="edit_view">
-                                    <option></option>
-                                    @foreach($bread->getViews() as $view)
-                                    <option value="{{ $view->name }}" {{ ($bread->edit_view == $view->name) ? 'selected' : '' }}>{{ $view->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="col-md-3 form-group">
-                                <label>{{ __('bread::manager.add_view') }}</label>
-                                <select class="form-control select2" data-placeholder="{{ __('bread::manager.select_view') }}" name="add_view">
-                                    <option></option>
-                                    @foreach($bread->getViews() as $view)
-                                    <option value="{{ $view->name }}" {{ ($bread->add_view == $view->name) ? 'selected' : '' }}>{{ $view->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        @endif
                     </div>
                 </div>
             </div>
-        </div>
-        <button type="submit" class="btn pull-right btn-primary">{{ __('voyager::generic.save') }}</button>
-    </form>
-</div>
+            <button type="submit" class="btn pull-right btn-primary">{{ __('voyager::generic.save') }}</button>
+        </form>
+    </div>
 
-@stop
+    @stop
 
 @section('javascript')
+<!-- views, lists, roles -->
 <script>
 $('input[data-slug-origin]').each(function(i, el) {
     $(el).slugify({
         forceupdate: true,
     });
 });
-
-$('.add-list').on('click', function(e) {
-    e.preventDefault();
-    this.$snotify.confirm('Are you sure you want to delete this element?', 'Delete Element?', {
-        timeout: 5000,
-        showProgressBar: true,
-        closeOnClick: false,
-        pauseOnHover: true,
-        buttons: [
-            {text: 'Yes', action: (toast) => this.layout.elements.splice(i, 1), bold: false},
-            {text: 'No', action: (toast) => this.$snotify.remove(toast.id) },
-        ]
-    });
-});
 </script>
-@endsection
-@section('javascript')
-<script src="{{ asset('vendor/bread/js/app.js') }}"></script>
 @endsection

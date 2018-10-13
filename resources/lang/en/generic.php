@@ -1,6 +1,8 @@
 <?php
 
 return [
-    'actions'   => 'Actions',
-    'name'      => 'Name',
+    'actions'                           => 'Actions',
+    'name'                              => 'Name',
+    'views'                             => 'Views',
+    'lists'                             => 'Lists',
 ];

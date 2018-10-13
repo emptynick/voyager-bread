@@ -1,10 +1,8 @@
 {
     "name": "voyager-bread",
     "description": "Extended BREAD functionality for Laravel Voyager",
-    "license": "MIT",
-    "version": "0.1.1",
     "require": {
-        "larapack/hooks": "~1.0"
+        "larapack/hooks": "^1.0.5"
     },
     "autoload": {
         "psr-4": {
@@ -19,9 +17,6 @@
             "aliases": {
                 "Bread": "Bread\\BreadFacade"
             },
-            "migrations": [
-                "resources/database/migrations"
-            ],
             "assets": {
                 "resources/assets": "public/vendor/bread"
             }

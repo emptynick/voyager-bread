@@ -5,134 +5,128 @@ namespace Bread;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Http\Request;
 use Illuminate\Support\ServiceProvider;
-use TCG\Voyager\Facades\Voyager;
-use TCG\Voyager\Models\Permission;
-use TCG\Voyager\Models\Role;
 
 class BreadServiceProvider extends ServiceProvider
 {
-    /**
-     * Bootstrap any application services.
-     *
-     * @return void
-     */
     public function boot()
     {
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'bread');
         $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'bread');
-
-        $this->publishes([
-            __DIR__.'/../publishable/assets' => public_path('vendor/bread'),
-        ], 'bread_assets');
-
-        $this->loadHelpers();
+        $this->mergeConfigFrom(
+            dirname(__DIR__).'/publishable/config/bread.php', 'bread'
+        );
     }
 
-    /**
-     * Register any application services.
-     *
-     * @return void
-     */
     public function register()
     {
         app(Dispatcher::class)->listen('voyager.admin.routing.after', function ($router) {
             $this->addRoutes($router);
         });
 
-        $this->registerFormFields();
-
-        $this->mergeConfigFrom(
-            dirname(__DIR__).'/resources/config/bread.php', 'bread'
-        );
-    }
-
-    public function addRoutes($router)
-    {
-        $namespacePrefix = '\\Bread\\Http\\Controllers\\';
-
-        $router->group([
-            'as'     => 'bread.',
-            'prefix' => 'bread',
-        ], function () use ($namespacePrefix, $router) {
-            $router->get('/', ['uses' => $namespacePrefix.'BreadManagerController@index',              'as' => 'index']);
-            $router->get('{table}/create', ['uses' => $namespacePrefix.'BreadManagerController@create',     'as' => 'create']);
-            $router->post('/', ['uses' => $namespacePrefix.'BreadManagerController@store',   'as' => 'store']);
-            $router->get('{table}/edit', ['uses' => $namespacePrefix.'BreadManagerController@edit', 'as' => 'edit']);
-            $router->put('{id}', ['uses' => $namespacePrefix.'BreadManagerController@update',  'as' => 'update']);
-            $router->delete('{id}', ['uses' => $namespacePrefix.'BreadManagerController@destroy',  'as' => 'delete']);
-
-            $router->get('{table}/views', [
-                'uses'  => $namespacePrefix.'BreadManagerController@views',
-                'as'    => 'views.edit',
-            ]);
-            $router->post('{table}/views', [
-                'uses'  => $namespacePrefix.'BreadManagerController@storeViews',
-                'as'    => 'views.store',
-            ]);
-
-            $router->get('{table}/lists', [
-                'uses'  => $namespacePrefix.'BreadManagerController@lists',
-                'as'    => 'lists.edit',
-            ]);
-            $router->post('{table}/lists', [
-                'uses'  => $namespacePrefix.'BreadManagerController@storeLists',
-                'as'    => 'lists.store',
-            ]);
-
-            $router->post('translation', function (Request $request) {
-                if (!isset($request->key)) {
-                    return;
-                }
-
-                $translation = __($request->key);
-                if (is_array($translation)) {
-                    return $request->key;
-                }
-
-                return $translation;
-            })->name('translation');
-        });
-    }
-
-    protected function checkPermissions()
-    {
-        $permission = Permission::firstOrNew([
-            'key'        => 'bread',
-            'table_name' => 'bread',
-        ]);
-
-        if (!$permission->exists) {
-            $permission->save();
-            $role = Role::where('name', 'admin')->first();
-            if (!is_null($role)) {
-                $role->permissions()->attach($permission);
-            }
-        }
+        $this->loadHelpers();
+        $this->registerFormfields();
     }
 
     protected function loadHelpers()
     {
         foreach (glob(__DIR__.'/Helpers/*.php') as $filename) {
-            require_once $filename;
+           require_once $filename;
         }
     }
 
-    protected function registerFormFields()
+    protected function addRoutes($router)
     {
-        $formFields = [
+        $namespace = '\\Bread\\Http\\Controllers\\';
+
+        $router->group([
+            'as'     => 'bread.',
+            'prefix' => 'bread',
+        ], function () use ($namespace, $router) {
+            $router->get('getTranslation/{key?}', function($key = null) {
+                return __($key);
+            })->name('getTranslation');
+            $router->get('/', [
+                'uses' => $namespace.'ManagerController@index',
+                'as' => 'index'
+            ]);
+            $router->get('{table}/create', [
+                'uses' => $namespace.'ManagerController@create',
+                'as' => 'create'
+            ]);
+            $router->post('/', [
+                'uses' => $namespace.'ManagerController@store',
+                'as' => 'store'
+            ]);
+            $router->get('{table}/edit', [
+                'uses' => $namespace.'ManagerController@edit',
+                'as' => 'edit'
+            ]);
+            $router->delete('{id}', [
+                'uses' => $namespace.'ManagerController@destroy',
+                'as' => 'delete'
+            ]);
+            $router->get('{table}/views/{name?}', [
+                'uses'  => $namespace.'ManagerController@views',
+                'as'    => 'views.edit',
+            ]);
+            $router->get('{table}/lists/{name?}', [
+                'uses'  => $namespace.'ManagerController@lists',
+                'as'    => 'lists.edit',
+            ]);
+            $router->post('{table}/storelayouts', [
+                'uses'  => $namespace.'ManagerController@storeLayouts',
+                'as'    => 'storelayouts',
+            ]);
+
+            //Assets
+            $router->get('/styles.css', [
+                'uses' => $namespace.'AssetController@styles',
+                'as' => 'styles'
+            ]);
+            $router->get('/scripts.js', [
+                'uses' => $namespace.'AssetController@scripts',
+                'as' => 'scripts'
+            ]);
+        });
+
+        try {
+            foreach (BreadFacade::getBreads(true) as $bread) {
+                $router->resource($bread->slug, $bread->controller ?: '\Bread\Http\Controllers\BreadController');
+                $router->get($bread->slug.'/data/get', ($bread->controller ?: '\Bread\Http\Controllers\BreadController').'@data')->name($bread->slug.'.data');
+            }
+        } catch (\Exception $e) { }
+    }
+
+    protected function registerFormfields()
+    {
+        $formfields = [
+            \Bread\Formfields\Checkboxes::class,
+            \Bread\Formfields\Color::class,
+            \Bread\Formfields\Coordinates::class,
+            \Bread\Formfields\DateTime::class,
+            \Bread\Formfields\Heading::class,
+            \Bread\Formfields\Markdown::class,
+            \Bread\Formfields\MaskedInput::class,
+            \Bread\Formfields\Number::class,
+            \Bread\Formfields\Paragraph::class,
+            \Bread\Formfields\Password::class,
+            \Bread\Formfields\RadioButtons::class,
+            \Bread\Formfields\Richtextbox::class,
+            \Bread\Formfields\Select::class,
+            \Bread\Formfields\DynamicSelect::class,
+            \Bread\Formfields\Tags::class,
             \Bread\Formfields\Text::class,
             \Bread\Formfields\Textarea::class,
-            \Bread\Formfields\Number::class,
-            \Bread\Formfields\Heading::class,
-            \Bread\Formfields\Paragraph::class,
-            \Bread\Formfields\MaskedInput::class,
-            \Bread\Formfields\ColorPicker::class,
-            \Bread\Formfields\Password::class,
-            \Bread\Formfields\RichTextEditor::class,
-        ];
+            /*\Bread\Formfields\MaskedInput::class,
+            \Bread\Formfields\RichTextEditor::class,*/
 
-        foreach ($formFields as $formField) {
-            BreadFacade::addFormfield($formField);
+            \Bread\Formfields\Relationships\HasOne::class,
+            \Bread\Formfields\Relationships\HasMany::class,
+            \Bread\Formfields\Relationships\BelongsTo::class,
+            \Bread\Formfields\Relationships\BelongsToMany::class,
+        ];
+        foreach ($formfields as $formfield) {
+            BreadFacade::addFormfield($formfield);
         }
     }
 }
