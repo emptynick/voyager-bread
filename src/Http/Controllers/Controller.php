@@ -16,7 +16,6 @@ abstract class Controller extends BaseController
         if ($request->route()) {
             return explode('.', $request->route()->getName())[1];
         }
-        return null;
     }
 
     public function getLayout($action)
@@ -27,6 +26,7 @@ abstract class Controller extends BaseController
         $roles = $roles->unique();
         $action_type = $action.($action == 'browse' ? '_list' : '_view');
         $type = ($action == 'browse' ? 'list' : 'view');
+
         return $this->bread->layouts->whereIn($action.'_roles', $roles)->first()
             ?: $this->bread->layouts->where('name', $this->bread->{$action_type})->first();
     }
@@ -37,8 +37,10 @@ abstract class Controller extends BaseController
             $element->options->put('isTranslatable', (
                 $model->isTranslatable && $model->isFieldTranslatable($element->field)
             ));
+
             return $element;
         });
+
         return $layout;
     }
 
@@ -47,7 +49,7 @@ abstract class Controller extends BaseController
         if (isset($bread->model) && class_exists($bread->model)) {
             $model = app($bread->model);
             if ($model->relationships) {
-                $relationships =  collect($model->relationships)->map(function ($name) use ($model) {
+                $relationships = collect($model->relationships)->map(function ($name) use ($model) {
                     $relationship = $model->{$name}();
                     $related_bread = BreadFacade::getBread($relationship->getRelated()->getTable());
                     $info = collect([]);
@@ -59,11 +61,14 @@ abstract class Controller extends BaseController
                         $info->put('lists', $related_bread->layouts->where('type', 'list'));
                         $info->put('views', $related_bread->layouts->where('type', 'view'));
                     }
+
                     return $info;
                 });
+
                 return $relationships;
             }
         }
+
         return collect([]);
     }
 
@@ -75,6 +80,7 @@ abstract class Controller extends BaseController
                 return collect($model->accessors);
             }
         }
+
         return collect([]);
     }
 
@@ -99,8 +105,8 @@ abstract class Controller extends BaseController
         }
 
         return [
-            'rules'  =>   $rules,
-            'messages' => $messages
+            'rules'    => $rules,
+            'messages' => $messages,
         ];
     }
 

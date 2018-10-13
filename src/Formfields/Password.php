@@ -4,8 +4,8 @@ namespace Bread\Formfields;
 
 class Password extends BaseFormfield
 {
-    protected $name = "Password";
-    protected $codename = "password";
+    protected $name = 'Password';
+    protected $codename = 'password';
 
     public $options = [
         'placeholder'    => '',
@@ -22,8 +22,9 @@ class Password extends BaseFormfield
     public function store($input)
     {
         if ($this->options->keep_password && (!$input || $input == '')) {
-            return null; //Returning null will exclude the field from the update-query
+            return; //Returning null will exclude the field from the update-query
         }
+
         return bcrypt($input ?: '');
     }
 }

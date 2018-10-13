@@ -9,6 +9,6 @@ class Checkboxes extends BaseFormfield
     public $options = [
         'title'     => '',
         'help_text' => '',
-        'options'   => []
+        'options'   => [],
     ];
 }

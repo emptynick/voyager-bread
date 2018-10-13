@@ -6,7 +6,6 @@ use Bread\BreadFacade;
 use Illuminate\Http\Request;
 use TCG\Voyager\Database\Schema\SchemaManager;
 use TCG\Voyager\Facades\Voyager;
-use \TCG\Voyager\Models\Role;
 
 class ManagerController extends Controller
 {
@@ -16,6 +15,7 @@ class ManagerController extends Controller
             SchemaManager::listTableNames(),
             config('voyager.database.tables.hidden', [])
         );
+
         return view('bread::manager.index', compact('tables'));
     }
 
@@ -31,6 +31,7 @@ class ManagerController extends Controller
         //Todo: display message based on existence
         $bread = $bread->merge(collect($request->except('_token')));
         BreadFacade::saveBread($request->table_name, $bread);
+
         return redirect()
                 ->route('voyager.bread.edit', ['table' => $request->table_name])
                 ->with([
@@ -74,6 +75,7 @@ class ManagerController extends Controller
         if ($bread) {
             $fields = SchemaManager::describeTable($table)->keys()->merge($this->getAccessors($bread));
             $relationships = $this->getRelationships($bread);
+
             return view('bread::manager.views', [
                 'views'         => $bread->getViews()->values(),
                 'bread'         => $bread,
@@ -96,13 +98,14 @@ class ManagerController extends Controller
 
         if ($bread) {
             $fields = SchemaManager::describeTable($table)->keys()->merge($this->getAccessors($bread));
+
             return view('bread::manager.lists', [
                 'lists'         => $bread->getLists()->values(),
                 'bread'         => $bread,
                 'fields'        => $fields,
                 'relationships' => $this->getRelationships($bread),
                 'table'         => $table,
-                'model'         => app($bread->model)
+                'model'         => app($bread->model),
             ]);
         }
 

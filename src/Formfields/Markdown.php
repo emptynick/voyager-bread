@@ -4,8 +4,8 @@ namespace Bread\Formfields;
 
 class Markdown extends BaseFormfield
 {
-    protected $name = "Markdown";
-    protected $codename = "markdown";
+    protected $name = 'Markdown';
+    protected $codename = 'markdown';
 
     public $options = [
         'length'         => null,

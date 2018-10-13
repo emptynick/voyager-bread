@@ -3,7 +3,6 @@
 namespace Bread;
 
 use Illuminate\Events\Dispatcher;
-use Illuminate\Http\Request;
 use Illuminate\Support\ServiceProvider;
 
 class BreadServiceProvider extends ServiceProvider
@@ -30,7 +29,7 @@ class BreadServiceProvider extends ServiceProvider
     protected function loadHelpers()
     {
         foreach (glob(__DIR__.'/Helpers/*.php') as $filename) {
-           require_once $filename;
+            require_once $filename;
         }
     }
 
@@ -42,28 +41,28 @@ class BreadServiceProvider extends ServiceProvider
             'as'     => 'bread.',
             'prefix' => 'bread',
         ], function () use ($namespace, $router) {
-            $router->get('getTranslation/{key?}', function($key = null) {
+            $router->get('getTranslation/{key?}', function ($key = null) {
                 return __($key);
             })->name('getTranslation');
             $router->get('/', [
                 'uses' => $namespace.'ManagerController@index',
-                'as' => 'index'
+                'as'   => 'index',
             ]);
             $router->get('{table}/create', [
                 'uses' => $namespace.'ManagerController@create',
-                'as' => 'create'
+                'as'   => 'create',
             ]);
             $router->post('/', [
                 'uses' => $namespace.'ManagerController@store',
-                'as' => 'store'
+                'as'   => 'store',
             ]);
             $router->get('{table}/edit', [
                 'uses' => $namespace.'ManagerController@edit',
-                'as' => 'edit'
+                'as'   => 'edit',
             ]);
             $router->delete('{id}', [
                 'uses' => $namespace.'ManagerController@destroy',
-                'as' => 'delete'
+                'as'   => 'delete',
             ]);
             $router->get('{table}/views/{name?}', [
                 'uses'  => $namespace.'ManagerController@views',
@@ -81,11 +80,11 @@ class BreadServiceProvider extends ServiceProvider
             //Assets
             $router->get('/styles.css', [
                 'uses' => $namespace.'AssetController@styles',
-                'as' => 'styles'
+                'as'   => 'styles',
             ]);
             $router->get('/scripts.js', [
                 'uses' => $namespace.'AssetController@scripts',
-                'as' => 'scripts'
+                'as'   => 'scripts',
             ]);
         });
 
@@ -94,7 +93,8 @@ class BreadServiceProvider extends ServiceProvider
                 $router->resource($bread->slug, $bread->controller ?: '\Bread\Http\Controllers\BreadController');
                 $router->get($bread->slug.'/data/get', ($bread->controller ?: '\Bread\Http\Controllers\BreadController').'@data')->name($bread->slug.'.data');
             }
-        } catch (\Exception $e) { }
+        } catch (\Exception $e) {
+        }
     }
 
     protected function registerFormfields()

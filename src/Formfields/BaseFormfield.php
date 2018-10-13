@@ -50,7 +50,7 @@ class BaseFormfield
     {
         foreach ($data as $key => $value) {
             if ($key == 'options') {
-                $this->options = collect(json_decode($this->getOptions((array)$value)))->merge((array)$value);
+                $this->options = collect(json_decode($this->getOptions((array) $value)))->merge((array) $value);
             } else {
                 $this->{$key} = $value;
             }

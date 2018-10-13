@@ -10,6 +10,6 @@ class Select extends BaseFormfield
         'title'     => '',
         'help_text' => '',
         'multiple'  => false,
-        'options'   => []
+        'options'   => [],
     ];
 }

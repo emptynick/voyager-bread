@@ -4,8 +4,8 @@ namespace Bread\Formfields;
 
 class Tags extends BaseFormfield
 {
-    protected $name = "Tags";
-    protected $codename = "tags";
+    protected $name = 'Tags';
+    protected $codename = 'tags';
 
     public $options = [
         'placeholder'    => '',

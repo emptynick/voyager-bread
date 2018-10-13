@@ -9,6 +9,6 @@ class Heading extends BaseFormfield
     public $group = 'layout';
     public $options = [
         'text'         => '',
-        'size'         => 'h2'
+        'size'         => 'h2',
     ];
 }
