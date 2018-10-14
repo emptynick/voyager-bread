@@ -15,5 +15,8 @@
 
 ## Formfields
 
+* [Introduction](formfields/introduction.md)
+* [Number](formfields/number.md)
 * [Text](formfields/text.md)
+* [Textarea](formfields/textarea.md)
 
