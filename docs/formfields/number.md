@@ -2,6 +2,8 @@
 
 This input lets you input numbers only.
 
+![](../.gitbook/assets/number.png)
+
 ### Options
 
 #### Default value

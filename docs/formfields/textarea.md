@@ -1,6 +1,8 @@
 # Textarea
 
-The textarea formfield has the same options as [Text ](text.md#options)except one:
+The textarea formfield has the same options as [Text ](text.md#options)except one.
+
+![](../.gitbook/assets/textarea.png)
 
 ### Options
 

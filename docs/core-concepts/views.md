@@ -8,6 +8,8 @@ It consist of multiple formfields which are assigned to different fields in your
 After you created a BREAD for your table, you can add as many views to it as you want.  
 Just click the `Add View` button and you are prompted to enter the name of the view. The name can be anything you want.
 
+![](../.gitbook/assets/new_view.PNG)
+
 ### Adding a formfield
 
 After you created at least one view, you can now add formfields to it. To do so, just click `Add Formfield` and a dropdown with all possible options will open.  
@@ -19,7 +21,7 @@ Make sure to assign the field \(the column in the database-table\) to your formf
 
 ### Resizing a formfield
 
-You can resize the width of all formfields. Do this by clicking the arrow in the top left corner of the formfield.
+You can resize the width of all formfields. Do this by clicking the arrow in the top right corner of the formfield.
 
 {% hint style="info" %}
 Be aware that this width will also be used for mobile users - so don't make formfields too small. Different sizes for different resolutions might come in a later version.

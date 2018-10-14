@@ -1,6 +1,8 @@
 # Text
 
-This formfield gives you a simple text-input which is highly customizable.
+This formfield gives you a simple text-input.
+
+![](../.gitbook/assets/text.png)
 
 ### Options
 

@@ -12,6 +12,8 @@ You want to make sure that you choose a field for every formfield and that you o
 Here you can enter all your validation rules and messages for this formfield.  
 You can find a list of all rules in the [Laravel docs](https://laravel.com/docs/validation#available-validation-rules).
 
+![](../.gitbook/assets/validation.png)
+
 ### Translatable options
 
 All option inputs are translatable via language files.  
