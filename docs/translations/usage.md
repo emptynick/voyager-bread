@@ -13,7 +13,7 @@ After you've setup everything correctly, the Trait will automatically return the
 
 #### isTranslatable
 
-`isTranslatable` is a boolean value which indicates if this model is translatable.
+`isTranslatable` is a boolean value which indicates if this model is translatable and contains at least one translatable field.
 
 #### isFieldTranslatable
 
