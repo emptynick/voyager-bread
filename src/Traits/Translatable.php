@@ -39,6 +39,7 @@ trait Translatable
                     // Value is not valid JSON, just return value
                     return $value;
                 }
+
                 return '';
             }
         }
