@@ -1,6 +1,6 @@
 # Configurations
 
-After installing the hook you will find a configuration file under \`config/bread.php\`.  
+After installing the hook you will find a configuration file under `config/bread.php`.  
 This file contains the following options:
 
 ### bread\_path
