@@ -29,5 +29,5 @@ Be aware that this width will also be used for mobile users - so don't make form
 
 ### Moving a formfield
 
-To move a formfield to another position, just click and hold the formfield and drag it to the position where you want it to be.
+To move a formfield to another position, just click and hold the handle and drag it to the position where you want it to be.
 
