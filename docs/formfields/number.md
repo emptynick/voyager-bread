@@ -52,5 +52,5 @@ The maximum value
 
 #### Step
 
-The amount the input should decrease/increase when scrolling up down. Defaults to 1
+The amount the input should decrease/increase when scrolling up or down. Defaults to 1
 
