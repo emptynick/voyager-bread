@@ -94,8 +94,7 @@
                     </div>
                 </div>
             </div>
-            <draggable v-model="this.currentView.elements" v-if="this.views.length > 0 && this.currentView.elements.length > 0" :options="{ disabled: (this.currentDragId > -1) }">
-                <br>
+            <draggable v-model="currentView.elements" v-if="this.views.length > 0 && this.currentView.elements.length > 0" :options="{ handle: '.voyager-handle' }">
                 <div v-for="(item, id) in this.currentView.elements" :key="id" :class="'col-md-'+item.width">
                     <div :class="'panel panel-bordered '+item.class"
                     style="height:100%; margin-bottom:0 !important;"
@@ -105,7 +104,8 @@
                             <div class="panel-actions">
                                 <a class="panel-action voyager-trash" @click="deleteElement(id)"></a>
                                 <a class="panel-action voyager-settings open-settings" @click="openOptions(id)"></a>
-                                <a @mousedown="startDrag(id)" @mousedown="endDrag()" class="panel-action voyager-code drag_handle"></a>
+                                <a @mousedown="startDrag(id)" @mouseup="endDrag()" class="panel-action voyager-code drag_handle"></a>
+                                <a class="panel-action voyager-handle"></a>
                             </div>
                         </div>
                         <div class="panel-body formfield-panel">
@@ -281,6 +281,7 @@ var builder = new Vue({
         },
         drag: function(e) {
             if (this.currentDragId > -1) {
+                e.preventDefault();
                 var maxWidth = this.$refs.editWrapper.clientWidth;
                 var relative = e.clientX - this.findPos(this.$refs.editWrapper).left;
                 var threshold = maxWidth / this.cols;
