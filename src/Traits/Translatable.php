@@ -24,16 +24,22 @@ trait Translatable
             $value = $this->getAttribute($key);
             if ($value) {
                 //Todo: Check if attribute is casted (already)
-                $value = collect(json_decode($value));
-                $locale = app()->getLocale();
-                $fallback = config('app.fallback_locale', 'en');
-                if ($value->has($locale)) {
-                    return $value->get($locale);
-                } elseif ($value->has($fallback)) {
-                    return $value->get($fallback);
+                $json = json_decode($value);
+                if (json_last_error() === JSON_ERROR_NONE) {
+                    $value = collect($json);
+                    $locale = app()->getLocale();
+                    $fallback = config('app.fallback_locale', 'en');
+
+                    if ($value->has($locale)) {
+                        return $value->get($locale);
+                    } elseif ($value->has($fallback)) {
+                        return $value->get($fallback);
+                    }
                 } else {
-                    return '';
+                    // Value is not valid JSON, just return value
+                    return $value;
                 }
+                return '';
             }
         }
 

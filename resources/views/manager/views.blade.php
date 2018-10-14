@@ -24,57 +24,59 @@
 <div class="page-content container-fluid">
     <div id="view-builder">
         <vue-snotify></vue-snotify>
-        <div class="col-md-12">
-            <div class="dropdown" style="display:inline" v-if="this.views.length > 0">
-                <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
-                    Add Element
-                    <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu">
-                    <li class="dropdown-header">Formfields</li>
-                    @foreach(\Bread\BreadFacade::formfields()->where('group', 'formfield')->sortBy('name') as $formfield)
-					<li>
-                        <a href="#" v-on:click="addElement('{{ $formfield->getCodeName() }}')">
-                            {{ $formfield->getName() }}
-                        </a>
-                    </li>
-					@endforeach
-                    <li class="dropdown-header">Layout Elements</li>
-                    @foreach(\Bread\BreadFacade::formfields()->where('group', 'layout') as $formfield)
-					<li>
-                        <a href="#" v-on:click="addElement('{{ $formfield->getCodeName() }}')">
-                            {{ $formfield->getName() }}
-                        </a>
-                    </li>
-					@endforeach
-                    @if (count($relationships) > 0)
-                        <li class="dropdown-header">Relationships</li>
-                        @foreach($relationships as $relationship)
-                        <li>
-                            <a href="#" v-on:click="addElement('{{ $relationship['type_slug'] }}', '{{ $relationship['name'] }}')">
-                                {{ $relationship['name'] }}
+        <div class="row">
+            <div class="col-md-12">
+                <div class="dropdown" style="display:inline" v-if="this.views.length > 0">
+                    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                        Add Element
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li class="dropdown-header">Formfields</li>
+                        @foreach(\Bread\BreadFacade::formfields()->where('group', 'formfield')->sortBy('name') as $formfield)
+    					<li>
+                            <a href="#" v-on:click="addElement('{{ $formfield->getCodeName() }}')">
+                                {{ $formfield->getName() }}
                             </a>
                         </li>
-                        @endforeach
-                    @endif
-                </ul>
+    					@endforeach
+                        <li class="dropdown-header">Layout Elements</li>
+                        @foreach(\Bread\BreadFacade::formfields()->where('group', 'layout') as $formfield)
+    					<li>
+                            <a href="#" v-on:click="addElement('{{ $formfield->getCodeName() }}')">
+                                {{ $formfield->getName() }}
+                            </a>
+                        </li>
+    					@endforeach
+                        @if (count($relationships) > 0)
+                            <li class="dropdown-header">Relationships</li>
+                            @foreach($relationships as $relationship)
+                            <li>
+                                <a href="#" v-on:click="addElement('{{ $relationship['type_slug'] }}', '{{ $relationship['name'] }}')">
+                                    {{ $relationship['name'] }}
+                                </a>
+                            </li>
+                            @endforeach
+                        @endif
+                    </ul>
+                </div>
+                <div class="dropdown" style="display:inline" v-if="this.views.length > 0">
+                    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                        View (@{{ this.currentView.name }})
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li v-for="(view, key) in this.views">
+                            <a href="#" v-on:click="currentViewId = key">
+                                @{{ view.name }}
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <button @click="newViewPrompt()" class="btn btn-primary">New View</button>
+                <button @click="saveViews()" class="btn btn-primary">Save Views</button>
+                <button v-if="this.views.length > 0" @click="deleteView()" class="btn btn-primary">Delete View</button>
             </div>
-            <div class="dropdown" style="display:inline" v-if="this.views.length > 0">
-                <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
-                    View (@{{ this.currentView.name }})
-                    <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu">
-                    <li v-for="(view, key) in this.views">
-                        <a href="#" v-on:click="currentViewId = key">
-                            @{{ view.name }}
-                        </a>
-                    </li>
-                </ul>
-            </div>
-            <button @click="newViewPrompt()" class="btn btn-primary">New View</button>
-            <button @click="saveViews()" class="btn btn-primary">Save Views</button>
-            <button v-if="this.views.length > 0" @click="deleteView()" class="btn btn-primary">Delete View</button>
         </div>
         <div class="clearfix"></div>
         <div style="width:100%; height:100%;" ref="editWrapper" id="editWrapper">
