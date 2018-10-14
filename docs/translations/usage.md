@@ -7,7 +7,7 @@ Please note that saving JSON with multiple languages takes more space in your da
 Try to use TEXT fields or, even better, JSON fields, as they are searchable by Laravel natively.
 {% endhint %}
 
-After you've setup everything correctly, the Trait will automatically return the value in the locale the app is currently set to. If you want another locale than the current, use `app()->setLocale('...')`.
+After you've setup everything correctly, the Trait will automatically return the value in the locale the app is currently set to.
 
 ### Methods/Variables
 
@@ -18,4 +18,12 @@ After you've setup everything correctly, the Trait will automatically return the
 #### isFieldTranslatable
 
 `isFieldTranslatable($field)` returns a bool whether the given field is translatable or not. Takes the field-name string as an argument.
+
+#### getTranslation
+
+`getTranslation($field, $locale, $fallback)` returns the translated attribute for a field.
+
+#### setTranslation
+
+`setTranslation($field, $value, $locale)` sets the value for a locale
 
