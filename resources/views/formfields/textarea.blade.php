@@ -31,8 +31,9 @@
         <textarea class="form-control" :disabled="show == 'mockup'"
                :placeholder="options.placeholder"
                :rows="options.rows"
-               :name="name"
-               v-model="value">
+               :name="name+'_faker'"
+               v-model="translate"></textarea>
+        <input type="hidden" :name="name" v-model="translationString">
         <small v-if="options.help_text.length > 0">@{{ options.help_text }}</small>
     </div>
 </div>
@@ -42,9 +43,17 @@
 Vue.component('formfield-textarea', {
     template: `@yield('textarea')`,
     props: ['show', 'options', 'type', 'name', 'input'],
-    data: function() {
-        return {
-            'value': (this.input == '' ? options.default_value : this.input),
+    created: function() {
+        this.setInitialTranslation(
+            (this.input == null ? this.options.default_value : this.input),
+            '{{ app()->getLocale() }}',
+            {!! json_encode(config('voyager.multilingual.locales')) !!},
+            this.options.isTranslatable
+        );
+    },
+    watch: {
+        translate: function (newVal, oldVal) {
+            this.$bus.$emit(this.name+'_change', newVal, oldVal);
         }
     },
 });

@@ -63,5 +63,18 @@ Vue.component('formfield-text', {
             this.options.isTranslatable
         );
     },
+    watch: {
+        translate: function (newVal, oldVal) {
+            this.$bus.$emit(this.name+'_change', newVal, oldVal);
+        }
+    },
+    mounted: function() {
+        this.$bus.$on(this.options.slug_from+'_change', (newVal, oldVal) => {
+            if (this.options.slug_from != '' && typeof oldVal === 'string') {
+                //Todo: this.translate = slugify(newVal);
+                console.log("Slugify \""+newVal+"\"");
+            }
+        });
+    },
 });
 </script>

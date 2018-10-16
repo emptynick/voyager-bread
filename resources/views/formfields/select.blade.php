@@ -55,11 +55,6 @@
 Vue.component('formfield-select', {
     template: `@yield('select')`,
     props: ['show', 'options', 'type', 'fields', 'name', 'input', 'field'],
-    data: function() {
-        return {
-            ttt: '',
-        };
-    },
     methods: {
         deleteOption: function(key) {
             this.options.options.splice(key, 1);

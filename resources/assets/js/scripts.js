@@ -74,9 +74,7 @@ const translatable = {
 
             if (this.isJsonString(value)) {
                 var data = JSON.parse(value);
-
-                //Double quoted strings are "valid" JSON, workaround:
-                if (typeof data === 'string') {
+                if (typeof data !== 'object') {
                     Vue.set(this.data, locale, value);
                 } else {
                     this.data = data;

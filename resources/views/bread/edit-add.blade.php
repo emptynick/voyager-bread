@@ -16,47 +16,51 @@
     <div class="page-content edit-add container-fluid">
         <div class="row">
             <div class="col-md-12">
-                @include('voyager::alerts')
                 <form action="@if($content->getKey()){{ route('voyager.'.$bread->slug.'.update', $content->getKey()) }}@else{{ route('voyager.'.$bread->slug.'.store') }}@endif"
                         method="POST" enctype="multipart/form-data">
                     {{ csrf_field() }}
                     @if($content->getKey())
                         {{ method_field("PUT") }}
                     @endif
-                        <div v-for="(item, key) in elements" :class="'col-md-'+item.width">
-                            <div class="panel">
-                                <div class="panel-body">
-                                    <div :class="'form-group '+(hasError(item.field) ? 'has-error' : '')">
-                                        <component
-                                            :is="'formfield-'+item.type"
-                                            :options="item.options"
-                                            :name="item.field"
-                                            :show="'{{ $content->getKey() ? 'edit' : 'add' }}'"
-                                            :input="getContentForField(item.field)"
-                                            ></component>
+                    <div class="panel panel-bordered">
+                        <div class="panel-body">
+                            @include('voyager::alerts')
 
-                                        <span class="help-block" style="color:#f96868" v-if="hasError(item.field)">
-                                            <ul>
-                                                <li v-for="msg in getErrors(item.field)">
-                                                    @{{ msg }}
-                                                </li>
-                                            </ul>
-                                        </span>
+                            <div v-for="(item, key) in elements" :class="'col-md-'+item.width">
+                                <div class="panel">
+                                    <div class="panel-body">
+                                        <div :class="'form-group '+(hasError(item.field) ? 'has-error' : '')">
+                                            <component
+                                                :is="'formfield-'+item.type"
+                                                :options="item.options"
+                                                :name="item.field"
+                                                :show="'{{ $content->getKey() ? 'edit' : 'add' }}'"
+                                                :input="getContentForField(item.field)"
+                                                ></component>
+
+                                            <span class="help-block" style="color:#f96868" v-if="hasError(item.field)">
+                                                <ul>
+                                                    <li v-for="msg in getErrors(item.field)">
+                                                        @{{ msg }}
+                                                    </li>
+                                                </ul>
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        <div class="panel-footer">
+                            <button type="submit" name="submit_action" value="" class="btn btn-primary">{{ __('voyager::generic.save') }}</button>
+                            @can('edit', $model)
+                                <button type="submit" name="submit_action" value="edit" class="btn btn-primary">Save and Edit</button>
+                            @endcan
+                            @can('add', $model)
+                                <button type="submit" name="submit_action" value="add" class="btn btn-primary">Save and create new</button>
+                            @endcan
+                        </div>
                     </div>
-                    <div class="">
-                        <button type="submit" name="submit_action" value="" class="btn btn-primary">{{ __('voyager::generic.save') }}</button>
-                        @can('edit', $model)
-                            <button type="submit" name="submit_action" value="edit" class="btn btn-primary">Save and Edit</button>
-                        @endcan
-                        @can('add', $model)
-                            <button type="submit" name="submit_action" value="add" class="btn btn-primary">Save and create new</button>
-                        @endcan
-                    </div>
-                </form>
+                </div>
             </div>
         </div>
     </div>

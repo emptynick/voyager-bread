@@ -62,6 +62,12 @@ class Layout
                 return $option;
             });
 
+            foreach (['label', 'title', 'help_text'] as $item) {
+                if (isset($element->{$item}) && starts_with($element->{$item}, '__')) {
+                    $element->{$item} = __(str_after($element->{$item}, '__'));
+                }
+            }
+
             return $element;
         });
 

@@ -27188,6 +27188,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_vue_simplemde__ = __webpack_require__(233);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_vue_simplemde___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_9_vue_simplemde__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_vue_masked_input__ = __webpack_require__(245);
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 window.Vue = __webpack_require__(4);
 
 //Global events
@@ -27264,9 +27266,7 @@ var translatable = {
 
             if (this.isJsonString(value)) {
                 var data = JSON.parse(value);
-
-                //Double quoted strings are "valid" JSON, workaround:
-                if (typeof data === 'string') {
+                if ((typeof data === 'undefined' ? 'undefined' : _typeof(data)) !== 'object') {
                     Vue.set(this.data, locale, value);
                 } else {
                     this.data = data;

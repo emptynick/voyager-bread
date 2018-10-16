@@ -11,7 +11,6 @@ class DynamicSelect extends BaseFormfield
         'help_text' => '',
         'multiple'  => false,
         'method'    => '', //The method that is called
-        'arguments' => [], //The arguments that get passed
         'fields'    => [], //The fields that trigger a reload
     ];
 }
