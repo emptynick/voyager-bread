@@ -2,7 +2,7 @@
 @section('page_title', __('voyager::generic.view').' '.$bread->display_name_singular)
 
 @section('content')
-<div id="bread-edit">
+<div id="bread-read">
     <vue-snotify></vue-snotify>
     <div class="container-fluid">
         <h1 class="page-title">
@@ -26,6 +26,9 @@
                 {{ __('voyager::generic.return_to_list') }}
             </a>
         </h1>
+        @if ($model->isTranslatable)
+        <language-switcher :languages="{{ json_encode(config('voyager.multilingual.locales')) }}"></language-switcher>
+        @endif
     </div>
     <div class="page-content edit-add container-fluid">
         <div class="row">
@@ -36,7 +39,7 @@
                         <div class="panel-body">
                             <div class="form-group">
                                 <component
-                                    :is="item.element_type+'-'+item.type"
+                                    :is="'formfield-'+item.type"
                                     :options="item.options"
                                     :name="item.field"
                                     :show="'read'"
@@ -56,13 +59,13 @@
 @foreach(\Bread\BreadFacade::formfields() as $formfield)
 @include($formfield->getComponent('view'))
 @endforeach
+@include('bread::components.language-switcher')
 <script>
 new Vue({
-    el: "#bread-edit",
+    el: "#bread-read",
     data: {
         elements: {!! $layout->elements->toJson() !!},
         content: {!! $content ? collect($content)->toJson() : 'null' !!},
-        errors: {!! $errors->toJson() !!},
     },
     methods: {
         getContentForField: function(field) {

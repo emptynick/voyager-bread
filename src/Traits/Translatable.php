@@ -18,64 +18,46 @@ trait Translatable
         return $this->translatable && in_array($field, $this->translatable);
     }
 
-    public function __get($field)
+    public function getAttributeValue($key)
     {
-        return $this->getTranslation($field, app()->getLocale(), config('app.fallback_locale', 'en'));
-    }
-
-    public function __set($field, $value)
-    {
-        return $this->setTranslation($field, $value, app()->getLocale());
-    }
-
-    public function getTranslation($field, $locale, $fallback)
-    {
-        if ($this->translatable && in_array($field, $this->translatable)) {
-            $value = $this->getAttribute($field);
-            if ($value) {
-                //Todo: Check if attribute is casted (already)
-                $json = json_decode($value);
-                if (json_last_error() === JSON_ERROR_NONE) {
-                    $value = collect($json);
-
-                    if ($value->has($locale)) {
-                        return $value->get($locale);
-                    } elseif ($value->has($fallback)) {
-                        return $value->get($fallback);
-                    }
-                } else {
-                    // Value is not valid JSON, just return value
-                    return $value;
-                }
-            }
-
-            return '';
+        if (!$this->translatable || !$this->isFieldTranslatable($key)) {
+            return parent::getAttributeValue($key);
         }
 
-        return $this->getAttribute($field);
+        return $this->getTranslation($key, app()->getLocale());
     }
 
-    public function setTranslation($field, $value, $locale)
+    public function setAttribute($key, $value)
     {
-        if ($this->translatable && in_array($field, $this->translatable)) {
-            $initial = $this->getAttribute($field);
-            if ($initial = '') {
-                $initial = null;
-            }
-            $json = json_decode($initial);
-            //if the original value is a string and $locale is different from app-locale,
-            //the original value would be discarded
-            if (!$json && $locale != app()->getLocale()) {
-                $json = new StdClass();
-                $json->{app()->getLoale()} = $initial;
-            }
-            //Todo: $initial could be a casted JSON object already
-            $trans_value = collect($json ?? '{}');
-            $trans_value->put($locale, $value);
-
-            return $this->setAttribute($field, json_encode($trans_value));
+        if (!$this->translatable || !$this->isFieldTranslatable($key)) {
+            return parent::setAttribute($key, $value);
         }
 
-        return $this->setAttribute($field, $value);
+        return $this->setTranslation($key, $this->getLocale(), $value);
+    }
+
+    public function getTranslation($key, $locale)
+    {
+        $trans = $this->getTranslations($key);
+        if (gettype($trans) != 'array') {
+            return $this->getAttributes()[$key];
+        }
+        $translation = $trans[$locale] ?? $trans[config('app.fallback_locale')] ?? '';
+
+        return $translation;
+    }
+
+    public function getTranslations($key)
+    {
+        return json_decode($this->getAttributes()[$key] ?? '' ?: '{}', true);
+    }
+
+    public function setTranslation($key, $value, $locale)
+    {
+        $translations = $this->getTranslations($key);
+        $translations[$locale] = $value;
+        $this->{$key} = $this->asJson($translations);
+
+        return $this;
     }
 }

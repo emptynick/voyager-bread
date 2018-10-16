@@ -26,6 +26,14 @@
             <input type="number" min="1" class="form-control" v-model="options.rows">
         </div>
     </div>
+    <div v-else-if="show == 'read'">
+        @{{ options.title }}
+        <br>
+        @{{ translate }}
+    </div>
+    <div v-else-if="show == 'relationship'">
+        @{{ translate }}
+    </div>
     <div v-else>
         @{{ options.title }}
         <textarea class="form-control" :disabled="show == 'mockup'"

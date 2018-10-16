@@ -34,7 +34,7 @@
     <div v-else-if="show == 'read'">
         @{{ options.title }}
         <br>
-        @{{ value }}
+        @{{ translate }}
     </div>
     <div v-else-if="show == 'relationship'">
         @{{ translate }}

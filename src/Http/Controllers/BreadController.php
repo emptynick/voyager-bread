@@ -43,7 +43,7 @@ class BreadController extends Controller
         //Get browse-list, check if scopes are applied, if yes, check if $model->scope->where(id, $id)->findOrFail()
         $content = $this->model->findOrFail($id);
         $this->authorize('read', $content);
-        $layout = $this->getLayout('read')->translate();
+        $layout = $this->prepareLayout($this->getLayout('read')->translate(), $this->model);
         $view = 'bread::bread.read';
         if (view()->exists('bread::'.$this->bread->slug.'.read')) {
             $view = 'bread::'.$this->bread->slug.'.read';
