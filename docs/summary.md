@@ -14,6 +14,7 @@
 * [Lists](core-concepts/lists.md)
 * [Accessors](core-concepts/accessors.md)
 * [Relationships](core-concepts/untitled.md)
+* [Soft Deletes](core-concepts/soft-deletes.md)
 
 ## Formfields
 
