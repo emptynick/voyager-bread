@@ -6,7 +6,7 @@ Except for resizing, the workwise of lists is the same as for [views](views.md).
 
 ### Field
 
-The field is the column in your database-table where data is read from. It can also be an accessor or a relationship-field if your model has one of them.
+The field is the column in your database-table where data is read from. It can also be an accessor or a relationship-field if your model has them.
 
 ### Label
 

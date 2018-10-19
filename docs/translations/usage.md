@@ -9,20 +9,29 @@ Try to use TEXT fields or, even better, JSON fields, as they are searchable by L
 
 After you've setup everything correctly, the Trait will automatically return the value in the locale the app is currently set to.
 
-### Methods/Variables
+## Methods/Variables
 
-#### isTranslatable
+### isTranslatable
 
-`isTranslatable` is a boolean value which indicates if this model is translatable and contains at least one translatable field.
+`isTranslatable` returns a boolean value which indicates if this model is translatable and contains at least one translatable field.
 
-#### isFieldTranslatable
+### isFieldTranslatable
 
 `isFieldTranslatable($field)` returns a bool whether the given field is translatable or not. Takes the field-name string as an argument.
 
-#### getTranslation
+### getTranslation
 
-`getTranslation($field, $locale, $fallback)` returns the translated attribute for a field.
+`getTranslation($field, $locale)` returns the translated attribute for a field.
 
-#### setTranslation
+### getTranslations
+
+`getTranslations($field)` returns an array with all translations.
+
+### getPlainValue
+
+`getPlainValue($field)` returns the content of the field as a \(json-encoded\) string.
+
+### setTranslation
 
 `setTranslation($field, $value, $locale)` sets the value for a locale
+

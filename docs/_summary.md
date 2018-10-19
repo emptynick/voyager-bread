@@ -12,6 +12,8 @@
 * [BREAD](core-concepts/bread.md)
 * [Views](core-concepts/views.md)
 * [Lists](core-concepts/lists.md)
+* [Accessors](core-concepts/accessors.md)
+* [Relationships](core-concepts/untitled.md)
 
 ## Formfields
 
