@@ -3,7 +3,6 @@
 namespace Bread;
 
 use Bread\Classes\Bread as BreadClass;
-use Bread\Formfields\BaseFormfield;
 
 class Bread
 {
@@ -36,12 +35,13 @@ class Bread
             $this->breads = $this->getBreads();
         }
 
-        return $this->breads->filter(function($bread) use ($slug) {
+        return $this->breads->filter(function ($bread) use ($slug) {
             if (!isset($bread->slug_array)) {
                 return $bread->slug == $slug;
             } elseif (is_object($bread->slug_array)) {
-                return in_array($slug, (array)$bread->slug_array);
+                return in_array($slug, (array) $bread->slug_array);
             }
+
             return false;
         })->first();
     }
@@ -76,12 +76,12 @@ class Bread
 
     public function hasBread($slug)
     {
-        return (count($this->getBread($slug)) > 0);
+        return count($this->getBread($slug)) > 0;
     }
 
     public function hasBreadByTable($table)
     {
-        return (count($this->getBreadByTable($table)) > 0);
+        return count($this->getBreadByTable($table)) > 0;
     }
 
     public function saveBread($table, $content)

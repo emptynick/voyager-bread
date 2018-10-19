@@ -4,8 +4,8 @@ namespace Bread\Http\Controllers;
 
 use Bread\BreadFacade;
 use Illuminate\Http\Request;
-use TCG\Voyager\Facades\Voyager;
 use TCG\Voyager\Database\Schema\SchemaManager;
+use TCG\Voyager\Facades\Voyager;
 
 class ManagerController extends Controller
 {
@@ -96,6 +96,7 @@ class ManagerController extends Controller
 
         if ($bread) {
             $fields = SchemaManager::describeTable($table)->keys()->merge($this->getAccessors($bread));
+
             return view('bread::manager.lists', [
                 'lists'         => $bread->getLists()->values(),
                 'bread'         => $bread,
