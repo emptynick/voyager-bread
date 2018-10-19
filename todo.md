@@ -6,8 +6,6 @@
 * Check checkboxes for functionality \(single, multiple, etc\)
 * Find a good maps package for coordinates
 * Translate markdown-editor
-* Use formfield also for browsing
-* Put a ref="'formfield_'+name" to ALL formfields
 
 # Check Formfields
 * Checkboxes

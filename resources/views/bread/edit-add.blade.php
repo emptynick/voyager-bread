@@ -36,7 +36,8 @@
                                                 :name="item.field"
                                                 :show="'{{ $content->getKey() ? 'edit' : 'add' }}'"
                                                 :input="getContentForField(item.field)"
-                                                ></component>
+                                                :ref="item.field"
+                                            ></component>
 
                                             <span class="help-block" style="color:#f96868" v-if="hasError(item.field)">
                                                 <ul>
@@ -105,7 +106,7 @@ new Vue({
         getErrors: function(field) {
             return this.errors[field];
         },
-    },
+    }
 });
 </script>
 @endsection

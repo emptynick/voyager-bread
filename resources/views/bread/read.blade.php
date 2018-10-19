@@ -42,8 +42,10 @@
                                     :is="'formfield-'+item.type"
                                     :options="item.options"
                                     :name="item.field"
+                                    :ref="item.field"
                                     :show="'read'"
-                                    :input="getContentForField(item.field)"></component>
+                                    :input="getContentForField(item.field)"
+                                ></component>
                             </div>
                         </div>
                     </div>
