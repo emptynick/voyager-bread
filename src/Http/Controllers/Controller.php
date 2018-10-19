@@ -129,7 +129,7 @@ abstract class Controller extends BaseController
 
         foreach ($layout->elements as $element) {
             $returned = $element->store($request->{$element->field});
-            if ($returned !== FALSE) {
+            if ($returned !== false) {
                 if (gettype($returned) == 'array') {
                     foreach ($returned as $key => $value) {
                         $data->put($key, $value);

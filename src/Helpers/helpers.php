@@ -19,6 +19,7 @@ if (!function_exists('translate_elements')) {
                 }
             }
         }
+
         return $input;
     }
 }
@@ -36,6 +37,7 @@ if (!function_exists('get_translated_value')) {
                 return $data->first();
             }
         }
+
         return $input;
     }
 }
@@ -47,6 +49,7 @@ if (!function_exists('get_translated_values')) {
         if (json_last_error() == JSON_ERROR_NONE) {
             return $data;
         }
+
         return $input;
     }
 }

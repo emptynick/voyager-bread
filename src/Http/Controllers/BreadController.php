@@ -5,7 +5,6 @@ namespace Bread\Http\Controllers;
 use Bread\BreadFacade;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;
 use TCG\Voyager\Database\Schema\SchemaManager;
 use TCG\Voyager\Facades\Voyager;
@@ -237,14 +236,14 @@ class BreadController extends Controller
         if (in_array('Illuminate\Database\Eloquent\SoftDeletes', class_uses($this->model))) {
             if ($layout->trashed == 'show') {
                 //Also show trashed
-            } else if ($layout->trashed == 'select') {
+            } elseif ($layout->trashed == 'select') {
                 //Let the user decide what to show
                 if ($request->has('withTrashed')) {
                     if ($request->withTrashed == 'yes') {
                         //
-                    } else if ($request->withTrashed == 'no') {
+                    } elseif ($request->withTrashed == 'no') {
                         $data = $data->whereNull('deleted_at');
-                    } else if ($request->withTrashed == 'only') {
+                    } elseif ($request->withTrashed == 'only') {
                         $data = $data->whereNotNull('deleted_at');
                     }
                 } else {
@@ -346,12 +345,12 @@ class BreadController extends Controller
             }
 
             //Add static stuff
-            $final[$key]['bread_read']   = route('voyager.'.$this->bread->slug.'.show', $result[$this->model->getKeyName()]);
-            $final[$key]['bread_edit']   = route('voyager.'.$this->bread->slug.'.edit', $result[$this->model->getKeyName()]);
+            $final[$key]['bread_read'] = route('voyager.'.$this->bread->slug.'.show', $result[$this->model->getKeyName()]);
+            $final[$key]['bread_edit'] = route('voyager.'.$this->bread->slug.'.edit', $result[$this->model->getKeyName()]);
             $final[$key]['bread_delete'] = route('voyager.'.$this->bread->slug.'.destroy', $result[$this->model->getKeyName()]);
-            $final[$key]['bread_key']    = $result->getKey();
-            $final[$key]['deleted_at']   = $result['deleted_at'] ?? '';
-            $final[$key]['restore']      = route('voyager.'.$this->bread->slug.'.restore', $result[$this->model->getKeyName()]);
+            $final[$key]['bread_key'] = $result->getKey();
+            $final[$key]['deleted_at'] = $result['deleted_at'] ?? '';
+            $final[$key]['restore'] = route('voyager.'.$this->bread->slug.'.restore', $result[$this->model->getKeyName()]);
         }
 
         return [

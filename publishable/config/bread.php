@@ -7,5 +7,5 @@ return [
     'bread_buttons' => [
         'save_edit'     => true,
         'save_new'      => true,
-    ]
+    ],
 ];
