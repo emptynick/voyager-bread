@@ -2,13 +2,6 @@
 
 @section('page_title', __('voyager::bread.edit_bread_for_table', ['table' => $table]))
 
-@section('page_header')
-<h1 class="page-title">
-    <i class="voyager-bread"></i>
-    {{ __('voyager::bread.edit_bread_for_table', ['table' => $table]) }}
-</h1>
-@stop
-
 @section('breadcrumbs')
 <ol class="breadcrumb hidden-xs">
     @if(count(Request::segments()) == 1)
@@ -30,7 +23,12 @@
 @endsection
 
 @section('content')
-<div class="page-content container-fluid">
+<div class="page-content container-fluid" id="bread-edit-add">
+    <h1 class="page-title">
+        <i class="voyager-bread"></i>
+        {{ __('voyager::bread.edit_bread_for_table', ['table' => $table]) }}
+    </h1>
+    <language-switcher :languages="{{ json_encode(config('voyager.multilingual.locales')) }}"></language-switcher>
     <form method="post" action="{{ route('voyager.bread.store') }}">
         <input type="hidden" name="table_name" value="{{ $table }}">
         {{ csrf_field() }}
@@ -45,15 +43,15 @@
                         <div class="row clearfix">
                             <div class="col-md-4 form-group">
                                 <label>{{ __('voyager::bread.display_name_singular') }}</label>
-                                <input type="text" class="form-control" name="display_name_singular" value="{{ (isset($bread) ? $bread->display_name_singular : ucfirst(str_singular($table))) }}" placeholder="{{ __('voyager::bread.display_name_singular') }}">
+                                <language-input type="text" name="display_name_singular" :input="'{{ (isset($bread) ? $bread->display_name_singular_string : ucfirst(str_singular($table))) }}'" placeholder="{{ __('voyager::bread.display_name_singular') }}">
                             </div>
                             <div class="col-md-4 form-group">
                                 <label>{{ __('voyager::bread.display_name_plural') }}</label>
-                                <input type="text" class="form-control" name="display_name_plural" value="{{ (isset($bread) ? $bread->display_name_plural : ucfirst($table)) }}" placeholder="{{ __('voyager::bread.display_name_plural') }}">
+                                <language-input type="text" name="display_name_plural" :input="'{{ (isset($bread) ? $bread->display_name_plural_string : ucfirst($table)) }}'" placeholder="{{ __('voyager::bread.display_name_plural') }}">
                             </div>
                             <div class="col-md-4 form-group">
                                 <label>{{ __('voyager::bread.url_slug') }}</label>
-                                <input type="text" class="form-control slug" data-slug-origin="display_name_plural" name="slug" value="{{ (isset($bread) ? $bread->slug : str_slug($table)) }}" placeholder="{{ __('voyager::bread.url_slug_ph') }}" data-slug-origin="display_name_plural" data-slug-forceupdate="true">
+                                <language-input type="text" :slug_from="'display_name_plural'" name="slug" :input="'{{ (isset($bread) ? $bread->slug_string : str_slug($table)) }}'" placeholder="{{ __('voyager::bread.url_slug_ph') }}" data-slug-origin="display_name_plural" data-slug-forceupdate="true">
                             </div>
                         </div>
                         <div class="row clearfix">
@@ -130,12 +128,16 @@
     @stop
 
 @section('javascript')
-<!-- views, lists, roles -->
+<script src="{{ route('voyager.bread.scripts') }}"></script>
+@include('bread::components.language-switcher')
+@include('bread::components.language-input')
 <script>
-$('input[data-slug-origin]').each(function(i, el) {
-    $(el).slugify({
-        forceupdate: true,
-    });
+
+var builder = new Vue({
+    el: "#bread-edit-add",
+    data: {
+
+    }
 });
 </script>
 @endsection

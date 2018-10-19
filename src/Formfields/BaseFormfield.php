@@ -11,27 +11,7 @@ class BaseFormfield
     public $options = [];
     public $validation_rules = [];
 
-    public function browse($input)
-    {
-        return $input;
-    }
-
-    public function read($input)
-    {
-        return $input;
-    }
-
-    public function edit($input)
-    {
-        return $input;
-    }
-
     public function update($input)
-    {
-        return $input;
-    }
-
-    public function add($input)
     {
         return $input;
     }

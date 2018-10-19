@@ -33,8 +33,7 @@
     </div>
     <div v-else>
         <label v-if="options.title.length > 0">@{{ options.title }}</label>
-        <multiselect v-model="ttt" :options="options.options" track-by="key" label="value" :multiselect="options.multiple">
-        </multiselect>
+        
         <small v-if="options.help_text.length > 0">@{{ options.help_text }}</small>
     </div>
 </div>

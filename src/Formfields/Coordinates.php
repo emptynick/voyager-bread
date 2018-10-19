@@ -13,11 +13,6 @@ class Coordinates extends BaseFormfield
         'help_text'      => '',
     ];
 
-    public function browse($input)
-    {
-        return $input;
-    }
-
     public function store($input)
     {
         //Join array

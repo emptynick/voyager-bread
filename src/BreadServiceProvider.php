@@ -90,8 +90,12 @@ class BreadServiceProvider extends ServiceProvider
 
         try {
             foreach (BreadFacade::getBreads(true) as $bread) {
-                $router->resource($bread->slug, $bread->controller ?: '\Bread\Http\Controllers\BreadController');
-                $router->get($bread->slug.'/data/get', ($bread->controller ?: '\Bread\Http\Controllers\BreadController').'@data')->name($bread->slug.'.data');
+                $slugs = collect(get_translated_values($bread->slug_string));
+                foreach ($slugs as $lang_slug) {
+                    $router->resource($lang_slug, $bread->controller ?: '\Bread\Http\Controllers\BreadController');
+                    $router->get($lang_slug.'/data/get', ($bread->controller ?: '\Bread\Http\Controllers\BreadController').'@data')->name($lang_slug.'.data');
+                    $router->post($lang_slug.'/restore/{id}', ($bread->controller ?: '\Bread\Http\Controllers\BreadController').'@restore')->name($lang_slug.'.restore');
+                }
             }
         } catch (\Exception $e) {
         }

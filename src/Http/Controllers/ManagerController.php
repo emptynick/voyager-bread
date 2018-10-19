@@ -4,8 +4,8 @@ namespace Bread\Http\Controllers;
 
 use Bread\BreadFacade;
 use Illuminate\Http\Request;
-use TCG\Voyager\Database\Schema\SchemaManager;
 use TCG\Voyager\Facades\Voyager;
+use TCG\Voyager\Database\Schema\SchemaManager;
 
 class ManagerController extends Controller
 {
@@ -26,8 +26,8 @@ class ManagerController extends Controller
 
     public function store(Request $request)
     {
-        $bread = collect(BreadFacade::getBread($request->table_name));
-        $exists = BreadFacade::hasBread($request->table_name);
+        $bread = collect(BreadFacade::getBreadByTable($request->table_name));
+        $exists = BreadFacade::hasBreadByTable($request->table_name);
         //Todo: display message based on existence
         $bread = $bread->merge(collect($request->except('_token')));
         BreadFacade::saveBread($request->table_name, $bread);
@@ -42,8 +42,7 @@ class ManagerController extends Controller
 
     public function edit($table)
     {
-        $bread = BreadFacade::getBread($table);
-
+        $bread = BreadFacade::getBreadByTable($table);
         if ($bread) {
             return view('bread::manager.edit-add', compact('bread', 'table'));
         }
@@ -71,16 +70,15 @@ class ManagerController extends Controller
 
     public function views($table, $name = '')
     {
-        $bread = BreadFacade::getBread($table);
+        $bread = BreadFacade::getBreadByTable($table);
         if ($bread) {
             $fields = SchemaManager::describeTable($table)->keys()->merge($this->getAccessors($bread));
-            $relationships = $this->getRelationships($bread);
 
             return view('bread::manager.views', [
                 'views'         => $bread->getViews()->values(),
                 'bread'         => $bread,
                 'fields'        => $fields,
-                'relationships' => $relationships,
+                'relationships' => $this->getRelationships($bread),
                 'table'         => $table,
                 'model'         => app($bread->model),
             ]);
@@ -94,11 +92,10 @@ class ManagerController extends Controller
 
     public function lists($table, $name = '')
     {
-        $bread = BreadFacade::getBread($table);
+        $bread = BreadFacade::getBreadByTable($table);
 
         if ($bread) {
             $fields = SchemaManager::describeTable($table)->keys()->merge($this->getAccessors($bread));
-
             return view('bread::manager.lists', [
                 'lists'         => $bread->getLists()->values(),
                 'bread'         => $bread,
@@ -117,7 +114,7 @@ class ManagerController extends Controller
 
     public function storeLayouts(Request $request, $table)
     {
-        $bread = BreadFacade::getBread($table);
+        $bread = BreadFacade::getBreadByTable($table);
 
         if ($bread) {
             if ($request->has('views')) {

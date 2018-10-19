@@ -33,7 +33,7 @@ trait Translatable
             return parent::setAttribute($key, $value);
         }
 
-        return $this->setTranslation($key, $this->getLocale(), $value);
+        return $this->setTranslation($key, $value, app()->getLocale());
     }
 
     public function getTranslation($key, $locale)
@@ -52,12 +52,28 @@ trait Translatable
         return json_decode($this->getAttributes()[$key] ?? '' ?: '{}', true);
     }
 
+    public function getPlainValue($key)
+    {
+        return parent::getAttributeValue($key);
+    }
+
     public function setTranslation($key, $value, $locale)
     {
         $translations = $this->getTranslations($key);
-        $translations[$locale] = $value;
-        $this->{$key} = $this->asJson($translations);
+        $test = json_decode($value);
+        if (gettype($test) == 'object' && count($test) > 0) {
+            $this->attributes[$key] = $value;
+        } else {
+            $translations[$locale] = $value;
+            $this->attributes[$key] = $this->asJson($translations);
+        }
 
         return $this;
+    }
+
+    public function save(array $options = [])
+    {
+        unset($this->isTranslatable);
+        parent::save();
     }
 }

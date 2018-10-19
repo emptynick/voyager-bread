@@ -24,6 +24,10 @@ class Bread
         foreach ($data as $key => $value) {
             if ($key == 'layouts' && !$simple) {
                 $this->parseLayouts($value);
+            } elseif ($key == 'display_name_singular' || $key == 'display_name_plural' || $key == 'slug') {
+                $this->{$key} = get_translated_value($value);
+                $this->{$key.'_string'} = $value;
+                $this->{$key.'_array'} = json_decode($value);
             } else {
                 $this->{$key} = $value;
             }

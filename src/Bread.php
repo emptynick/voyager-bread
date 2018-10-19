@@ -10,12 +10,12 @@ class Bread
     protected $formfields = [];
     protected $breads = [];
 
-    public function addFormfield($handler)
+    public function addFormfield($formfield)
     {
-        if (!$handler instanceof BaseFormfield) {
-            $handler = app($handler);
+        if (gettype($formfield) == 'string') {
+            $formfield = app($formfield);
         }
-        $this->formfields[$handler->getCodename()] = $handler;
+        $this->formfields[$formfield->getCodename()] = $formfield;
 
         return $this;
     }
@@ -30,52 +30,58 @@ class Bread
         return collect($this->formfields);
     }
 
-    public function getBread($table, $simple = false)
+    public function getBread($slug)
     {
-        if (ends_with(config('bread.bread_path'), '/')) {
-            $full_path = config('bread.bread_path').$table.'.json';
-        } else {
-            $full_path = config('bread.bread_path').'/'.$table.'.json';
+        if (count($this->breads) == 0) {
+            $this->breads = $this->getBreads();
         }
-        if (file_exists($full_path)) {
-            $bread = new BreadClass(
-                json_decode(
-                    file_get_contents($full_path)
-                ), $simple);
-            $bread->name = $table;
 
-            return $bread->validate() ? $bread : null;
-        } else {
-            return;
-        }
+        return $this->breads->filter(function($bread) use ($slug) {
+            if (!isset($bread->slug_array)) {
+                return $bread->slug == $slug;
+            } elseif (is_object($bread->slug_array)) {
+                return in_array($slug, (array)$bread->slug_array);
+            }
+            return false;
+        })->first();
     }
 
-    public function getBreads($simple = false)
+    public function getBreadByTable($table)
+    {
+        if (count($this->breads) == 0) {
+            $this->breads = $this->getBreads();
+        }
+
+        return $this->breads->where('table_name', $table)->first();
+    }
+
+    public function getBreads()
     {
         $breads = collect();
         $files = scandir(config('bread.bread_path'));
         foreach ($files as $bread) {
             if (ends_with($bread, '.json')) {
-                $bread = $this->getBread(str_replace('.json', '', $bread), $simple);
-                if ($bread) {
+                $bread = new BreadClass(
+                    json_decode(
+                        file_get_contents(config('bread.bread_path').DIRECTORY_SEPARATOR.$bread)
+                    ));
+                if ($bread->validate()) {
                     $breads[] = $bread;
                 }
-                $bread = null;
             }
         }
 
         return $breads;
     }
 
-    public function hasBread($table)
+    public function hasBread($slug)
     {
-        if (ends_with(config('bread.bread_path'), '/')) {
-            $full_path = config('bread.bread_path').$table.'.json';
-        } else {
-            $full_path = config('bread.bread_path').'/'.$table.'.json';
-        }
+        return (count($this->getBread($slug)) > 0);
+    }
 
-        return file_exists($full_path);
+    public function hasBreadByTable($table)
+    {
+        return (count($this->getBreadByTable($table)) > 0);
     }
 
     public function saveBread($table, $content)

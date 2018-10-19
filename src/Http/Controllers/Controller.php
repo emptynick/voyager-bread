@@ -6,6 +6,7 @@ use Bread\BreadFacade;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
+use TCG\Voyager\Database\Schema\SchemaManager;
 
 abstract class Controller extends BaseController
 {
@@ -20,6 +21,7 @@ abstract class Controller extends BaseController
 
     public function getLayout($action)
     {
+        //Todo: this is not working :(
         //Collect all role-ids for the user
         $roles = collect(\Auth::user()->roles->pluck('id'));
         $roles[] = \Auth::user()->role->id;
@@ -51,16 +53,18 @@ abstract class Controller extends BaseController
             if ($model->relationships) {
                 $relationships = collect($model->relationships)->map(function ($name) use ($model) {
                     $relationship = $model->{$name}();
-                    $related_bread = BreadFacade::getBread($relationship->getRelated()->getTable());
+                    $related = $relationship->getRelated();
+                    $related_bread = BreadFacade::getBread($related->getTable());
                     $info = collect([]);
                     $info->put('name', $name);
                     $info->put('type', class_basename($relationship));
                     $info->put('type_slug', str_slug(class_basename($relationship)));
                     $info->put('has_bread', boolval($related_bread));
-                    if (boolval($related_bread)) {
+                    if ($related_bread !== null) {
                         $info->put('lists', $related_bread->layouts->where('type', 'list'));
                         $info->put('views', $related_bread->layouts->where('type', 'view'));
                     }
+                    $info->put('attributes', SchemaManager::describeTable($related->getTable())->keys()->merge($this->getModelAccessors($related)));
 
                     return $info;
                 });
@@ -75,10 +79,19 @@ abstract class Controller extends BaseController
     public function getAccessors($bread)
     {
         if (isset($bread->model) && class_exists($bread->model)) {
-            $model = app($bread->model);
-            if ($model->accessors) {
-                return collect($model->accessors);
-            }
+            return $this->getModelAccessors($bread->model);
+        }
+
+        return collect([]);
+    }
+
+    public function getModelAccessors($model)
+    {
+        if (is_string($model)) {
+            $model = app($model);
+        }
+        if ($model->accessors) {
+            return collect($model->accessors);
         }
 
         return collect([]);
@@ -116,7 +129,7 @@ abstract class Controller extends BaseController
 
         foreach ($layout->elements as $element) {
             $returned = $element->store($request->{$element->field});
-            if (!is_null($returned)) {
+            if ($returned !== FALSE) {
                 if (gettype($returned) == 'array') {
                     foreach ($returned as $key => $value) {
                         $data->put($key, $value);

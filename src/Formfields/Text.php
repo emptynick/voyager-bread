@@ -16,11 +16,6 @@ class Text extends BaseFormfield
         'slug_from'      => null,
     ];
 
-    public function browse($input)
-    {
-        return substr($input, 0, $this->options['length'] ?: 50);
-    }
-
     public function store($input)
     {
         return $input;

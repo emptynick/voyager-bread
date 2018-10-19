@@ -12,4 +12,12 @@ class Select extends BaseFormfield
         'multiple'  => false,
         'options'   => [],
     ];
+
+    public function store($input)
+    {
+        if ($this->options['multiple']) {
+            return $input ? json_encode($input) : '[]';
+        }
+        return $input ?? '';
+    }
 }

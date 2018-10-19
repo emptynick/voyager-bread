@@ -32,7 +32,7 @@
                 </button>
                 <ul class="dropdown-menu">
                     <li class="dropdown-header">Formfields</li>
-                    @foreach(\Bread\BreadFacade::formfields()->where('element_type', 'formfield') as $formfield)
+                    @foreach(\Bread\BreadFacade::formfields()->where('group', 'formfield') as $formfield)
 					<li>
                         <a href="#" v-on:click="addElement('{{ $formfield->getCodeName() }}')">
                             {{ $formfield->getName() }}
@@ -104,9 +104,10 @@
                                     </option>
                                 </optgroup>
                                 @foreach ($relationships as $relationship)
-                                <optgroup label="{{ $relationship }}">
-                                    @foreach (\Bread\BreadFacade::getRelationshipAttributes($bread, $model, $relationship) as $rl_attr)
-                                    <option value="{{ $relationship }}|{{ $rl_attr }}">{{ $rl_attr }}</option>
+                                <optgroup label="{{ $relationship['name'] }}">
+                                    <!-- Todo: display relationship attributes here -->
+                                    @foreach ($relationship['attributes'] as $attr)
+                                    <option value="{{ $relationship['name'] }}|{{ $attr }}">{{ $relationship['name'].'.'.$attr }}</option>
                                     @endforeach
                                 </optgroup>
                                 @endforeach
@@ -141,7 +142,7 @@
                 </draggable>
             </div>
             <div class="clearfix">&nbsp;</div>
-            <div class="col-md-6">
+            <div class="col-md-3">
                 <div class="panel panel-bordered" v-if="this.lists.length > 0">
                     <div class="panel-heading">
                         <h3 class="panel-title">
@@ -165,6 +166,33 @@
                                 :disabled="currentList.data != 'scope'"
                                 v-model="currentList.scope"
                                 placeholder="Method/Scope Name">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="panel panel-bordered" v-if="this.lists.length > 0">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            <i class="voyager-trash"></i> Trashed
+                            <span class="panel-desc"> Show/hide trashed entries or select</span>
+                        </h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="radio">
+                            <label>
+                                <input type="radio" value="show" v-model="currentList.trashed">Show
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" value="hide" v-model="currentList.trashed">Hide
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" value="select" v-model="currentList.trashed">Select
+                            </label>
                         </div>
                     </div>
                 </div>
@@ -299,6 +327,7 @@ var builder = new Vue({
                             let list = {
                                 name: toast.value,
                                 type: "view",
+                                trashed: 'hide',
                                 elements: []
                             };
                             this.lists.push(list);

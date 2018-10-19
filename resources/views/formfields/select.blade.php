@@ -44,8 +44,17 @@
     </div>
     <div v-else>
         <label v-if="options.title.length > 0">@{{ options.title }}</label>
-        <multiselect v-model="ttt" :options="options.options" track-by="key" label="value" :multiselect="options.multiple">
-        </multiselect>
+        <v-select v-model="value" :options="options.options" label="value" :multiple="options.multiple" :disabled="show == 'mockup'">
+            
+        </v-select>
+        <div v-if="options.multiple">
+            <div v-for="(item, key) in value">
+                <input type="hidden" :name="name+'[]'" :value="options.options[key].key">
+            </div>
+        </div>
+        <div v-else>
+            <input type="hidden" :name="name" :value="value ? value.key : ''">
+        </div>
         <small v-if="options.help_text.length > 0">@{{ options.help_text }}</small>
     </div>
 </div>
@@ -55,6 +64,11 @@
 Vue.component('formfield-select', {
     template: `@yield('select')`,
     props: ['show', 'options', 'type', 'fields', 'name', 'input', 'field'],
+    data: function () {
+        return {
+            value: this.parseInput(this.input),
+        }
+    },
     methods: {
         deleteOption: function(key) {
             this.options.options.splice(key, 1);
@@ -65,6 +79,38 @@ Vue.component('formfield-select', {
                 value: ""
             };
             this.options.options.push(option);
+        },
+        parseInput: function(input) {
+            if (input == null || input == '') {
+                return this.options.multiple ? [] : '';
+            } else {
+                if (this.options.multiple) {
+                    var original = JSON.parse(input);
+                    var data = [];
+                    original.map(function(key) {
+                        for (var option in this.options.options) {
+                            if (this.options.options[option].key == key) {
+                                data.push({
+                                    key: key,
+                                    value: this.options.options[option].value,
+                                });
+                            }
+                        }
+                    }, this);
+                    return data;
+                } else {
+                    for (var option in this.options.options) {
+                        if (this.options.options[option].key == input) {
+                            return {
+                                key: input,
+                                value: this.options.options[option].value,
+                            };
+                        }
+                    }
+                }
+            }
+
+            return input;
         }
     },
 });

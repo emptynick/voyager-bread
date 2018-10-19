@@ -50,8 +50,15 @@
             <input type="number" class="form-control" v-model="options.step">
         </div>
     </div>
-    <div v-else-if="show == 'relationship'">
-        @{{ value }}
+    <div v-else-if="show == 'read'">
+        <div v-if="options.title.length > 0">
+            <strong>@{{ options.title }}</strong>
+            <br>
+        </div>
+        @{{ translate }}
+    </div>
+    <div v-else-if="show == 'relationship' || show == 'browse'">
+        @{{ translate }}
     </div>
     <div v-else>
         @{{ options.title }}
@@ -60,8 +67,9 @@
                :max="options.max"
                :step="options.step"
                :placeholder="options.placeholder"
-               :name="name"
-               v-model="value">
+               :name="name+'_faker'"
+               v-model="translate">
+        <input type="hidden" :name="name" v-model="translationString">
         <small v-if="options.help_text.length > 0">@{{ options.help_text }}</small>
     </div>
 </div>
@@ -71,10 +79,25 @@
 Vue.component('formfield-number', {
     template: `@yield('number')`,
     props: ['show', 'options', 'type', 'name', 'input'],
-    data: function() {
-        return {
-            'value': (this.input == '' ? options.default_value : this.input),
+    created: function() {
+        this.setInitialTranslation(
+            (this.input == null ? this.options.default_value : this.input),
+            '{{ app()->getLocale() }}',
+            {!! json_encode(config('voyager.multilingual.locales')) !!},
+            this.options.isTranslatable
+        );
+    },
+    watch: {
+        translate: function (newVal, oldVal) {
+            this.$bus.$emit(this.name+'_change', newVal, oldVal);
         }
+    },
+    mounted: function() {
+        this.$bus.$on(this.options.slug_from+'_change', (newVal, oldVal) => {
+            if (this.options.slug_from != '' && typeof oldVal === 'string') {
+                this.translate = Vue.slugify(newVal);
+            }
+        });
     },
 });
 </script>

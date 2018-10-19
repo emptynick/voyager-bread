@@ -22,13 +22,6 @@ class Number extends BaseFormfield
         'help_text'      => '',
     ];
 
-    public function browse($input)
-    {
-        $input = number_format($this->store((float) $input), $this->options['decimals'], $this->options['dec_point'], $this->options['thousands_sep']);
-
-        return $this->options['prefix'].$input.$this->options['suffix'];
-    }
-
     public function store($input)
     {
         if ($this->options['min'] && $this->options['min'] != '') {

@@ -14,11 +14,6 @@ class Tags extends BaseFormfield
         'delimiter'      => ';',
     ];
 
-    public function browse($input)
-    {
-        return $input;
-    }
-
     public function store($input)
     {
         return $input;

@@ -51,12 +51,16 @@
                             </div>
                         </div>
                         <div class="panel-footer">
-                            <button type="submit" name="submit_action" value="" class="btn btn-primary">{{ __('voyager::generic.save') }}</button>
+                            <button type="submit" name="submit_action" value="" class="btn btn-primary">Save</button>
                             @can('edit', $model)
-                                <button type="submit" name="submit_action" value="edit" class="btn btn-primary">Save and Edit</button>
+                            @if (config('bread.bread_buttons.save_edit', true))
+                                <button type="submit" name="submit_action" value="edit" class="btn btn-primary">Save and edit</button>
+                            @endif
                             @endcan
                             @can('add', $model)
+                            @if (config('bread.bread_buttons.save_new', true))
                                 <button type="submit" name="submit_action" value="add" class="btn btn-primary">Save and create new</button>
+                            @endif
                             @endcan
                         </div>
                     </div>

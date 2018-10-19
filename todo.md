@@ -2,11 +2,34 @@
 
 * Make accessors not orderable automatically
 * Display arrays from Vue, not static from PHP
-* Make Text-Formfield sluggable
-* Translate options if neccessary
 * PHP &gt;= 7.0 only
-* Select ignores `multiple` and `default`
 * Check checkboxes for functionality \(single, multiple, etc\)
-* Find a good maps package
+* Find a good maps package for coordinates
 * Translate markdown-editor
-* Switch select to [https://github.com/sagalbot/vue-select](https://github.com/sagalbot/vue-select), docs look better/supports tagging directly
+* Use formfield also for browsing
+* Put a ref="'formfield_'+name" to ALL formfields
+
+# Check Formfields
+* Checkboxes
+* Color
+* Coordinates
+* DateTime
+* Dynamic Select
+* ~~Heading~~
+* Markdown
+* Masked Input
+* Number
+* ~~Paragraph~~
+* Password
+* Radiobuttons
+* Richtexteditor
+* Select => Default value?
+* ~~Tags~~
+* ~~Text~~
+* ~~Textarea~~
+
+# Relationships
+* HasOne
+* HasMany
+* BelongsTo
+* BelongsToMany

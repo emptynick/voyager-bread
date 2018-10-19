@@ -50,27 +50,4 @@ class Layout
             return $item->getComponent($action);
         });
     }
-
-    public function translate()
-    {
-        $this->elements = $this->elements->map(function ($element) {
-            $element->options = $element->options->map(function ($option) {
-                if ($option && is_string($option) && starts_with($option, '__')) {
-                    $option = __(str_after($option, '__'));
-                }
-
-                return $option;
-            });
-
-            foreach (['label', 'title', 'help_text'] as $item) {
-                if (isset($element->{$item}) && starts_with($element->{$item}, '__')) {
-                    $element->{$item} = __(str_after($element->{$item}, '__'));
-                }
-            }
-
-            return $element;
-        });
-
-        return $this;
-    }
 }

@@ -23,5 +23,7 @@ class BaseRelationshipFormfield extends BaseFormfield
 
     public function store($input)
     {
+        //Todo: return false because we dont actually store anything in the DB (directly)
+        return false;
     }
 }

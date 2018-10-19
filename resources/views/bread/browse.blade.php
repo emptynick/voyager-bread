@@ -18,6 +18,9 @@
                 <i class="voyager-trash"></i> <span>{{ __('voyager::generic.bulk_delete') }}</span>
             </a>
         @endcan
+        @if ($model->isTranslatable)
+        <language-switcher :languages="{{ json_encode(config('voyager.multilingual.locales')) }}"></language-switcher>
+        @endif
     </div>
     <div class="page-content browse container-fluid">
         @include('voyager::alerts')
@@ -25,7 +28,16 @@
             <div class="col-md-12">
                 <div class="panel panel-bordered">
                     <div class="panel-body">
-                        <v-server-table url="{{ route('voyager.'.$bread->slug.'.data') }}" :columns="columns" :options="options" ref="browse_table">
+                        <v-server-table :url="tableUrl" :columns="columns" :options="options" ref="browse_table">
+                            <template v-for="col in this.columns" :slot="col" slot-scope="props">
+                                <component
+                                    :is="'formfield-'+props.row[col].type"
+                                    :options="JSON.parse(props.row[col].options)"
+                                    :name="''"
+                                    :show="'browse'"
+                                    :input="props.row[col].data"
+                                ></component>
+                            </template>
                             <div slot="h__bread_delete">
                                 @can('delete', $model)
                                     <input type="checkbox" id="select_all_checkbox" v-model="selectAll" v-on:click="toggleSelectAll()">
@@ -48,24 +60,31 @@
                                 </a>
                                 @endcan
                                 @can('delete', $model)
-                                <a href="#" class="btn btn-sm btn-danger" v-on:click="deleteEntry(props.row.bread_delete)">
+                                <a href="#" @if ($soft_delete)v-if="!props.row.deleted_at"@endif class="btn btn-sm btn-danger" v-on:click="deleteEntry(props.row.bread_delete)">
                                     <i class="voyager-trash"></i> <span class="hidden-xs hidden-sm">{{ __('voyager::generic.delete') }}</span>
                                 </a>
+                                @if ($soft_delete)
+                                <a href="#" v-if="props.row.deleted_at" class="btn btn-sm btn-success" v-on:click="restoreEntry(props.row.restore)">
+                                    <i class="voyager-trash"></i> <span class="hidden-xs hidden-sm">Restore</span>
+                                </a>
+                                @endif
                                 @endcan
                             </div>
                             <div slot="h__bread_actions">
                                 <div class="pull-right">Actions</div>
                             </div>
-                            <div slot="{{ $model->getKeyName() }}" slot-scope="props">
-                                @can('read', $model)
-                                <a :href="props.row.bread_read">{{ props.row.<?php echo $model->getKeyName(); ?> }}</a>
-                                @else
-                                    @can('edit', $model)
-                                    <a :href="props.row.bread_edit">{{ props.row.<?php echo $model->getKeyName(); ?> }}</a>
-                                    @else
-                                        {{ props.row.<?php echo $model->getKeyName(); ?> }}
-                                    @endcan
-                                @endcan
+
+                            <div slot="beforeLimit">
+                                @if ($soft_delete)
+                                <div v-if="this.layout.trashed == 'select'">
+                                    Trashed:
+                                    <select class="form-control" v-model="withTrashed">
+                                        <option value="no">No</option>
+                                        <option value="yes">Yes</option>
+                                        <option value="only">Only</option>
+                                    </select>
+                                </div>
+                                @endif
                             </div>
                         </v-server-table>
                     </div>
@@ -78,12 +97,18 @@
 
 @section('javascript')
 <script src="{{ route('voyager.bread.scripts') }}"></script>
+@foreach(\Bread\BreadFacade::formfields() as $formfield)
+@include($formfield->getComponent('view'))
+@endforeach
+@include('bread::components.language-switcher')
 <script>
 new Vue({
     el: "#bread-browse",
     data: {
+        withTrashed: 'no',
         deleteIds: [],
         selectAll: false,
+        layout: {!! collect($layout)->toJson() !!},
         columns: {!! $layout->elements->pluck('field')->prepend('bread_delete')->push('bread_actions')->toJson() !!},
         options: {
             filterByColumn: true,
@@ -119,6 +144,7 @@ new Vue({
                 defaultOption: 'Select {column}',
             },
         },
+        tableUrl: "{{ route('voyager.'.$bread->slug.'.data') }}",
     },
     methods: {
         toggleSelectAll: function() {
@@ -167,8 +193,32 @@ new Vue({
 					{text: '{{ __("voyager::generic.no") }}', action: (toast) => this.$snotify.remove(toast.id) },
 				]
 			});
+        },
+        restoreEntry: function(url) {
+            this.$snotify.confirm('Are you sure you want to restore this {{ $bread->display_name_singular }}?', 'Restore {{ $bread->display_name_singular }}?', {
+				timeout: 5000,
+				showProgressBar: true,
+				closeOnClick: false,
+				pauseOnHover: true,
+				buttons: [
+					{text: '{{ __("voyager::generic.yes") }}', action: (toast) => {
+                        this.$http.post(url, { _token: '{{ csrf_token() }}' }).then(response => {
+                            this.$refs.browse_table.refresh();
+                            this.$snotify.remove(toast.id);
+                        }, response => {
+                            //
+                        });
+                    }, bold: false},
+					{text: '{{ __("voyager::generic.no") }}', action: (toast) => this.$snotify.remove(toast.id) },
+				]
+			});
+        },
+    },
+    watch: {
+        withTrashed: function(value) {
+            this.tableUrl = "{{ route('voyager.'.$bread->slug.'.data') }}?withTrashed="+value;
         }
-    }
+    },
 });
 </script>
 @endsection

@@ -53,7 +53,9 @@
             :mask="options.mask"
             :placeholder="options.placeholder"
             :placeholderChar="options.mask_char"
+            v-model="translate"
             class="form-control" />
+        <input type="hidden" :name="name" v-model="translationString">
         <small v-if="options.help_text.length > 0">@{{ options.help_text }}</small>
     </div>
 </div>
@@ -63,9 +65,17 @@
 Vue.component('formfield-maskedinput', {
     template: `@yield('maskedinput')`,
     props: ['show', 'options', 'type', 'fields', 'name', 'input'],
-    data: function() {
-        return {
-            'value': (this.input == null ? this.options.default_value : this.input),
+    created: function() {
+        this.setInitialTranslation(
+            (this.input == null ? this.options.default_value : this.input),
+            '{{ app()->getLocale() }}',
+            {!! json_encode(config('voyager.multilingual.locales')) !!},
+            this.options.isTranslatable
+        );
+    },
+    watch: {
+        translate: function (newVal, oldVal) {
+            this.$bus.$emit(this.name+'_change', newVal, oldVal);
         }
     },
 });

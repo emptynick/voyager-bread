@@ -32,11 +32,13 @@
         </div>
     </div>
     <div v-else-if="show == 'read'">
-        @{{ options.title }}
-        <br>
+        <div v-if="options.title.length > 0">
+            <strong>@{{ options.title }}</strong>
+            <br>
+        </div>
         @{{ translate }}
     </div>
-    <div v-else-if="show == 'relationship'">
+    <div v-else-if="show == 'relationship' || show == 'browse'">
         @{{ translate }}
     </div>
     <div v-else>

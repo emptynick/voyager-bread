@@ -14,15 +14,10 @@ class Password extends BaseFormfield
         'keep_password'  => true,
     ];
 
-    public function browse($input)
-    {
-        return '********';
-    }
-
     public function store($input)
     {
         if ($this->options->keep_password && (!$input || $input == '')) {
-            return; //Returning null will exclude the field from the update-query
+            return false; //Returning false will exclude the field from the update-query
         }
 
         return bcrypt($input ?: '');

@@ -24,16 +24,18 @@ class BreadController extends Controller
     {
         $this->authorize('browse', app($this->bread->model));
 
-        $layout = $this->getLayout('browse')->translate();
+        $layout = $this->getLayout('browse');
+        $layout->elements = translate_elements($layout->elements);
         $view = 'bread::bread.browse';
         if (view()->exists('bread::'.$this->bread->slug.'.browse')) {
             $view = 'bread::'.$this->bread->slug.'.browse';
         }
 
         return Voyager::view($view, [
-            'bread'  => $this->bread,
-            'model'  => $this->model,
-            'layout' => $layout,
+            'bread'       => $this->bread,
+            'model'       => $this->model,
+            'layout'      => $layout,
+            'soft_delete' => in_array('Illuminate\Database\Eloquent\SoftDeletes', class_uses($this->model)),
         ]);
     }
 
@@ -43,7 +45,8 @@ class BreadController extends Controller
         //Get browse-list, check if scopes are applied, if yes, check if $model->scope->where(id, $id)->findOrFail()
         $content = $this->model->findOrFail($id);
         $this->authorize('read', $content);
-        $layout = $this->prepareLayout($this->getLayout('read')->translate(), $this->model);
+        $layout = $this->prepareLayout($this->getLayout('read'), $this->model);
+        $layout->elements = translate_elements($layout->elements);
         $view = 'bread::bread.read';
         if (view()->exists('bread::'.$this->bread->slug.'.read')) {
             $view = 'bread::'.$this->bread->slug.'.read';
@@ -63,7 +66,8 @@ class BreadController extends Controller
         //Get browse-list, check if scopes are applied, if yes, check if $model->scope->where(id, $id)->findOrFail()
         $content = $this->model->findOrFail($id);
         $this->authorize('edit', $content);
-        $layout = $this->prepareLayout($this->getLayout('edit')->translate(), $this->model);
+        $layout = $this->prepareLayout($this->getLayout('edit'), $this->model);
+        $layout->elements = translate_elements($layout->elements);
         $view = 'bread::bread.edit-add';
         if (view()->exists('bread::'.$this->bread->slug.'.edit-add')) {
             $view = 'bread::'.$this->bread->slug.'.edit-add';
@@ -85,11 +89,11 @@ class BreadController extends Controller
 
         $validation = $this->getValidation($layout);
         $validator = Validator::make($request->all(), $validation['rules'], $validation['messages'])->validate();
-
         $data = $this->getProcessedInput($request, $layout)->toArray();
+
         foreach ($data as $key => $value) {
             if ($key) {
-                $content->{$key} = $value;
+                $content->setAttribute($key, $value);
             }
         }
         $content->save();
@@ -123,7 +127,9 @@ class BreadController extends Controller
     public function create()
     {
         $this->authorize('add', $this->model);
-        $layout = $this->prepareLayout($this->getLayout('add')->translate(), $this->model);
+        $layout = $this->prepareLayout($this->getLayout('add'), $this->model);
+        $layout->elements = translate_elements($layout->elements);
+
         $view = 'bread::bread.edit-add';
         if (view()->exists('bread::'.$this->bread->slug.'.edit-add')) {
             $view = 'bread::'.$this->bread->slug.'.edit-add';
@@ -169,14 +175,14 @@ class BreadController extends Controller
                 return redirect()
                         ->route("voyager.{$this->bread->slug}.edit", $content->getKey())
                         ->with([
-                            'message'    => __('voyager::generic.successfully_updated')." {$this->bread->display_name_singular}",
+                            'message'    => __('voyager::generic.successfully_added_new')." {$this->bread->display_name_singular}",
                             'alert-type' => 'success',
                         ]);
             } elseif ($request->submit_action == 'add') {
                 return redirect()
                         ->route("voyager.{$this->bread->slug}.create")
                         ->with([
-                            'message'    => __('voyager::generic.successfully_updated')." {$this->bread->display_name_singular}",
+                            'message'    => __('voyager::generic.successfully_added_new')." {$this->bread->display_name_singular}",
                             'alert-type' => 'success',
                         ]);
             }
@@ -202,23 +208,54 @@ class BreadController extends Controller
         }
         foreach ($ids as $id) {
             $data = $this->model->findOrFail($id);
-            //Clean-up everything related
+            //Todo: Clean-up everything related
         }
         $data->destroy($ids);
     }
 
+    public function restore(Request $request, $id)
+    {
+        $data = $this->model->findOrFail($id);
+        $this->authorize('delete', $data);
+        $data->restore();
+    }
+
     public function data(Request $request)
     {
-        $layout = $this->getLayout('browse');
+        //Todo: authorize!!!
+        $layout = $this->prepareLayout($this->getLayout('browse'), $this->model);
         if ($request->has('list')) {
             $layout = $this->bread->layouts->where('type', 'list')->where('name', $request->list)->first();
         }
 
         extract(request()->only(['query', 'limit', 'page', 'orderBy', 'ascending']));
         $fields = SchemaManager::describeTable($this->model->getTable())->keys();
-        $relationships = $this->getRelationships($this->bread)->toArray();
+        $relationships = $this->getRelationships($this->bread);
         $attributes = $this->getAccessors($this->bread)->toArray();
-        $data = $this->model->select('*');
+
+        $data = $this->model;
+        if (in_array('Illuminate\Database\Eloquent\SoftDeletes', class_uses($this->model))) {
+            if ($layout->trashed == 'show') {
+                //Also show trashed
+            } else if ($layout->trashed == 'select') {
+                //Let the user decide what to show
+                if ($request->has('withTrashed')) {
+                    if ($request->withTrashed == 'yes') {
+                        //
+                    } else if ($request->withTrashed == 'no') {
+                        $data = $data->whereNull('deleted_at');
+                    } else if ($request->withTrashed == 'only') {
+                        $data = $data->whereNotNull('deleted_at');
+                    }
+                } else {
+                    $data = $data->whereNull('deleted_at');
+                }
+            } else {
+                //Hide trashed
+                $data = $data->whereNull('deleted_at');
+            }
+        }
+        $data = $data->select('*');
         if ($layout->data && $layout->data == 'scope' && $layout->scope && $layout->scope != '') {
             $data = $data->{$layout->scope}();
         }
@@ -274,54 +311,47 @@ class BreadController extends Controller
 
         foreach ($results as $key => $result) {
             foreach ($elements as $name) {
+                $data = '';
                 //Test what $name is
                 if (in_array($name, $fields) || in_array($name, $attributes)) {
                     //Its a normal field or an accessor
-                    $data = $result->{$name};
-                } else {
+                    if ($this->model->isTranslatable && $this->model->isFieldTranslatable($name)) {
+                        $data = $result->getPlainValue($name);
+                    } else {
+                        $data = $result->{$name};
+                    }
+                } elseif (strpos($name, '|') !== false) {
                     //It should be a relationship-attribute
                     $parts = explode('|', $name, 2);
-                    if (in_array($parts[0], $relationships)) {
+                    $relationship_details = $relationships->where('name', $parts[0])->first();
+                    if ($relationship_details) {
                         //It IS a relationship-attribute
-                        $relationship = $result->{$parts[0]};
-                        if ($relationship instanceof Collection) {
-                            foreach ($relationship as $i => $related) {
-                                if ($i < 3) {
-                                    $data .= $related->{$parts[1]};
-                                    if ($i <= 1) {
-                                        $data .= ', ';
-                                    }
-                                }
-                            }
-                            if (count($relationship) > 3) {
-                                $data .= ' and '.(count($relationship) - 3).' more';
-                            }
-                            if (count($relationship) == 0) {
-                                $data = __('voyager::generic.none');
-                            }
-                        } elseif (!isset($relationship)) {
-                            $data = '-';
-                        } else {
-                            $data = $relationship->{$parts[1]};
+                        $relationship = collect($result->{$relationship_details['name']}()->pluck($parts[1]));
+                        //Todo: relationship values use the current app-locale
+                        $data = implode(', ', $relationship->take(3)->toArray());
+                        if (count($relationship) > 3) {
+                            $data .= ' and '.(count($relationship) - 3).' more';
                         }
-                        //Todo: add link to results
+                        if (count($relationship) == 0) {
+                            $data = __('voyager::generic.none');
+                        }
                     }
                 }
 
-                if (is_array($data)) {
-                    //Todo: Consider displaying arrays?
-                    $final[$key][$name] = 'Array';
-                } else {
-                    $final[$key][$name] = $layout->elements->where('field', $name)->first()->browse($data);
-                }
-                $data = '';
+                $element = $layout->elements->where('field', $name)->first();
+
+                $final[$key][$name]['data'] = $data;
+                $final[$key][$name]['type'] = $element->getCodename();
+                $final[$key][$name]['options'] = $element->getOptions();
             }
 
-            //Add URLs
-            $final[$key]['bread_read'] = route('voyager.'.$this->bread->slug.'.show', $result[$this->model->getKeyName()]);
-            $final[$key]['bread_edit'] = route('voyager.'.$this->bread->slug.'.edit', $result[$this->model->getKeyName()]);
+            //Add static stuff
+            $final[$key]['bread_read']   = route('voyager.'.$this->bread->slug.'.show', $result[$this->model->getKeyName()]);
+            $final[$key]['bread_edit']   = route('voyager.'.$this->bread->slug.'.edit', $result[$this->model->getKeyName()]);
             $final[$key]['bread_delete'] = route('voyager.'.$this->bread->slug.'.destroy', $result[$this->model->getKeyName()]);
-            $final[$key]['bread_key'] = $result->getKey();
+            $final[$key]['bread_key']    = $result->getKey();
+            $final[$key]['deleted_at']   = $result['deleted_at'] ?? '';
+            $final[$key]['restore']      = route('voyager.'.$this->bread->slug.'.restore', $result[$this->model->getKeyName()]);
         }
 
         return [
