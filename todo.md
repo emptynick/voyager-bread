@@ -11,12 +11,12 @@
 * Checkboxes
 * Color
 * Coordinates
-* DateTime
+* ~~DateTime~~
 * Dynamic Select
 * ~~Heading~~
 * Markdown
 * Masked Input
-* Number
+* ~~Number~~
 * ~~Paragraph~~
 * Password
 * Radiobuttons

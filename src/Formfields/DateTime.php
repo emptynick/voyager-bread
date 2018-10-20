@@ -8,22 +8,21 @@ class DateTime extends BaseFormfield
     protected $codename = 'datetime';
 
     public $options = [
-        'field2'         => '',
-        'type'           => 'datetime',
-        'range'          => false,
+        'type'           => 'datetime', //date, datetime, time
         'help_text'      => '',
         'title'          => '',
+        'min_from'       => '',
     ];
 
     public function store($input)
     {
-        if ($this->options->range) {
-            return [
-                $this->options->field  => '',
-                $this->options->field2 => '',
-            ];
-        } else {
-            return $input;
+        if ($this->options['type'] == 'datetime') {
+            return \Carbon\Carbon::parse($input)->toDateTimeString();
+        } elseif ($this->options['type'] == 'date') {
+            return \Carbon\Carbon::parse($input)->toDateString();
+        } elseif ($this->options['type'] == 'time') {
+            return \Carbon\Carbon::parse($input)->toTimeString();
         }
+        return $input;
     }
 }

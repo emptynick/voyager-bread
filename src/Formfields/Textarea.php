@@ -15,9 +15,4 @@ class Textarea extends Text
         'help_text'      => '',
         'rows'           => 5,
     ];
-
-    public function store($input)
-    {
-        return $input;
-    }
 }

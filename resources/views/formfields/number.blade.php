@@ -29,14 +29,6 @@
             <label>Decimals</label>
             <input type="number" min="0" class="form-control" v-model="options.decimals">
         </div>
-        <div class="form-group col-md-6">
-            <label>Decimal sep.</label>
-            <input type="text" class="form-control" v-model="options.dec_point">
-        </div>
-        <div class="form-group col-md-6">
-            <label>Thousands sep.</label>
-            <input type="text" class="form-control" v-model="options.thousands_sep">
-        </div>
         <div class="form-group col-md-4" v-if="type == 'view'">
             <label>Min</label>
             <input type="number" min="0" class="form-control" v-model="options.min">
@@ -55,10 +47,10 @@
             <strong>@{{ options.title }}</strong>
             <br>
         </div>
-        @{{ translate }}
+        @{{ formatedValue }}
     </div>
     <div v-else-if="show == 'relationship' || show == 'browse'">
-        @{{ translate }}
+        @{{ formatedValue }}
     </div>
     <div v-else>
         @{{ options.title }}
@@ -86,6 +78,11 @@ Vue.component('formfield-number', {
             {!! json_encode(config('voyager.multilingual.locales')) !!},
             this.options.isTranslatable
         );
+    },
+    computed: {
+        formatedValue: function() {
+            return this.options.prefix + this.translate.toFixed(this.options.decimals) + this.options.suffix;
+        },
     },
     watch: {
         translate: function (newVal, oldVal) {

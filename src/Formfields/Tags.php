@@ -13,9 +13,4 @@ class Tags extends BaseFormfield
         'help_text'      => '',
         'delimiter'      => ';',
     ];
-
-    public function store($input)
-    {
-        return $input;
-    }
 }

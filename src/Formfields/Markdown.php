@@ -13,9 +13,4 @@ class Markdown extends BaseFormfield
         'help_text'      => '',
         'spellcheck'     => false,
     ];
-
-    public function store($input)
-    {
-        return $input;
-    }
 }

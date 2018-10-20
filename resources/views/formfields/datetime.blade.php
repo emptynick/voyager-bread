@@ -1,23 +1,13 @@
 @section('datetime')
 <div>
     <div v-if="show == 'options'">
-        <div class="form-group" v-if="options.range">
-            <label>Field 2</label>
-            <select class="form-control" v-model="options.field2">
-                <option v-for="field in fields">
-                    @{{ field }}
-                </option>
-            </select>
-        </div>
         <div class="form-group" v-if="type == 'view'">
             <label>Type</label>
             <select class="form-control" v-model="options.type">
                 <option value="date">Date</option>
                 <option value="datetime">Date & Time</option>
+                <option value="time">Time</option>
             </select>
-        </div>
-        <div class="checkbox">
-            <label><input type="checkbox" v-model="options.range" value="true">Range</label>
         </div>
         <div class="form-group" v-if="type == 'view'">
             <label>Title</label>
@@ -27,15 +17,29 @@
             <label>Help text</label>
             <input type="text" class="form-control" v-model="options.help_text">
         </div>
+        <div class="form-group">
+            <label>Minimum from</label>
+            <select class="form-control" v-model="options.min_from">
+                <option value="">None</option>
+                <option v-for="field in fields">
+                    @{{ field }}
+                </option>
+            </select>
+        </div>
     </div>
+
     <div v-else>
         @{{ options.title }}
-        <div :class="'col-md-'+(options.range ? 6 : 12)">
-            <datetime v-model="date" :type="options.type" input-class="form-control"></datetime>
-        </div>
-        <div class="col-md-6" v-if="options.range">
-            <datetime v-model="date2" :min-datetime="date" :type="options.type" input-class="form-control"></datetime>
-        </div>
+        <br v-if="options.title.length > 0">
+        <datetime
+            v-model="date"
+            :type="options.type"
+            :disabled="show == 'mockup'"
+            :min-datetime="this.minDateTime"
+            :phrases="{ ok: 'Continue', cancel: 'Exit' }"
+            input-class="form-control"
+        ></datetime>
+        <input type="text" :name="name" v-model="date">
         <small v-if="options.help_text.length > 0">@{{ options.help_text }}</small>
     </div>
 </div>
@@ -44,13 +48,40 @@
 <script>
 Vue.component('formfield-datetime', {
     template: `@yield('datetime')`,
-    data: function() {
+    props: ['show', 'options', 'type', 'fields', 'name', 'input'],
+    data: function () {
         return {
-            //Todo: split input to both dates
-            date: '',
-            date2: ''
+            minDateTime: null,
+            date: (this.input ? this.toISOLocal(new Date(this.input), this.input) : ''),
         };
     },
-    props: ['show', 'options', 'type', 'fields', 'name', 'input']
+    watch: {
+        date: function (newVal, oldVal) {
+            this.$bus.$emit(this.name+'_change', newVal, oldVal);
+        }
+    },
+    mounted: function() {
+        this.$bus.$on(this.options.min_from+'_change', (newVal, oldVal) => {
+            if (this.options.min_from != '' && typeof oldVal === 'string') {
+                this.minDateTime = newVal;
+            }
+        });
+    },
+    methods: {
+        toISOLocal(d, input) {
+            //var ddd = LuxonDateTime.local();
+            if (input.endsWith('Z')) {
+                return input;
+            }
+            if (this.options.type == 'time') {
+                d = new Date('1970-01-01T' + input + 'Z');
+            }
+            var z = n => (n < 10 ? '0' : '') + n;
+
+            return d.getFullYear() + '-' + z(d.getMonth()+1) + '-' +
+            z(d.getDate()) + 'T' + z(d.getHours()) + ':'  + z(d.getMinutes()) +
+            ':' + z(d.getSeconds())+'.000Z';
+        }
+    }
 });
 </script>

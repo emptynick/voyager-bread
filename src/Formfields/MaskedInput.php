@@ -16,9 +16,4 @@ class MaskedInput extends BaseFormfield
         'mask'           => '+',
         'mask_char'      => '-',
     ];
-
-    public function store($input)
-    {
-        return $input;
-    }
 }
