@@ -34,14 +34,6 @@ The suffix gets added to the end of the value when browsing or reading
 
 How many decimals are shown and saved in the database? For example 2 will result in `1.23`
 
-#### Decimal separator
-
-The character used to separate decimals. Defaults to a dot
-
-#### Thousand separator
-
-The character used to separate thousands. Defaults to a comma and will result in e.g. `1,234,567`
-
 #### Min
 
 The minimum value
