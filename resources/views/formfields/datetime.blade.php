@@ -39,7 +39,7 @@
             :phrases="{ ok: 'Continue', cancel: 'Exit' }"
             input-class="form-control"
         ></datetime>
-        <input type="text" :name="name" v-model="date">
+        <input type="hidden" :name="name" v-model="date">
         <small v-if="options.help_text.length > 0">@{{ options.help_text }}</small>
     </div>
 </div>
