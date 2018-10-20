@@ -85,6 +85,9 @@ Vue.component('formfield-datetime', {
             ':' + z(d.getSeconds())+'.000Z';
         },
         getParsedDateTime() {
+            if (!this.date) {
+                return '-';
+            }
             var d = new Date(this.date);
             if (this.options.type == 'time') {
                 return d.getHours()+':'+d.getMinutes();
