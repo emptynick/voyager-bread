@@ -1,7 +1,7 @@
 @section('datetime')
 <div>
     <div v-if="show == 'options'">
-        <div class="form-group" v-if="type == 'view'">
+        <div class="form-group">
             <label>Type</label>
             <select class="form-control" v-model="options.type">
                 <option value="date">Date</option>
@@ -17,7 +17,7 @@
             <label>Help text</label>
             <input type="text" class="form-control" v-model="options.help_text">
         </div>
-        <div class="form-group">
+        <div class="form-group" v-if="type == 'view'">
             <label>Minimum from</label>
             <select class="form-control" v-model="options.min_from">
                 <option value="">None</option>
@@ -27,7 +27,9 @@
             </select>
         </div>
     </div>
-
+    <div v-else-if="show == 'relationship' || show == 'browse'">
+        @{{ getParsedDateTime() }}
+    </div>
     <div v-else>
         @{{ options.title }}
         <br v-if="options.title.length > 0">
@@ -81,6 +83,15 @@ Vue.component('formfield-datetime', {
             return d.getFullYear() + '-' + z(d.getMonth()+1) + '-' +
             z(d.getDate()) + 'T' + z(d.getHours()) + ':'  + z(d.getMinutes()) +
             ':' + z(d.getSeconds())+'.000Z';
+        },
+        getParsedDateTime() {
+            var d = new Date(this.date);
+            if (this.options.type == 'time') {
+                return d.getHours()+':'+d.getMinutes();
+            } else if (this.options.type == 'date') {
+                return d.toLocaleDateString();
+            }
+            return d.toLocaleString();
         }
     }
 });
