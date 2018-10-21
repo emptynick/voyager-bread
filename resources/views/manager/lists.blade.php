@@ -27,11 +27,11 @@
         <div class="col-md-12">
             <div class="dropdown" style="display:inline" v-if="this.lists.length > 0">
                 <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
-                    Add Element
+                    {{ __("bread::manager.add_element") }}
                     <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu">
-                    <li class="dropdown-header">Formfields</li>
+                    <li class="dropdown-header">{{ __("bread::generic.formfields") }}</li>
                     @foreach(\Bread\BreadFacade::formfields()->where('group', 'formfield') as $formfield)
 					<li>
                         <a href="#" v-on:click="addElement('{{ $formfield->getCodeName() }}')">
@@ -43,7 +43,7 @@
             </div>
             <div class="dropdown" style="display:inline" v-if="this.lists.length > 0">
                 <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
-                    List (@{{ this.currentList.name }})
+                    {{ __("bread::generic.list") }} (@{{ this.currentList.name }})
                     <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu">

@@ -28,11 +28,11 @@
             <div class="col-md-12">
                 <div class="dropdown" style="display:inline" v-if="this.views.length > 0">
                     <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
-                        Add Element
+                        {{ __("bread::manager.add_element") }}
                         <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu">
-                        <li class="dropdown-header">Formfields</li>
+                        <li class="dropdown-header">{{ __("bread::generic.formfields") }}</li>
                         @foreach(\Bread\BreadFacade::formfields()->where('group', 'formfield')->sortBy('name') as $formfield)
     					<li>
                             <a href="#" v-on:click="addElement('{{ $formfield->getCodeName() }}')">
@@ -40,7 +40,7 @@
                             </a>
                         </li>
     					@endforeach
-                        <li class="dropdown-header">Layout Elements</li>
+                        <li class="dropdown-header">{{ __("bread::generic.layout_elements") }}</li>
                         @foreach(\Bread\BreadFacade::formfields()->where('group', 'layout') as $formfield)
     					<li>
                             <a href="#" v-on:click="addElement('{{ $formfield->getCodeName() }}')">
@@ -49,7 +49,7 @@
                         </li>
     					@endforeach
                         @if (count($relationships) > 0)
-                            <li class="dropdown-header">Relationships</li>
+                            <li class="dropdown-header">{{ __("bread::generic.relationships") }}</li>
                             @foreach($relationships as $relationship)
                             <li>
                                 <a href="#" v-on:click="addElement('{{ $relationship['type_slug'] }}', '{{ $relationship['name'] }}')">
@@ -62,7 +62,7 @@
                 </div>
                 <div class="dropdown" style="display:inline" v-if="this.views.length > 0">
                     <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
-                        View (@{{ this.currentView.name }})
+                        {{ __("bread::generic.view") }} (@{{ this.currentView.name }})
                         <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu">
@@ -73,9 +73,9 @@
                         </li>
                     </ul>
                 </div>
-                <button @click="newViewPrompt()" class="btn btn-primary">New View</button>
-                <button @click="saveViews()" class="btn btn-primary">Save Views</button>
-                <button v-if="this.views.length > 0" @click="deleteView()" class="btn btn-primary">Delete View</button>
+                <button @click="newViewPrompt()" class="btn btn-primary">{{ __("bread::manager.view_new") }}</button>
+                <button @click="saveViews()" class="btn btn-primary">{{ __("bread::manager.view_save") }}</button>
+                <button v-if="this.views.length > 0" @click="deleteView()" class="btn btn-primary">{{ __("bread::manager.view_delete") }}</button>
             </div>
         </div>
         <div class="clearfix"></div>
@@ -116,14 +116,14 @@
                             </component>
                             <div :id="id+'_options'">
                                 <div class="pull-left">
-                                    <h4>Options</h4>
+                                    <h4>{{ __("bread::generic.options") }}</h4>
                                 </div>
                                 <div class="pull-right" @click="openOptions(null)">
                                     <span class="voyager-x" style="cursor:pointer;"></span>
                                 </div>
                                 <div class="clearfix"></div>
                                 <div class="form-group" v-if="componentType(item) != 'formfield-relationship'">
-                                    <label>Field</label>
+                                    <label>{{ __("bread::manager.field") }}</label>
                                     <select class="form-control" v-model="item.field">
                                         <option v-for="field in fields">
                                             @{{ field }}
@@ -174,7 +174,7 @@ var builder = new Vue({
     },
     methods: {
         deleteElement(id) {
-            this.$snotify.confirm('Are you sure you want to delete this element?', 'Delete Element?', {
+            this.$snotify.confirm('{{ __("voyager::manager.delete_element_confirm") }}', '{{ __("voyager::manager.delete_element") }}', {
 				timeout: 5000,
 				showProgressBar: true,
 				closeOnClick: false,
@@ -209,7 +209,7 @@ var builder = new Vue({
             this.currentView.elements.push(newitem);
         },
         deleteView() {
-            this.$snotify.confirm('Are you sure you want to delete this View?', 'Delete View?', {
+            this.$snotify.confirm('{{ __("voyager::manager.view_delete_confirm") }}', '{{ __("voyager::manager.view_delete") }}', {
 				timeout: 5000,
 				showProgressBar: true,
 				closeOnClick: false,
@@ -229,9 +229,9 @@ var builder = new Vue({
                 views: JSON.stringify(this.views),
                 _token: "{{ csrf_token() }}"
             }).then(response => {
-                this.$snotify.success('Views were successfully saved.');
+                this.$snotify.success('{{ __("voyager::manager.view_saved") }}');
             }, response => {
-                this.$snotify.error('Saving views failed: ' + response.body);
+                this.$snotify.error('{{ __("voyager::manager.view_saving_failed") }}: ' + response.body);
             });
         },
         newViewPrompt: function() {
