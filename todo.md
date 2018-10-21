@@ -6,6 +6,7 @@
 * Check checkboxes for functionality \(single, multiple, etc\)
 * Find a good maps package for coordinates
 * Translate markdown-editor
+* Validate bread/edit-add
 
 # Check Formfields
 * Checkboxes

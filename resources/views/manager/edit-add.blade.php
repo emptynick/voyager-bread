@@ -14,10 +14,10 @@
     <li><a href="{{ route('voyager.bread.index') }}">{{ __('bread::manager.bread_manager') }}</a></li>
     @if(isset($bread))
         <li>{{ $bread->display_name_plural }}</li>
-        <li>Edit</li>
+        <li>{{ __('voyager::generic.edit') }}</li>
     @else
         <li>{{ ucfirst($table) }}</li>
-        <li>Add</li>
+        <li>{{ __('voyager::generic.add') }}</li>
     @endif
 </ol>
 @endsection

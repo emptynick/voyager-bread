@@ -37,10 +37,10 @@
                                 <div class="actions pull-right">
                                     @if (Bread\BreadFacade::hasBread($table))
                                     <a href="{{ route('voyager.bread.views.edit', $table) }}" class="btn btn-sm btn-primary">
-                                        <i class="voyager-lightbulb"></i> Views
+                                        <i class="voyager-lightbulb"></i> {{ __('bread::generic.views') }}
                                     </a>
                                     <a href="{{ route('voyager.bread.lists.edit', $table) }}" class="btn btn-sm btn-primary">
-                                        <i class="voyager-list"></i> Lists
+                                        <i class="voyager-list"></i> {{ __('bread::generic.lists') }}
                                     </a>
                                     <a href="{{ route('voyager.bread.edit', ['table' => $table]) }}" class="btn btn-sm btn-primary">
                                         <i class="voyager-edit"></i> {{ __('bread::manager.edit_bread') }}
@@ -82,10 +82,10 @@ var builder = new Vue({
             event.preventDefault();
             this.$snotify.confirm('{{ __('bread::manager.delete_bread_question') }}', '{{ __('bread::manager.delete_bread_title') }}', {
                 buttons: [
-                    { text: 'Yes', action: (toast) => {
+                    { text: '{{ __('voyager::generic.yes') }}', action: (toast) => {
                         this.$refs.form.submit();
                     }},
-                    { text: 'No', action: (toast) => this.$snotify.remove(toast.id)},
+                    { text: '{{ __('voyager::generic.yes') }}', action: (toast) => this.$snotify.remove(toast.id)},
                 ],
             });
         }

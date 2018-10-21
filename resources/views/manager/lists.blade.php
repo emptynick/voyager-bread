@@ -55,9 +55,9 @@
                     </li>
                 </ul>
             </div>
-            <button @click="newListPrompt()" class="btn btn-primary">New List</button>
-            <button @click="saveLists()" class="btn btn-primary">Save Lists</button>
-            <button @click="deleteList()" class="btn btn-primary" v-if="this.lists.length > 0">Delete List</button>
+            <button @click="newListPrompt()" class="btn btn-primary">{{ __('bread::manager.list_new') }}</button>
+            <button @click="saveLists()" class="btn btn-primary">{{ __('bread::manager.list_save') }}</button>
+            <button @click="deleteList()" class="btn btn-primary" v-if="this.lists.length > 0">{{ __('bread::manager.list_delete') }}</button>
         </div>
         <div class="clearfix"></div>
         <div id="wrapper" style="align-items: stretch;width: 100%; height: 100%;">
@@ -82,14 +82,14 @@
             <!-- -->
             <div class="panel panel-bordered" v-if="this.lists.length > 0 && currentList.elements.length > 0">
                 <div class="row fake-table-hd">
-                    <div class="col-xs-2">Field</div>
-                    <div class="col-xs-3">Label</div>
-                    <div class="col-xs-1">Type</div>
-                    <div class="col-xs-1">Searchable</div>
-                    <div class="col-xs-1">Orderable</div>
-                    <div class="col-xs-1">Initial Order</div>
-                    <div class="col-xs-1">Show in relationship</div>
-                    <div class="col-xs-2">Actions</div>
+                    <div class="col-xs-2">{{ __('bread::manager.field') }}</div>
+                    <div class="col-xs-3">{{ __('bread::manager.label') }}</div>
+                    <div class="col-xs-1">{{ __('bread::manager.type') }}</div>
+                    <div class="col-xs-1">{{ __('bread::manager.searchable') }}</div>
+                    <div class="col-xs-1">{{ __('bread::manager.orderable') }}</div>
+                    <div class="col-xs-1">{{ __('bread::manager.initial_order') }}</div>
+                    <div class="col-xs-1">{{ __('bread::manager.show_in_relationship') }}</div>
+                    <div class="col-xs-2">{{ __('bread::generic.actions') }}</div>
                 </div>
                 <draggable v-model="currentList.elements" @end="recalculateIds">
                     <div class="row row-dd"
@@ -124,12 +124,12 @@
                         </div>
                         <div class="col-xs-1"><input type="checkbox" v-model="element.relationship_show"></div>
                         <div class="col-xs-2">
-                            <button class="btn btn-primary" v-on:click="openOptions(element.id)">Options</button>
-                            <button class="btn btn-danger" v-on:click="deleteElement(element.id)">Delete</button>
+                            <button class="btn btn-primary" v-on:click="openOptions(element.id)">{{ __('bread::generic.options') }}</button>
+                            <button class="btn btn-danger" v-on:click="deleteElement(element.id)">{{ __('voyager::generic.delete') }}</button>
                         </div>
                         <div :id="element.id+'_options'">
                             <div class="pull-left">
-                                <h4>Options</h4>
+                                <h4>{{ __('bread::generic.options') }}</h4>
                             </div>
                             <div class="pull-right" @click="openOptions(null)">
                                 <span class="voyager-x" style="cursor:pointer;"></span>
@@ -146,26 +146,26 @@
                 <div class="panel panel-bordered" v-if="this.lists.length > 0">
                     <div class="panel-heading">
                         <h3 class="panel-title">
-                            <i class="voyager-data"></i> Data
-                            <span class="panel-desc"> The Data to be shown in this list</span>
+                            <i class="voyager-data"></i> {{ __('bread::generic.data') }}
+                            <span class="panel-desc"> {{ __('bread::manager.data_to_be_show') }}</span>
                         </h3>
                     </div>
                     <div class="panel-body">
                         <div class="radio">
                             <label>
-                                <input type="radio" value="all" v-model="currentList.data">All Data
+                                <input type="radio" value="all" v-model="currentList.data">{{ __('bread::manager.all_data') }}
                             </label>
                         </div>
                         <div class="radio">
                             <label>
-                                <input type="radio" value="scope" v-model="currentList.data">Method/Scope
+                                <input type="radio" value="scope" v-model="currentList.data">{{ __('bread::manager.method_scope') }}
                             </label>
                             <input
                                 type="text"
                                 class="form-control"
                                 :disabled="currentList.data != 'scope'"
                                 v-model="currentList.scope"
-                                placeholder="Method/Scope Name">
+                                placeholder="{{ __('bread::manager.method_scope_name') }}">
                         </div>
                     </div>
                 </div>
@@ -174,24 +174,24 @@
                 <div class="panel panel-bordered" v-if="this.lists.length > 0">
                     <div class="panel-heading">
                         <h3 class="panel-title">
-                            <i class="voyager-trash"></i> Trashed
-                            <span class="panel-desc"> Show/hide trashed entries or select</span>
+                            <i class="voyager-trash"></i> {{ __('bread::manager.trashed') }}
+                            <span class="panel-desc"> {{ __('bread::manager.trashed_info') }}</span>
                         </h3>
                     </div>
                     <div class="panel-body">
                         <div class="radio">
                             <label>
-                                <input type="radio" value="show" v-model="currentList.trashed">Show
+                                <input type="radio" value="show" v-model="currentList.trashed">{{ __('bread::generic.show') }}
                             </label>
                         </div>
                         <div class="radio">
                             <label>
-                                <input type="radio" value="hide" v-model="currentList.trashed">Hide
+                                <input type="radio" value="hide" v-model="currentList.trashed">{{ __('bread::generic.hide') }}
                             </label>
                         </div>
                         <div class="radio">
                             <label>
-                                <input type="radio" value="select" v-model="currentList.trashed">Select
+                                <input type="radio" value="select" v-model="currentList.trashed">{{ __('bread::generic.select') }}
                             </label>
                         </div>
                     </div>
@@ -201,8 +201,8 @@
                 <div class="panel panel-bordered" v-if="this.lists.length > 0">
                     <div class="panel-heading">
                         <h3 class="panel-title">
-                            <i class="voyager-lock"></i> Roles
-                            <span class="panel-desc"> The roles which use this List</span>
+                            <i class="voyager-lock"></i> {{ __('bread::manager.roles') }}
+                            <span class="panel-desc"> {{ __('bread::manager.roles_info') }}</span>
                         </h3>
                     </div>
                     <div class="panel-body">
@@ -251,7 +251,7 @@ var builder = new Vue({
             this.currentOptionId = id;
         },
         deleteElement(id) {
-            this.$snotify.confirm('Are you sure you want to delete this element?', 'Delete Element?', {
+            this.$snotify.confirm('{{ __('bread::manager.delete_element_confirm') }}', '{{ __('bread::manager.delete_element') }}', {
 				timeout: 5000,
 				showProgressBar: true,
 				closeOnClick: false,
@@ -289,7 +289,7 @@ var builder = new Vue({
             this.currentList.elements.push(newitem);
         },
         deleteList() {
-            this.$snotify.confirm('Are you sure you want to delete this List?', 'Delete List?', {
+            this.$snotify.confirm('{{ __('bread::manager.list_delete_confirm') }}', '{{ __('bread::manager.list_delete') }}?', {
 				timeout: 5000,
 				showProgressBar: true,
 				closeOnClick: false,
@@ -309,9 +309,9 @@ var builder = new Vue({
                 lists: JSON.stringify(this.lists),
                 _token: "{{ csrf_token() }}"
             }).then(response => {
-                this.$snotify.success('Lists were successfully saved.');
+                this.$snotify.success('{{ __("bread::manager.lists_saved") }}');
             }, response => {
-                this.$snotify.error('Saving lists failed: ' + response.body);
+                this.$snotify.error('{{ __("bread::manager.lists_save_failed") }} ' + response.body);
             });
         },
         newListPrompt: function() {

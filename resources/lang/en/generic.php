@@ -5,4 +5,9 @@ return [
     'name'                              => 'Name',
     'views'                             => 'Views',
     'lists'                             => 'Lists',
+    'options'                           => 'Options',
+    'data'                              => 'Data',
+    'show'                              => 'Show',
+    'hide'                              => 'Hide',
+    'select'                            => 'Select',
 ];
