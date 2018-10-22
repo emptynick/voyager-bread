@@ -1,10 +1,17 @@
 @section('language-input')
 <div>
+    <textarea v-model="translate"
+           class="form-control"
+           v-on:input="$emit('input', translationString)"
+           :placeholder="this.placeholder"
+           v-if="type == 'textarea'">
+    </textarea>
     <input v-model="translate"
            :type="this.type"
            class="form-control"
-           :name="name+'_faker'"
-           :placeholder="this.placeholder">
+           v-on:input="$emit('input', translationString)"
+           :placeholder="this.placeholder"
+           v-else>
     <input type="hidden" :name="name" v-model="translationString">
 </div>
 @endsection
@@ -24,11 +31,11 @@ Vue.component('language-input', {
     watch: {
         translate: function (newVal, oldVal) {
             this.$bus.$emit(this.name+'_change', newVal, oldVal);
-        }
+        },
     },
     mounted: function() {
         this.$bus.$on(this.slug_from+'_change', (newVal, oldVal) => {
-            if (this.slug_from != '' && typeof oldVal === 'string') {
+            if (this.slug_from != '' && this.name !== undefined && typeof oldVal === 'string') {
                 this.translate = Vue.slugify(newVal);
             }
         });

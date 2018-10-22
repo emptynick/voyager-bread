@@ -3,7 +3,7 @@
     <div v-if="show == 'options'">
         <div class="form-group" v-if="type == 'view'">
             <label>Text</label>
-            <input type="text" class="form-control" v-model="options.text">
+            <language-input type="text" v-model="options.text" :input="options.text" />
         </div>
         <div class="form-group" v-if="type == 'view'">
             <label>Size</label>
@@ -18,7 +18,7 @@
         </div>
     </div>
     <div v-else>
-        <component :is="options.size">@{{ options.text }}</component>
+        <component :is="options.size">@{{ translated(options.text) }}</component>
     </div>
 </div>
 @endsection

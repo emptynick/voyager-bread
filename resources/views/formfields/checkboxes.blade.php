@@ -3,11 +3,11 @@
     <div v-if="show == 'options'">
         <div class="form-group" v-if="type == 'view'">
             <label>Title</label>
-            <input type="text" class="form-control" v-model="options.title">
+            <language-input type="text" v-model="options.title" :input="options.title" />
         </div>
         <div class="form-group" v-if="type == 'view'">
             <label>Help text</label>
-            <input type="text" class="form-control" v-model="options.help_text">
+            <language-input type="text" v-model="options.help_text" :input="options.help_text" />
         </div>
         <div class="col-md-12">
             <table class="table">
@@ -38,13 +38,13 @@
 
     </div>
     <div v-else>
-        <label v-if="options.title.length > 0">@{{ options.title }}</label>
+        <label v-if="options.title.length > 0">@{{ translated(options.title) }}</label>
         <div :class="'checkbox '+(show == 'mockup' ? 'disabled' : '')" v-for="option in options.options">
             <label><input type="checkbox" :name="getName()" :value="option.key" :disabled="show == 'mockup'">
                 @{{ option.value }}
             </label>
         </div>
-        <small v-if="options.help_text.length > 0">@{{ options.help_text }}</small>
+        <small v-if="options.help_text.length > 0">@{{ translated(options.help_text) }}</small>
     </div>
 </div>
 @endsection

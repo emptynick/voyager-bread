@@ -18,16 +18,12 @@ class Bread
     public $edit_view;
     public $add_view;
 
-    public function __construct($data, $simple = false)
+    public function __construct($data)
     {
         $this->layouts = collect([]);
         foreach ($data as $key => $value) {
-            if ($key == 'layouts' && !$simple) {
+            if ($key == 'layouts') {
                 $this->parseLayouts($value);
-            } elseif ($key == 'display_name_singular' || $key == 'display_name_plural' || $key == 'slug') {
-                $this->{$key} = get_translated_value($value);
-                $this->{$key.'_string'} = $value;
-                $this->{$key.'_array'} = json_decode($value);
             } else {
                 $this->{$key} = $value;
             }

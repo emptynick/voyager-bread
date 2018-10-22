@@ -1,6 +1,6 @@
 @section('language-switcher')
 <div>
-    <div class="language-selector">
+    <div class="language-selector" v-if="this.languages.length > 1">
         <div class="btn-group btn-group-sm" role="group" data-toggle="buttons">
             <label v-for="locale in languages" @click="switchLanguage(locale)" :class="'btn btn-primary '+(isLocale(locale) ? 'active' : '')">
                 <input type="radio"> @{{ locale.toUpperCase() }}

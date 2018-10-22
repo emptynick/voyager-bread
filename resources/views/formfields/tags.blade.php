@@ -3,7 +3,7 @@
     <div v-if="show == 'options'">
         <div class="form-group" v-if="type == 'view'">
             <label>Placeholder</label>
-            <input type="text" class="form-control" v-model="options.placeholder">
+            <language-input type="text" v-model="options.placeholder" :input="options.placeholder" />
         </div>
         <div class="form-group" v-if="type == 'view'">
             <label>Delimiter</label>
@@ -11,15 +11,15 @@
         </div>
         <div class="form-group" v-if="type == 'view'">
             <label>Title</label>
-            <input type="text" class="form-control" v-model="options.title">
+            <language-input type="text" v-model="options.title" :input="options.title" />
         </div>
         <div class="form-group" v-if="type == 'view'">
             <label>Help text</label>
-            <input type="text" class="form-control" v-model="options.help_text">
+            <language-input type="text" v-model="options.help_text" :input="options.help_text" />
         </div>
     </div>
     <div v-else-if="show == 'read'">
-        @{{ options.title }}
+        @{{ translated(options.title) }}
         <br>
         @{{ translate }}
     </div>
@@ -27,12 +27,12 @@
         @{{ translate }}
     </div>
     <div v-else>
-        <label v-if="options.title.length > 0">@{{ options.title }}</label>
+        <label v-if="options.title.length > 0">@{{ translated(options.title) }}</label>
         <v-select taggable push-tags multiple v-model="translateArray" :disabled="show == 'mockup'" :closeOnSelect="false">
-            
+
         </v-select>
         <input type="hidden" :name="name" v-model="translationString">
-        <small v-if="options.help_text.length > 0">@{{ options.help_text }}</small>
+        <small v-if="options.help_text.length > 0">@{{ translated(options.help_text) }}</small>
     </div>
 </div>
 @endsection
@@ -43,7 +43,7 @@ Vue.component('formfield-tags', {
     props: ['show', 'options', 'type', 'fields', 'name', 'input'],
     created: function() {
         this.setInitialTranslation(
-            (this.input == null ? this.options.default_value : this.input),
+            this.input,
             '{{ app()->getLocale() }}',
             {!! json_encode(config('voyager.multilingual.locales')) !!},
             this.options.isTranslatable

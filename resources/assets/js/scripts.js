@@ -62,7 +62,8 @@ const translatable = {
     },
     methods: {
         setLocale: function(locale) {
-            this.currentLocale = locale;
+            if (locale !== null)
+                this.currentLocale = locale;
         },
         setInitialTranslation: function(value, locale, languages, translatable) {
             this.setLocale(locale);
@@ -99,6 +100,14 @@ const translatable = {
                 return false;
             }
             return true;
+        },
+        translated: function(input) {
+            if (this.isJsonString(input)) {
+                var data = JSON.parse(input);
+                return data[this.currentLocale];
+            }
+
+            return input;
         }
     },
     computed: {
@@ -132,6 +141,10 @@ const translatable = {
                     return JSON.stringify(this.data);
                 }
                 return this.data;
+            },
+            set(value) {
+                console.log(value);
+                this.data = value;
             }
         },
     },

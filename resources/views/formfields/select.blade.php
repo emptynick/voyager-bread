@@ -3,11 +3,11 @@
     <div v-if="show == 'options'">
         <div class="form-group" v-if="type == 'view'">
             <label>Title</label>
-            <input type="text" class="form-control" v-model="options.title">
+            <language-input type="text" v-model="options.title" :input="options.title" />
         </div>
         <div class="form-group" v-if="type == 'view'">
             <label>Help text</label>
-            <input type="text" class="form-control" v-model="options.help_text">
+            <language-input type="text" v-model="options.help_text" :input="options.help_text" />
         </div>
         <div class="checkbox">
             <label><input type="checkbox" v-model="options.multiple" value="true">Multiple</label>
@@ -43,9 +43,9 @@
 
     </div>
     <div v-else>
-        <label v-if="options.title.length > 0">@{{ options.title }}</label>
+        <label v-if="options.title.length > 0">@{{ translated(options.title) }}</label>
         <v-select v-model="value" :options="options.options" label="value" :multiple="options.multiple" :disabled="show == 'mockup'">
-            
+
         </v-select>
         <div v-if="options.multiple">
             <div v-for="(item, key) in value">
@@ -55,7 +55,7 @@
         <div v-else>
             <input type="hidden" :name="name" :value="value ? value.key : ''">
         </div>
-        <small v-if="options.help_text.length > 0">@{{ options.help_text }}</small>
+        <small v-if="options.help_text.length > 0">@{{ translated(options.help_text) }}</small>
     </div>
 </div>
 @endsection

@@ -2,16 +2,16 @@
 <div>
     <div v-if="show == 'options'">
         <div class="form-group" v-if="type == 'view'">
-            <label>Default value</label>
-            <input type="text" class="form-control" v-model="options.default_value">
+            <label>Title</label>
+            <language-input type="text" v-model="options.title" :input="options.title" />
         </div>
         <div class="form-group" v-if="type == 'view'">
-            <label>Placeholder</label>
-            <input type="text" class="form-control" v-model="options.placeholder">
+            <label>Help Text</label>
+            <language-input type="text" v-model="options.help_text" :input="options.help_text" />
         </div>
     </div>
     <div v-else-if="show == 'read'">
-        @{{ options.title }}
+        @{{ translated(options.title) }}
         <br>
         @{{ value }}
     </div>
@@ -19,9 +19,9 @@
         @{{ translate }}
     </div>
     <div v-else>
-        <label v-if="options.title.length > 0">@{{ options.title }}</label>
+        <label v-if="options.title.length > 0">@{{ translated(options.title) }}</label>
         <div ref="map"></div>
-        <small v-if="options.help_text.length > 0">@{{ options.help_text }}</small>
+        <small v-if="options.help_text.length > 0">@{{ translated(options.help_text) }}</small>
     </div>
 </div>
 @endsection

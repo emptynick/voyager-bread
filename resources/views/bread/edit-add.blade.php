@@ -1,5 +1,5 @@
 @extends('voyager::master')
-@section('page_title', __('voyager::generic.'.($content->getKey() ? 'edit' : 'add')).' '.$bread->display_name_singular)
+@section('page_title', __('voyager::generic.'.($content->getKey() ? 'edit' : 'add')).' '.get_translated_value($bread->display_name_singular))
 
 @section('content')
 <div id="bread-edit">
@@ -7,7 +7,7 @@
     <div class="container-fluid">
         <h1 class="page-title">
             <i class="{{ $bread->icon }}"></i>
-            {{ __('voyager::generic.'.($content->getKey() ? 'edit' : 'add')).' '.$bread->display_name_singular }}
+            {{ __('voyager::generic.'.($content->getKey() ? 'edit' : 'add')).' '.get_translated_value($bread->display_name_singular) }}
         </h1>
         @if ($model->isTranslatable)
         <language-switcher :languages="{{ json_encode(config('voyager.multilingual.locales')) }}"></language-switcher>
@@ -16,7 +16,7 @@
     <div class="page-content edit-add container-fluid">
         <div class="row">
             <div class="col-md-12">
-                <form action="@if($content->getKey()){{ route('voyager.'.$bread->slug.'.update', $content->getKey()) }}@else{{ route('voyager.'.$bread->slug.'.store') }}@endif"
+                <form action="@if($content->getKey()){{ route('voyager.'.get_translated_value($bread->slug).'.update', $content->getKey()) }}@else{{ route('voyager.'.$bread->slug.'.store') }}@endif"
                         method="POST" enctype="multipart/form-data">
                     {{ csrf_field() }}
                     @if($content->getKey())

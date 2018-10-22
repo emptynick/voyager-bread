@@ -1,15 +1,15 @@
 @extends('voyager::master')
-@section('page_title', __('voyager::generic.viewing').' '.$bread->display_name_plural)
+@section('page_title', __('voyager::generic.viewing').' '.get_translated_value($bread->display_name_plural))
 
 @section('content')
 <div id="bread-browse">
     <vue-snotify></vue-snotify>
     <div class="container-fluid">
         <h1 class="page-title">
-            <i class="{{ $bread->icon }}"></i> {{ $bread->display_name_plural }}
+            <i class="{{ $bread->icon }}"></i> {{ get_translated_value($bread->display_name_plural) }}
         </h1>
         @can('add', $model)
-            <a href="{{ route('voyager.'.$bread->slug.'.create') }}" class="btn btn-success">
+            <a href="{{ route('voyager.'.get_translated_value($bread->slug).'.create') }}" class="btn btn-success">
                 <i class="voyager-plus"></i> <span>{{ __('voyager::generic.add_new') }}</span>
             </a>
         @endcan
@@ -116,7 +116,7 @@ new Vue({
             sortable: {!! $layout->elements->where('orderable', true)->pluck('field')->toJson() !!},
             headings: {
                 @foreach ($layout->elements as $el)
-                '{{ $el->field }}': '{{ $el->label }}',
+                '{{ $el->field }}': '{{ get_translated_value($el->label) }}',
                 @endforeach
             },
             listColumns: {
@@ -124,27 +124,27 @@ new Vue({
             },
             uniqueKey: '{{ $model->getKeyName() }}',
             orderBy: {
-                column: '{!! $layout->elements->slice($layout->initial_ordered, 1)->pluck('field')->first() !!}',
+                column: '{!! $layout->elements->slice($layout->initial_ordered ?? 0, 1)->pluck('field')->first() !!}',
             },
             pagination: {
                 edge: true
             },
             highlightMatches: true,
             texts: {
-                count: "Showing {from} to {to} of {count} {{ $bread->display_name_plural }}|{count} {{ $bread->display_name_plural }}|1 {{ $bread->display_name_singular }}",
+                count: "Showing {from} to {to} of {count} {{ get_translated_value($bread->display_name_plural) }}|{count} {{ get_translated_value($bread->display_name_plural) }}|1 {{ get_translated_value($bread->display_name_singular) }}",
                 first: 'First',
                 last: 'Last',
                 filter: "Filter:",
                 filterPlaceholder: "Search query",
                 limit: "Records:",
                 page: "Page:",
-                noResults: "No matching {{ $bread->display_name_plural }}",
+                noResults: "No matching {{ get_translated_value($bread->display_name_plural) }}",
                 filterBy: "Filter by {column}",
                 loading: 'Loading...',
                 defaultOption: 'Select {column}',
             },
         },
-        tableUrl: "{{ route('voyager.'.$bread->slug.'.data') }}",
+        tableUrl: "{{ route('voyager.'.get_translated_value($bread->slug).'.data') }}",
     },
     methods: {
         toggleSelectAll: function() {
@@ -156,7 +156,7 @@ new Vue({
             });
         },
         deleteEntry: function(url) {
-            this.$snotify.confirm('Are you sure you want to delete this {{ $bread->display_name_singular }}?', 'Delete {{ $bread->display_name_singular }}?', {
+            this.$snotify.confirm('Are you sure you want to delete this {{ get_translated_value($bread->display_name_singular) }}?', 'Delete {{ get_translated_value($bread->display_name_singular) }}?', {
 				timeout: 5000,
 				showProgressBar: true,
 				closeOnClick: false,
@@ -175,14 +175,14 @@ new Vue({
 			});
         },
         deleteEntries: function() {
-            this.$snotify.confirm('Are you sure you want to delete this '+this.deleteIds.length+' {{ $bread->display_name_plural }}?', 'Delete {{ $bread->display_name_plural }}?', {
+            this.$snotify.confirm('Are you sure you want to delete this '+this.deleteIds.length+' {{ get_translated_value($bread->display_name_plural) }}?', 'Delete {{ get_translated_value($bread->display_name_plural) }}?', {
 				timeout: 5000,
 				showProgressBar: true,
 				closeOnClick: false,
 				pauseOnHover: true,
 				buttons: [
 					{text: '{{ __("voyager::generic.yes") }}', action: (toast) => {
-                        this.$http.post("{{ route('voyager.'.$bread->slug.'.index') }}/0", { _token: '{{ csrf_token() }}', _method: 'delete', ids: this.deleteIds }).then(response => {
+                        this.$http.post("{{ route('voyager.'.get_translated_value($bread->slug).'.index') }}/0", { _token: '{{ csrf_token() }}', _method: 'delete', ids: this.deleteIds }).then(response => {
                             this.$refs.browse_table.refresh();
                             this.$snotify.remove(toast.id);
                             this.deleteIds = [];
@@ -195,7 +195,7 @@ new Vue({
 			});
         },
         restoreEntry: function(url) {
-            this.$snotify.confirm('Are you sure you want to restore this {{ $bread->display_name_singular }}?', 'Restore {{ $bread->display_name_singular }}?', {
+            this.$snotify.confirm('Are you sure you want to restore this {{ get_translated_value($bread->display_name_singular) }}?', 'Restore {{ get_translated_value($bread->display_name_singular) }}?', {
 				timeout: 5000,
 				showProgressBar: true,
 				closeOnClick: false,
@@ -216,7 +216,7 @@ new Vue({
     },
     watch: {
         withTrashed: function(value) {
-            this.tableUrl = "{{ route('voyager.'.$bread->slug.'.data') }}?withTrashed="+value;
+            this.tableUrl = "{{ route('voyager.'.get_translated_value($bread->slug).'.data') }}?withTrashed="+value;
         }
     },
 });

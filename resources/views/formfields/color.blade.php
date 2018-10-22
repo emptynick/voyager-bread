@@ -18,17 +18,17 @@
         </div>
         <div class="form-group" v-if="type == 'view'">
             <label>Title</label>
-            <input type="text" class="form-control" v-model="options.title">
+            <language-input type="text" v-model="options.title" :input="options.title" />
         </div>
         <div class="form-group" v-if="type == 'view'">
             <label>Help text</label>
-            <input type="text" class="form-control" v-model="options.help_text">
+            <language-input type="text" v-model="options.help_text" :input="options.help_text" />
         </div>
     </div>
     <div v-else>
-        @{{ options.title }}
+        @{{ translated(options.title) }}
         <swatches :colors="colors" :inline="options.inline" v-model="color"></swatches>
-        <small v-if="options.help_text.length > 0">@{{ options.help_text }}</small>
+        <small v-if="options.help_text.length > 0">@{{ translated(options.help_text) }}</small>
         <input type="hidden" :name="name" :value="color">
     </div>
 </div>

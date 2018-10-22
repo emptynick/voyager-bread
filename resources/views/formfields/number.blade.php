@@ -2,28 +2,24 @@
 <div>
     <div v-if="show == 'options'">
         <div class="form-group" v-if="type == 'view'">
-            <label>Default value</label>
-            <input type="text" class="form-control" v-model="options.default_value">
-        </div>
-        <div class="form-group" v-if="type == 'view'">
             <label>Placeholder</label>
-            <input type="text" class="form-control" v-model="options.placeholder">
+            <language-input type="text" v-model="options.placeholder" :input="options.placeholder" />
         </div>
         <div class="form-group" v-if="type == 'view'">
             <label>Title</label>
-            <input type="text" class="form-control" v-model="options.title">
+            <language-input type="text" v-model="options.title" :input="options.title" />
         </div>
         <div class="form-group" v-if="type == 'view'">
             <label>Help text</label>
-            <input type="text" class="form-control" v-model="options.help_text">
+            <language-input type="text" v-model="options.help_text" :input="options.help_text" />
         </div>
         <div class="form-group col-md-6">
             <label>Prefix</label>
-            <input type="text" class="form-control" v-model="options.prefix">
+            <language-input type="text" v-model="options.prefix" :input="options.prefix" />
         </div>
         <div class="form-group col-md-6">
             <label>Suffix</label>
-            <input type="text" class="form-control" v-model="options.suffix">
+            <language-input type="text" v-model="options.suffix" :input="options.suffix" />
         </div>
         <div class="form-group col-md-12">
             <label>Decimals</label>
@@ -44,7 +40,7 @@
     </div>
     <div v-else-if="show == 'read'">
         <div v-if="options.title.length > 0">
-            <strong>@{{ options.title }}</strong>
+            <strong>@{{ translated(options.title) }}</strong>
             <br>
         </div>
         @{{ formatedValue }}
@@ -53,16 +49,16 @@
         @{{ formatedValue }}
     </div>
     <div v-else>
-        @{{ options.title }}
+        @{{ translated(options.title) }}
         <input type="number" class="form-control" :disabled="show == 'mockup'"
                :min="options.min"
                :max="options.max"
                :step="options.step"
-               :placeholder="options.placeholder"
+               :placeholder="translted(options.placeholder)"
                :name="name+'_faker'"
                v-model="translate">
         <input type="hidden" :name="name" v-model="translationString">
-        <small v-if="options.help_text.length > 0">@{{ options.help_text }}</small>
+        <small v-if="options.help_text.length > 0">@{{ translated(options.help_text) }}</small>
     </div>
 </div>
 @endsection
@@ -81,20 +77,13 @@ Vue.component('formfield-number', {
     },
     computed: {
         formatedValue: function() {
-            return this.options.prefix + this.translate.toFixed(this.options.decimals) + this.options.suffix;
+            return translted(this.options.prefix) + this.translate.toFixed(this.options.decimals) + translted(this.options.suffix);
         },
     },
     watch: {
         translate: function (newVal, oldVal) {
             this.$bus.$emit(this.name+'_change', newVal, oldVal);
         }
-    },
-    mounted: function() {
-        this.$bus.$on(this.options.slug_from+'_change', (newVal, oldVal) => {
-            if (this.options.slug_from != '' && typeof oldVal === 'string') {
-                this.translate = Vue.slugify(newVal);
-            }
-        });
-    },
+    }
 });
 </script>

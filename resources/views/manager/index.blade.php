@@ -35,7 +35,7 @@
 
                             <td>
                                 <div class="actions pull-right">
-                                    @if (Bread\BreadFacade::hasBread($table))
+                                    @if (Bread\BreadFacade::hasBreadByTable($table))
                                     <a href="{{ route('voyager.bread.views.edit', $table) }}" class="btn btn-sm btn-primary">
                                         <i class="voyager-lightbulb"></i> {{ __('bread::generic.views') }}
                                     </a>

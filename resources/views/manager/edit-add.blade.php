@@ -13,7 +13,7 @@
     @endif
     <li><a href="{{ route('voyager.bread.index') }}">{{ __('bread::manager.bread_manager') }}</a></li>
     @if(isset($bread))
-        <li>{{ $bread->display_name_plural }}</li>
+        <li>{{ get_translated_value($bread->display_name_plural) }}</li>
         <li>{{ __('voyager::generic.edit') }}</li>
     @else
         <li>{{ ucfirst($table) }}</li>
@@ -43,15 +43,15 @@
                         <div class="row clearfix">
                             <div class="col-md-4 form-group">
                                 <label>{{ __('voyager::bread.display_name_singular') }}</label>
-                                <language-input type="text" name="display_name_singular" :input="'{{ (isset($bread) ? $bread->display_name_singular_string : ucfirst(str_singular($table))) }}'" placeholder="{{ __('voyager::bread.display_name_singular') }}">
+                                <language-input type="text" name="display_name_singular" :input="'{{ (isset($bread) ? $bread->display_name_singular : ucfirst(str_singular($table))) }}'" placeholder="{{ __('voyager::bread.display_name_singular') }}">
                             </div>
                             <div class="col-md-4 form-group">
                                 <label>{{ __('voyager::bread.display_name_plural') }}</label>
-                                <language-input type="text" name="display_name_plural" :input="'{{ (isset($bread) ? $bread->display_name_plural_string : ucfirst($table)) }}'" placeholder="{{ __('voyager::bread.display_name_plural') }}">
+                                <language-input type="text" name="display_name_plural" :input="'{{ (isset($bread) ? $bread->display_name_plural : ucfirst($table)) }}'" placeholder="{{ __('voyager::bread.display_name_plural') }}">
                             </div>
                             <div class="col-md-4 form-group">
                                 <label>{{ __('voyager::bread.url_slug') }}</label>
-                                <language-input type="text" :slug_from="'display_name_plural'" name="slug" :input="'{{ (isset($bread) ? $bread->slug_string : str_slug($table)) }}'" placeholder="{{ __('voyager::bread.url_slug_ph') }}" data-slug-origin="display_name_plural" data-slug-forceupdate="true">
+                                <language-input type="text" :slug_from="'display_name_plural'" name="slug" :input="'{{ (isset($bread) ? $bread->slug : str_slug($table)) }}'" placeholder="{{ __('voyager::bread.url_slug_ph') }}">
                             </div>
                         </div>
                         <div class="row clearfix">

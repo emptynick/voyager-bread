@@ -36,12 +36,12 @@ class Bread
         }
 
         return $this->breads->filter(function ($bread) use ($slug) {
-            if (!isset($bread->slug_array)) {
-                return $bread->slug == $slug;
-            } elseif (is_object($bread->slug_array)) {
-                return in_array($slug, (array) $bread->slug_array);
+            $slugs = get_translated_values($bread->slug, true);
+            if (is_string($slugs)) {
+                return ($slugs == $slug);
+            } else {
+                return $slugs->contains($slug);
             }
-
             return false;
         })->first();
     }

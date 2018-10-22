@@ -1,29 +1,5 @@
 <?php
 
-if (!function_exists('translate_elements')) {
-    function translate_elements($input)
-    {
-        foreach ($input as $key => $element) {
-            if (is_array($element) || is_object($element)) {
-                if (is_array($input)) {
-                    $input[$key] = translate_elements($element);
-                } elseif (is_object($input)) {
-                    $input->{$key} = translate_elements($element);
-                }
-            } elseif (is_string($element) && starts_with($element, '__')) {
-                $value = __(str_after($element, '__'));
-                if (is_array($input) || get_class($input) == 'Illuminate\Support\Collection') {
-                    $input[$key] = $value;
-                } elseif (is_object($input)) {
-                    $input->{$key} = $value;
-                }
-            }
-        }
-
-        return $input;
-    }
-}
-
 if (!function_exists('get_translated_value')) {
     function get_translated_value($input)
     {

@@ -23,6 +23,7 @@
 @section('content')
 <div class="page-content container-fluid">
     <div id="list-builder">
+        <language-switcher :languages="{{ json_encode(config('voyager.multilingual.locales')) }}"></language-switcher>
         <vue-snotify></vue-snotify>
         <div class="col-md-12">
             <div class="dropdown" style="display:inline" v-if="this.lists.length > 0">
@@ -114,7 +115,7 @@
                             </select>
                         </div>
                         <div class="col-xs-3">
-                            <input type="text" class="form-control" v-model="element.label">
+                            <language-input type="text" v-model="element.label" :input="element.label">
                         </div>
                         <div class="col-xs-1">@{{ ucfirst(element.type) }}</div>
                         <div class="col-xs-1"><input type="checkbox" v-model="element.searchable"></div>
@@ -225,6 +226,8 @@
 <input type="hidden" id="{{ $formfield->getCodeName() }}_default_options" value="{{ $formfield->getOptions($bread) }}">
 @endforeach
 @include('bread::components.validation-form')
+@include('bread::components.language-switcher')
+@include('bread::components.language-input')
 <script>
 var builder = new Vue({
     el: "#list-builder",
@@ -326,8 +329,9 @@ var builder = new Vue({
                         if (toast.value != '' && !listExists) {
                             let list = {
                                 name: toast.value,
-                                type: "view",
+                                type: "list",
                                 trashed: 'hide',
+                                data: 'all',
                                 elements: []
                             };
                             this.lists.push(list);

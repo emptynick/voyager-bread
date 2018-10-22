@@ -26,16 +26,20 @@ class ManagerController extends Controller
 
     public function store(Request $request)
     {
-        $bread = collect(BreadFacade::getBreadByTable($request->table_name));
-        $exists = BreadFacade::hasBreadByTable($request->table_name);
-        //Todo: display message based on existence
-        $bread = $bread->merge(collect($request->except('_token')));
+        $bread = BreadFacade::getBreadByTable($request->table_name);
+        if (!$bread) {
+            $bread = new \Bread\Classes\Bread([]);
+        }
+        foreach ($request->except('_token') as $key => $value) {
+            $bread->{$key} = $value;
+        }
+
         BreadFacade::saveBread($request->table_name, $bread);
 
         return redirect()
                 ->route('voyager.bread.edit', ['table' => $request->table_name])
                 ->with([
-                    'message'    => __('voyager::generic.successfully_updated').' '.$request->display_name_singular,
+                    'message'    => __('voyager::generic.successfully_updated').' '.get_translated_value($request->display_name_singular),
                     'alert-type' => 'success',
                 ]);
     }
@@ -73,7 +77,6 @@ class ManagerController extends Controller
         $bread = BreadFacade::getBreadByTable($table);
         if ($bread) {
             $fields = SchemaManager::describeTable($table)->keys()->merge($this->getAccessors($bread));
-
             return view('bread::manager.views', [
                 'views'         => $bread->getViews()->values(),
                 'bread'         => $bread,

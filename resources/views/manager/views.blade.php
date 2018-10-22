@@ -23,6 +23,7 @@
 @section('content')
 <div class="page-content container-fluid">
     <div id="view-builder">
+        <language-switcher :languages="{{ json_encode(config('voyager.multilingual.locales')) }}"></language-switcher>
         <vue-snotify></vue-snotify>
         <div class="row">
             <div class="col-md-12">
@@ -121,8 +122,9 @@
                                 <div class="pull-right" @click="openOptions(null)">
                                     <span class="voyager-x" style="cursor:pointer;"></span>
                                 </div>
+                                <language-switcher :languages="{{ json_encode(config('voyager.multilingual.locales')) }}"></language-switcher>
                                 <div class="clearfix"></div>
-                                <div class="form-group" v-if="componentType(item) != 'formfield-relationship'">
+                                <div class="form-group" v-if="item.type != 'relationship' && item.type != 'paragraph' && item.type != 'heading'">
                                     <label>{{ __("bread::manager.field") }}</label>
                                     <select class="form-control" v-model="item.field">
                                         <option v-for="field in fields">
@@ -131,7 +133,7 @@
                                     </select>
                                 </div>
                                 <component :is="componentType(item)" v-bind="item" :show="'options'" :type="'view'" :fields="fields" :lists="getLists(item)" :views="getViews(item)" :translatable="'{{ $model->isTranslatable ?: false }}'"></component>
-                                <validation-form v-bind="item" />
+                                <validation-form v-bind="item" v-if="item.type != 'paragraph' && item.type != 'heading'" />
                             </div>
                         </div>
                     </div>
@@ -152,6 +154,8 @@
 @endforeach
 
 @include('bread::components.validation-form')
+@include('bread::components.language-switcher')
+@include('bread::components.language-input')
 <script>
 var builder = new Vue({
     el: "#view-builder",

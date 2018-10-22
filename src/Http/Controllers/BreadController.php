@@ -21,10 +21,9 @@ class BreadController extends Controller
 
     public function index()
     {
-        $this->authorize('browse', app($this->bread->model));
+        $this->authorize('browse', $this->model);
 
         $layout = $this->getLayout('browse');
-        $layout->elements = translate_elements($layout->elements);
         $view = 'bread::bread.browse';
         if (view()->exists('bread::'.$this->bread->slug.'.browse')) {
             $view = 'bread::'.$this->bread->slug.'.browse';
@@ -45,7 +44,6 @@ class BreadController extends Controller
         $content = $this->model->findOrFail($id);
         $this->authorize('read', $content);
         $layout = $this->prepareLayout($this->getLayout('read'), $this->model);
-        $layout->elements = translate_elements($layout->elements);
         $view = 'bread::bread.read';
         if (view()->exists('bread::'.$this->bread->slug.'.read')) {
             $view = 'bread::'.$this->bread->slug.'.read';
@@ -66,7 +64,6 @@ class BreadController extends Controller
         $content = $this->model->findOrFail($id);
         $this->authorize('edit', $content);
         $layout = $this->prepareLayout($this->getLayout('edit'), $this->model);
-        $layout->elements = translate_elements($layout->elements);
         $view = 'bread::bread.edit-add';
         if (view()->exists('bread::'.$this->bread->slug.'.edit-add')) {
             $view = 'bread::'.$this->bread->slug.'.edit-add';
@@ -100,25 +97,25 @@ class BreadController extends Controller
         if ($request->has('submit_action')) {
             if ($request->submit_action == 'edit') {
                 return redirect()
-                        ->route("voyager.{$this->bread->slug}.edit", $content->getKey())
+                        ->route("voyager.".get_translated_value($this->bread->slug).".edit", $content->getKey())
                         ->with([
-                            'message'    => __('voyager::generic.successfully_updated')." {$this->bread->display_name_singular}",
+                            'message'    => __('voyager::generic.successfully_updated')." ".get_translated_value($this->bread->display_name_singular),
                             'alert-type' => 'success',
                         ]);
             } elseif ($request->submit_action == 'add') {
                 return redirect()
-                        ->route("voyager.{$this->bread->slug}.create")
+                        ->route("voyager.".get_translated_value($this->bread->slug).".create")
                         ->with([
-                            'message'    => __('voyager::generic.successfully_updated')." {$this->bread->display_name_singular}",
+                            'message'    => __('voyager::generic.successfully_updated')." ".get_translated_value($this->bread->display_name_singular),
                             'alert-type' => 'success',
                         ]);
             }
         }
 
         return redirect()
-                ->route("voyager.{$this->bread->slug}.index")
+                ->route("voyager.".get_translated_value($this->bread->slug).".index")
                 ->with([
-                    'message'    => __('voyager::generic.successfully_updated')." {$this->bread->display_name_singular}",
+                    'message'    => __('voyager::generic.successfully_updated')." ".get_translated_value($this->bread->display_name_singular),
                     'alert-type' => 'success',
                 ]);
     }
@@ -127,7 +124,6 @@ class BreadController extends Controller
     {
         $this->authorize('add', $this->model);
         $layout = $this->prepareLayout($this->getLayout('add'), $this->model);
-        $layout->elements = translate_elements($layout->elements);
 
         $view = 'bread::bread.edit-add';
         if (view()->exists('bread::'.$this->bread->slug.'.edit-add')) {
@@ -172,25 +168,25 @@ class BreadController extends Controller
         if ($request->has('submit_action')) {
             if ($request->submit_action == 'edit') {
                 return redirect()
-                        ->route("voyager.{$this->bread->slug}.edit", $content->getKey())
+                        ->route('voyager.'.get_translated_value($this->bread->slug).'.edit', $content->getKey())
                         ->with([
-                            'message'    => __('voyager::generic.successfully_added_new')." {$this->bread->display_name_singular}",
+                            'message'    => __('voyager::generic.successfully_added_new').' '.get_translated_value($this->bread->display_name_singular),
                             'alert-type' => 'success',
                         ]);
             } elseif ($request->submit_action == 'add') {
                 return redirect()
-                        ->route("voyager.{$this->bread->slug}.create")
+                        ->route('voyager.'.get_translated_value($this->bread->slug).'.create')
                         ->with([
-                            'message'    => __('voyager::generic.successfully_added_new')." {$this->bread->display_name_singular}",
+                            'message'    => __('voyager::generic.successfully_added_new').' '.get_translated_value($this->bread->display_name_singular),
                             'alert-type' => 'success',
                         ]);
             }
         }
 
         return redirect()
-                ->route("voyager.{$this->bread->slug}.index")
+                ->route('voyager.'.get_translated_value($this->bread->slug).'.index')
                 ->with([
-                        'message'    => __('voyager::generic.successfully_added_new')." {$this->bread->display_name_singular}",
+                        'message'    => __('voyager::generic.successfully_added_new').' '.get_translated_value($this->bread->display_name_singular),
                         'alert-type' => 'success',
                     ]);
     }
@@ -345,12 +341,12 @@ class BreadController extends Controller
             }
 
             //Add static stuff
-            $final[$key]['bread_read'] = route('voyager.'.$this->bread->slug.'.show', $result[$this->model->getKeyName()]);
-            $final[$key]['bread_edit'] = route('voyager.'.$this->bread->slug.'.edit', $result[$this->model->getKeyName()]);
-            $final[$key]['bread_delete'] = route('voyager.'.$this->bread->slug.'.destroy', $result[$this->model->getKeyName()]);
+            $final[$key]['bread_read'] = route('voyager.'.get_translated_value($this->bread->slug).'.show', $result[$this->model->getKeyName()]);
+            $final[$key]['bread_edit'] = route('voyager.'.get_translated_value($this->bread->slug).'.edit', $result[$this->model->getKeyName()]);
+            $final[$key]['bread_delete'] = route('voyager.'.get_translated_value($this->bread->slug).'.destroy', $result[$this->model->getKeyName()]);
             $final[$key]['bread_key'] = $result->getKey();
             $final[$key]['deleted_at'] = $result['deleted_at'] ?? '';
-            $final[$key]['restore'] = route('voyager.'.$this->bread->slug.'.restore', $result[$this->model->getKeyName()]);
+            $final[$key]['restore'] = route('voyager.'.get_translated_value($this->bread->slug).'.restore', $result[$this->model->getKeyName()]);
         }
 
         return [

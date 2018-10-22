@@ -3,11 +3,11 @@
     <div v-if="show == 'options'">
         <div class="form-group" v-if="type == 'view'">
             <label>Text</label>
-            <textarea class="form-control" v-model="options.text"></textarea>
+            <language-input type="textarea" v-model="options.text" :input="options.text" />
         </div>
     </div>
     <div v-else>
-        <p>@{{ options.text }}</p>
+        <p>@{{ translated(options.text) }}</p>
     </div>
 </div>
 @endsection
