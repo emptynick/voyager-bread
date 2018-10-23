@@ -77,6 +77,7 @@ class ManagerController extends Controller
         $bread = BreadFacade::getBreadByTable($table);
         if ($bread) {
             $fields = SchemaManager::describeTable($table)->keys()->merge($this->getAccessors($bread));
+
             return view('bread::manager.views', [
                 'views'         => $bread->getViews()->values(),
                 'bread'         => $bread,
