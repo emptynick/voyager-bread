@@ -23,7 +23,6 @@ use Bread\Traits\Translatable;
 class Category extends Model
 {
     use Translatable;
-
     protected $translatable = ['slug', 'name'];
 }
 
