@@ -38,10 +38,11 @@ class Bread
         return $this->breads->filter(function ($bread) use ($slug) {
             $slugs = get_translated_values($bread->slug, true);
             if (is_string($slugs)) {
-                return ($slugs == $slug);
+                return $slugs == $slug;
             } else {
                 return $slugs->contains($slug);
             }
+
             return false;
         })->first();
     }
