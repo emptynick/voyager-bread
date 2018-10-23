@@ -11,7 +11,7 @@
         </div>
     </div>
     <div v-else-if="show == 'read'">
-        @{{ translated(options.title) }}
+        @{{ translated(options.title, locale) }}
         <br>
         @{{ value }}
     </div>
@@ -19,9 +19,9 @@
         @{{ translate }}
     </div>
     <div v-else>
-        <label v-if="options.title.length > 0">@{{ translated(options.title) }}</label>
+        <label v-if="options.title.length > 0">@{{ translated(options.title, locale) }}</label>
         <div ref="map"></div>
-        <small v-if="options.help_text.length > 0">@{{ translated(options.help_text) }}</small>
+        <small v-if="options.help_text.length > 0">@{{ translated(options.help_text, locale) }}</small>
     </div>
 </div>
 @endsection
@@ -30,7 +30,7 @@
 <script>
 Vue.component('formfield-coordinates', {
     template: `@yield('coordinates')`,
-    props: ['show', 'options', 'type', 'fields', 'name', 'input'],
+    props: ['show', 'options', 'type', 'fields', 'name', 'input', 'locale'],
     data: function() {
         return {
             data: function () {

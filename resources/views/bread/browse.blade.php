@@ -35,6 +35,7 @@
                                     :options="JSON.parse(props.row[col].options)"
                                     :name="''"
                                     :show="'browse'"
+                                    :locale="'{{ app()->getLocale() }}'"
                                     :input="props.row[col].data"
                                 ></component>
                             </template>

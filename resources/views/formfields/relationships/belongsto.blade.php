@@ -18,9 +18,9 @@
 
     </div>
     <div v-else>
-        <label v-if="options.title.length > 0">@{{ translated(options.title) }}</label>
+        <label v-if="options.title.length > 0">@{{ translated(options.title, locale) }}</label>
         ...
-        <small v-if="options.help_text.length > 0">@{{ translated(options.help_text) }}</small>
+        <small v-if="options.help_text.length > 0">@{{ translated(options.help_text, locale) }}</small>
     </div>
 </div>
 @endsection
@@ -28,6 +28,6 @@
 <script>
 Vue.component('formfield-belongsto', {
     template: `@yield('belongsto')`,
-    props: ['show', 'options', 'type', 'fields', 'name', 'input'],
+    props: ['show', 'options', 'type', 'fields', 'name', 'input', 'locale'],
 });
 </script>

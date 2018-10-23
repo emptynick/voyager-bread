@@ -44,6 +44,7 @@
                                     :name="item.field"
                                     :ref="item.field"
                                     :show="'read'"
+                                    :locale="'{{ app()->getLocale() }}'"
                                     :input="getContentForField(item.field)"
                                 ></component>
                             </div>

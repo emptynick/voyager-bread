@@ -101,10 +101,14 @@ const translatable = {
             }
             return true;
         },
-        translated: function(input) {
+        translated: function(input, locale = null) {
             if (this.isJsonString(input)) {
                 var data = JSON.parse(input);
-                return data[this.currentLocale];
+                if (locale === null) {
+                    return data[this.currentLocale];
+                } else {
+                    return data[locale];
+                }
             }
 
             return input;

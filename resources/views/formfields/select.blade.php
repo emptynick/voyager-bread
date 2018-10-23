@@ -43,7 +43,7 @@
 
     </div>
     <div v-else>
-        <label v-if="options.title.length > 0">@{{ translated(options.title) }}</label>
+        <label v-if="options.title.length > 0">@{{ translated(options.title, locale) }}</label>
         <v-select v-model="value" :options="options.options" label="value" :multiple="options.multiple" :disabled="show == 'mockup'">
 
         </v-select>
@@ -55,7 +55,7 @@
         <div v-else>
             <input type="hidden" :name="name" :value="value ? value.key : ''">
         </div>
-        <small v-if="options.help_text.length > 0">@{{ translated(options.help_text) }}</small>
+        <small v-if="options.help_text.length > 0">@{{ translated(options.help_text, locale) }}</small>
     </div>
 </div>
 @endsection
@@ -63,7 +63,7 @@
 <script>
 Vue.component('formfield-select', {
     template: `@yield('select')`,
-    props: ['show', 'options', 'type', 'fields', 'name', 'input', 'field'],
+    props: ['show', 'options', 'type', 'fields', 'name', 'input', 'field', 'locale'],
     data: function () {
         return {
             value: this.parseInput(this.input),

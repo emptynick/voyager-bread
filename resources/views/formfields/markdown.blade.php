@@ -18,7 +18,7 @@
         </div>
     </div>
     <div v-else-if="show == 'read'">
-        @{{ translated(options.title) }}
+        @{{ translated(options.title, locale) }}
         <br>
         @{{ translate }}
     </div>
@@ -26,10 +26,10 @@
         @{{ translate }}
     </div>
     <div v-else>
-        <label v-if="options.title.length > 0">@{{ translated(options.title) }}</label>
+        <label v-if="options.title.length > 0">@{{ translated(options.title, locale) }}</label>
         <markdown-editor v-model="translate" :configs="config" disabled="true" ref="mdeditor"></markdown-editor>
         <input type="hidden" :name="name" v-model="translationString">
-        <small v-if="options.help_text.length > 0">@{{ translated(options.help_text) }}</small>
+        <small v-if="options.help_text.length > 0">@{{ translated(options.help_text, locale) }}</small>
     </div>
 </div>
 @endsection
@@ -37,7 +37,7 @@
 <script>
 Vue.component('formfield-markdown', {
     template: `@yield('markdown')`,
-    props: ['show', 'options', 'type', 'fields', 'name', 'input'],
+    props: ['show', 'options', 'type', 'fields', 'name', 'input', 'locale'],
     created: function() {
         this.setInitialTranslation(
             this.input,

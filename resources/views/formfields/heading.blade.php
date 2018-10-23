@@ -18,7 +18,7 @@
         </div>
     </div>
     <div v-else>
-        <component :is="options.size">@{{ translated(options.text) }}</component>
+        <component :is="options.size">@{{ translated(options.text, locale) }}</component>
     </div>
 </div>
 @endsection
@@ -26,6 +26,6 @@
 <script>
 Vue.component('formfield-heading', {
     template: `@yield('heading')`,
-    props: ['show', 'options', 'type']
+    props: ['show', 'options', 'type', 'locale']
 });
 </script>

@@ -7,7 +7,7 @@
         </div>
     </div>
     <div v-else>
-        <p>@{{ translated(options.text) }}</p>
+        <p>@{{ translated(options.text, locale) }}</p>
     </div>
 </div>
 @endsection
@@ -15,6 +15,6 @@
 <script>
 Vue.component('formfield-paragraph', {
     template: `@yield('paragraph')`,
-    props: ['show', 'options', 'type']
+    props: ['show', 'options', 'type', 'locale']
 });
 </script>

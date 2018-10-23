@@ -9,9 +9,9 @@
             <i class="{{ $bread->icon }}"></i>
             {{ __('voyager::generic.'.($content->getKey() ? 'edit' : 'add')).' '.get_translated_value($bread->display_name_singular) }}
         </h1>
-        @if ($model->isTranslatable)
+
         <language-switcher :languages="{{ json_encode(config('voyager.multilingual.locales')) }}"></language-switcher>
-        @endif
+
     </div>
     <div class="page-content edit-add container-fluid">
         <div class="row">
@@ -36,6 +36,7 @@
                                                 :name="item.field"
                                                 :show="'{{ $content->getKey() ? 'edit' : 'add' }}'"
                                                 :input="getContentForField(item.field)"
+                                                :locale="'{{ app()->getLocale() }}'"
                                                 :ref="item.field"
                                             ></component>
 

@@ -38,13 +38,13 @@
 
     </div>
     <div v-else>
-        <label v-if="options.title.length > 0">@{{ translated(options.title) }}</label>
+        <label v-if="options.title.length > 0">@{{ translated(options.title, locale) }}</label>
         <div :class="'checkbox '+(show == 'mockup' ? 'disabled' : '')" v-for="option in options.options">
             <label><input type="checkbox" :name="getName()" :value="option.key" :disabled="show == 'mockup'">
                 @{{ option.value }}
             </label>
         </div>
-        <small v-if="options.help_text.length > 0">@{{ translated(options.help_text) }}</small>
+        <small v-if="options.help_text.length > 0">@{{ translated(options.help_text, locale) }}</small>
     </div>
 </div>
 @endsection
@@ -52,7 +52,7 @@
 <script>
 Vue.component('formfield-checkboxes', {
     template: `@yield('checkboxes')`,
-    props: ['show', 'options', 'type', 'fields', 'name', 'input'],
+    props: ['show', 'options', 'type', 'fields', 'name', 'input', 'locale'],
     methods: {
         deleteOption: function(key) {
             this.options.options.splice(key, 1);

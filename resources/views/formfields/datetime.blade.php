@@ -31,7 +31,7 @@
         @{{ getParsedDateTime() }}
     </div>
     <div v-else>
-        @{{ translated(options.title) }}
+        @{{ translated(options.title, locale) }}
         <br v-if="options.title.length > 0">
         <datetime
             v-model="date"
@@ -42,7 +42,7 @@
             input-class="form-control"
         ></datetime>
         <input type="hidden" :name="name" v-model="date">
-        <small v-if="options.help_text.length > 0">@{{ translated(options.help_text) }}</small>
+        <small v-if="options.help_text.length > 0">@{{ translated(options.help_text, locale) }}</small>
     </div>
 </div>
 @endsection
@@ -50,7 +50,7 @@
 <script>
 Vue.component('formfield-datetime', {
     template: `@yield('datetime')`,
-    props: ['show', 'options', 'type', 'fields', 'name', 'input'],
+    props: ['show', 'options', 'type', 'fields', 'name', 'input', 'locale'],
     data: function () {
         return {
             minDateTime: null,
@@ -71,7 +71,6 @@ Vue.component('formfield-datetime', {
     },
     methods: {
         toISOLocal(d, input) {
-            //var ddd = LuxonDateTime.local();
             if (input.endsWith('Z')) {
                 return input;
             }

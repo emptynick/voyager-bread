@@ -29,7 +29,7 @@
     </div>
     <div v-else-if="show == 'read'">
         <div v-if="options.title.length > 0">
-            <strong>@{{ translated(options.title) }}</strong>
+            <strong>@{{ translated(options.title, locale) }}</strong>
             <br>
         </div>
         @{{ translate }}
@@ -39,14 +39,14 @@
     </div>
     <div v-else>
         <label v-if="options.title.length > 0">
-            <span>@{{ translated(options.title) }}</span>
+            <span>@{{ translated(options.title, locale) }}</span>
         </label>
         <input type="text" class="form-control" :disabled="show == 'mockup'"
                :placeholder="translated(options.placeholder)"
                :name="name+'_faker'"
                v-model="translate">
         <input type="hidden" :name="name" v-model="translationString">
-        <small v-if="options.help_text.length > 0">@{{ translated(options.help_text) }}</small>
+        <small v-if="options.help_text.length > 0">@{{ translated(options.help_text, locale) }}</small>
     </div>
 </div>
 @endsection
@@ -54,7 +54,7 @@
 <script>
 Vue.component('formfield-text', {
     template: `@yield('text')`,
-    props: ['show', 'options', 'type', 'fields', 'name', 'input'],
+    props: ['show', 'options', 'type', 'fields', 'name', 'input', 'locale'],
     created: function() {
         this.setInitialTranslation(
             this.input,

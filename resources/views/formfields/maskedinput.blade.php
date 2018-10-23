@@ -36,7 +36,7 @@
         </ul>
     </div>
     <div v-else-if="show == 'read'">
-        @{{ translated(options.title) }}
+        @{{ translated(options.title, locale) }}
         <br>
         @{{ value }}
     </div>
@@ -44,7 +44,7 @@
         @{{ translate }}
     </div>
     <div v-else>
-        <label v-if="options.title.length > 0">@{{ translated(options.title) }}</label>
+        <label v-if="options.title.length > 0">@{{ translated(options.title, locale) }}</label>
         <masked-input
             :mask="options.mask"
             :placeholder="translated(options.placeholder)"
@@ -52,7 +52,7 @@
             v-model="translate"
             class="form-control" />
         <input type="hidden" :name="name" v-model="translationString">
-        <small v-if="options.help_text.length > 0">@{{ translated(options.help_text) }}</small>
+        <small v-if="options.help_text.length > 0">@{{ translated(options.help_text, locale) }}</small>
     </div>
 </div>
 @endsection
@@ -60,7 +60,7 @@
 <script>
 Vue.component('formfield-maskedinput', {
     template: `@yield('maskedinput')`,
-    props: ['show', 'options', 'type', 'fields', 'name', 'input'],
+    props: ['show', 'options', 'type', 'fields', 'name', 'input', 'locale'],
     created: function() {
         this.setInitialTranslation(
             (this.input == null ? this.options.default_value : this.input),

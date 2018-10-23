@@ -112,7 +112,8 @@
                             </div>
                         </div>
                         <div class="panel-body formfield-panel">
-                            <component :is="componentType(item)" v-bind="item" :show="'mockup'" :type="'view'" :translatable="'{{ $model->isTranslatable ?: false }}'">
+                            <component :is="componentType(item)" v-bind="item" :show="'mockup'" :type="'view'" :translatable="'{{ $model->isTranslatable ?: false }}'"
+                            :locale="null">
 
                             </component>
                             <div :id="id+'_options'">

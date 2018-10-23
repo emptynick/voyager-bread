@@ -27295,9 +27295,15 @@ var translatable = {
             return true;
         },
         translated: function translated(input) {
+            var locale = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+
             if (this.isJsonString(input)) {
                 var data = JSON.parse(input);
-                return data[this.currentLocale];
+                if (locale === null) {
+                    return data[this.currentLocale];
+                } else {
+                    return data[locale];
+                }
             }
 
             return input;

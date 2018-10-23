@@ -18,7 +18,7 @@
         </div>
     </div>
     <div v-else-if="show == 'read'">
-        @{{ translated(options.title) }}
+        @{{ translated(options.title, locale) }}
         <br>
         @{{ value }}
     </div>
@@ -26,12 +26,12 @@
         @{{ translate }}
     </div>
     <div v-else>
-        <label v-if="options.title.length > 0">@{{ translated(options.title) }}</label>
+        <label v-if="options.title.length > 0">@{{ translated(options.title, locale) }}</label>
         <input type="password" class="form-control" :disabled="show == 'mockup'"
                :placeholder="options.placeholder"
                :name="name"
                v-model="input">
-        <small v-if="options.help_text.length > 0">@{{ translated(options.help_text) }}</small>
+        <small v-if="options.help_text.length > 0">@{{ translated(options.help_text, locale) }}</small>
     </div>
 </div>
 @endsection
@@ -39,6 +39,6 @@
 <script>
 Vue.component('formfield-password', {
     template: `@yield('password')`,
-    props: ['show', 'options', 'type', 'fields', 'name', 'input'],
+    props: ['show', 'options', 'type', 'fields', 'name', 'input', 'locale'],
 });
 </script>

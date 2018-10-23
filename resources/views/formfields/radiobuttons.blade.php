@@ -39,13 +39,13 @@
 
     </div>
     <div v-else>
-        <label v-if="options.title.length > 0">@{{ transltedoptions.title) }}</label>
+        <label v-if="options.title.length > 0">@{{ transltedoptions.title, locale) }}</label>
         <div :class="'radio '+(show == 'mockup' ? 'disabled' : '')" v-for="option in options.options">
             <label><input type="radio" :name="name" :value="option.key" :disabled="show == 'mockup'">
                 @{{ option.value }}
             </label>
         </div>
-        <small v-if="options.help_text.length > 0">@{{ transltedoptions.help_text) }}</small>
+        <small v-if="options.help_text.length > 0">@{{ transltedoptions.help_text, locale) }}</small>
     </div>
 </div>
 @endsection
@@ -53,7 +53,7 @@
 <script>
 Vue.component('formfield-radiobuttons', {
     template: `@yield('radiobuttons')`,
-    props: ['show', 'options', 'type', 'fields', 'name', 'input'],
+    props: ['show', 'options', 'type', 'fields', 'name', 'input', 'locale'],
     methods: {
         deleteOption: function(key) {
             this.options.options.splice(key, 1);

@@ -28,7 +28,7 @@
     <div v-else>
         @{{ translated(options.title) }}
         <swatches :colors="colors" :inline="options.inline" v-model="color"></swatches>
-        <small v-if="options.help_text.length > 0">@{{ translated(options.help_text) }}</small>
+        <small v-if="options.help_text.length > 0">@{{ translated(options.help_text, locale) }}</small>
         <input type="hidden" :name="name" :value="color">
     </div>
 </div>
@@ -37,7 +37,7 @@
 <script>
 Vue.component('formfield-color', {
     template: `@yield('color')`,
-    props: ['show', 'options', 'type', 'name', 'input'],
+    props: ['show', 'options', 'type', 'name', 'input', 'locale'],
     computed: {
         colors: function() {
             if (this.options.palette == "") {

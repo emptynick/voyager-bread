@@ -40,7 +40,7 @@
     </div>
     <div v-else-if="show == 'read'">
         <div v-if="options.title.length > 0">
-            <strong>@{{ translated(options.title) }}</strong>
+            <strong>@{{ translated(options.title, locale) }}</strong>
             <br>
         </div>
         @{{ formatedValue }}
@@ -49,16 +49,16 @@
         @{{ formatedValue }}
     </div>
     <div v-else>
-        @{{ translated(options.title) }}
+        @{{ translated(options.title, locale) }}
         <input type="number" class="form-control" :disabled="show == 'mockup'"
                :min="options.min"
                :max="options.max"
                :step="options.step"
-               :placeholder="translted(options.placeholder)"
+               :placeholder="translated(options.placeholder, locale)"
                :name="name+'_faker'"
                v-model="translate">
         <input type="hidden" :name="name" v-model="translationString">
-        <small v-if="options.help_text.length > 0">@{{ translated(options.help_text) }}</small>
+        <small v-if="options.help_text.length > 0">@{{ translated(options.help_text, locale) }}</small>
     </div>
 </div>
 @endsection
@@ -66,7 +66,7 @@
 <script>
 Vue.component('formfield-number', {
     template: `@yield('number')`,
-    props: ['show', 'options', 'type', 'name', 'input'],
+    props: ['show', 'options', 'type', 'name', 'input', 'locale'],
     created: function() {
         this.setInitialTranslation(
             (this.input == null ? this.options.default_value : this.input),
@@ -77,7 +77,7 @@ Vue.component('formfield-number', {
     },
     computed: {
         formatedValue: function() {
-            return translted(this.options.prefix) + this.translate.toFixed(this.options.decimals) + translted(this.options.suffix);
+            return translated(this.options.prefix, locale) + this.translate.toFixed(this.options.decimals) + translated(this.options.suffix, locale);
         },
     },
     watch: {

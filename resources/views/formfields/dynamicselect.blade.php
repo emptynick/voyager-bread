@@ -32,9 +32,9 @@
 
     </div>
     <div v-else>
-        <label v-if="options.title.length > 0">@{{ translated(options.title) }}</label>
+        <label v-if="options.title.length > 0">@{{ translated(options.title, locale) }}</label>
 
-        <small v-if="options.help_text.length > 0">@{{ translated(options.help_text) }}</small>
+        <small v-if="options.help_text.length > 0">@{{ translated(options.help_text, locale) }}</small>
     </div>
 </div>
 @endsection
@@ -42,7 +42,7 @@
 <script>
 Vue.component('formfield-dynamicselect', {
     template: `@yield('dynamicselect')`,
-    props: ['show', 'options', 'type', 'fields', 'name', 'input', 'field'],
+    props: ['show', 'options', 'type', 'fields', 'name', 'input', 'field', 'locale'],
     mounted: function() {
         this.options.fields.each(function(field) {
             this.$bus.$on(field + '_change', (newVal, oldVal) => {
