@@ -6,11 +6,10 @@
             <select class="form-control" v-model="options.palette">
                 <option value="basic">Basic</option>
                 <option value="text-basic">Text Basic</option>
-                <option value="text-advances">Text Advanced</option>
+                <option value="text-advanced">Text Advanced</option>
                 <option value="material-basic">Material Basic</option>
                 <option value="material-light">Material Light</option>
                 <option value="material-dark">Material Dark</option>
-                <option value="">Custom colors</option>
             </select>
         </div>
         <div class="checkbox">
@@ -28,6 +27,7 @@
     <div v-else>
         @{{ translated(options.title) }}
         <swatches :colors="colors" :inline="options.inline" v-model="color"></swatches>
+        <input type="hidden" :name="name" v-model="this.color">
         <small v-if="options.help_text.length > 0">@{{ translated(options.help_text, locale) }}</small>
         <input type="hidden" :name="name" :value="color">
     </div>
@@ -40,12 +40,6 @@ Vue.component('formfield-color', {
     props: ['show', 'options', 'type', 'name', 'input', 'locale'],
     computed: {
         colors: function() {
-            if (this.options.palette == "") {
-                if (this.options.custom_colors.length == 0) {
-                    return "basic";
-                }
-                //Todo: Return hex-colors as an array
-            }
             return this.options.palette;
         }
     },
