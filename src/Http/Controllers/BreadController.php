@@ -97,25 +97,25 @@ class BreadController extends Controller
         if ($request->has('submit_action')) {
             if ($request->submit_action == 'edit') {
                 return redirect()
-                        ->route("voyager.".get_translated_value($this->bread->slug).".edit", $content->getKey())
+                        ->route('voyager.'.get_translated_value($this->bread->slug).'.edit', $content->getKey())
                         ->with([
-                            'message'    => __('voyager::generic.successfully_updated')." ".get_translated_value($this->bread->display_name_singular),
+                            'message'    => __('voyager::generic.successfully_updated').' '.get_translated_value($this->bread->display_name_singular),
                             'alert-type' => 'success',
                         ]);
             } elseif ($request->submit_action == 'add') {
                 return redirect()
-                        ->route("voyager.".get_translated_value($this->bread->slug).".create")
+                        ->route('voyager.'.get_translated_value($this->bread->slug).'.create')
                         ->with([
-                            'message'    => __('voyager::generic.successfully_updated')." ".get_translated_value($this->bread->display_name_singular),
+                            'message'    => __('voyager::generic.successfully_updated').' '.get_translated_value($this->bread->display_name_singular),
                             'alert-type' => 'success',
                         ]);
             }
         }
 
         return redirect()
-                ->route("voyager.".get_translated_value($this->bread->slug).".index")
+                ->route('voyager.'.get_translated_value($this->bread->slug).'.index')
                 ->with([
-                    'message'    => __('voyager::generic.successfully_updated')." ".get_translated_value($this->bread->display_name_singular),
+                    'message'    => __('voyager::generic.successfully_updated').' '.get_translated_value($this->bread->display_name_singular),
                     'alert-type' => 'success',
                 ]);
     }

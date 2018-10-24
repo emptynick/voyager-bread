@@ -23,6 +23,7 @@ class DateTime extends BaseFormfield
         } elseif ($this->options['type'] == 'time') {
             return \Carbon\Carbon::parse($input)->toTimeString();
         }
+
         return $input;
     }
 }
