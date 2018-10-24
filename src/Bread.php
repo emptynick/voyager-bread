@@ -15,7 +15,6 @@ class Bread
             $formfield = app($formfield);
         }
         $this->formfields[$formfield->getCodename()] = $formfield;
-
         return $this;
     }
 
