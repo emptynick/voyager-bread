@@ -23,5 +23,4 @@ Here you can decide which buttons will be displayed when editing/adding entries.
 
 `save_new` saves the entry and redirects to the add-page
 
-![](../.gitbook/assets/bread_buttons.PNG)
-
+![](../.gitbook/assets/bread_buttons.png)

@@ -8,7 +8,7 @@ It consist of multiple formfields which are assigned to different fields in your
 After you created a BREAD for your table, you can add as many views to it as you want.  
 Just click the `Add View` button and you are prompted to enter the name of the view. The name can be anything you want.
 
-![](../.gitbook/assets/new_view.PNG)
+![](../.gitbook/assets/new_view.png)
 
 ### Adding a formfield
 
@@ -30,4 +30,3 @@ Be aware that this width will also be used for mobile users - so don't make form
 ### Moving a formfield
 
 To move a formfield to another position, just click and hold the handle and drag it to the position where you want it to be.
-
