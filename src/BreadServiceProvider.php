@@ -118,6 +118,7 @@ class BreadServiceProvider extends ServiceProvider
             \Bread\Formfields\Paragraph::class,
             \Bread\Formfields\Password::class,
             \Bread\Formfields\RadioButtons::class,
+            \Bread\Formfields\Repeater::class,
             \Bread\Formfields\Richtextbox::class,
             \Bread\Formfields\Select::class,
             \Bread\Formfields\DynamicSelect::class,

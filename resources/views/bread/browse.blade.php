@@ -15,7 +15,7 @@
         @endcan
         @can('delete', $model)
             <a href="#" v-on:click="deleteEntries()" v-if="deleteIds.length > 0" class="btn btn-danger">
-                <i class="voyager-trash"></i> <span>{{ __('voyager::generic.bulk_delete') }}</span>
+                <i class="voyager-trash"></i> <span>{{ __('voyager::generic.bulk_delete') }} (@{{ deleteIds.length }})</span>
             </a>
         @endcan
         @if ($model->isTranslatable)

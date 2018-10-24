@@ -35,7 +35,7 @@
         @{{ translate }}
     </div>
     <div v-else-if="show == 'relationship' || show == 'browse'">
-        @{{ translate }}
+        @{{ translate.substring(0, (options.length == '' ? null : options.length)) }}
     </div>
     <div v-else>
         <label v-if="options.title.length > 0">
@@ -66,7 +66,10 @@ Vue.component('formfield-text', {
     watch: {
         translate: function (newVal, oldVal) {
             this.$bus.$emit(this.name+'_change', newVal, oldVal);
-        }
+        },
+        input: function (newVal, oldVal) {
+            this.translate = newVal;
+        },
     },
     mounted: function() {
         this.$bus.$on(this.options.slug_from+'_change', (newVal, oldVal) => {

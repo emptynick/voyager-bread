@@ -25,12 +25,25 @@ abstract class Controller extends BaseController
         //Collect all role-ids for the user
         $roles = collect(\Auth::user()->roles->pluck('id'));
         $roles[] = \Auth::user()->role->id;
-        $roles = $roles->unique();
+        $roles = $roles->unique()->toArray();
         $action_type = $action.($action == 'browse' ? '_list' : '_view');
         $type = ($action == 'browse' ? 'list' : 'view');
-
-        return $this->bread->layouts->whereIn($action.'_roles', $roles)->first()
+        $layout = $this->bread->layouts->filter(function ($item) use ($action, $roles) {
+            foreach ($roles as $role) {
+                $match = in_array($role, $item->{$action.'_roles'});
+                if ($match) {
+                    return true;
+                }
+            }
+            return false;
+        })->first()
             ?: $this->bread->layouts->where('name', $this->bread->{$action_type})->first();
+
+        if (!$layout) {
+            throw new \Exception('There is no layout for your roles and this action ('.$action.').');
+        }
+
+        return $layout;
     }
 
     public function prepareLayout($layout, $model)

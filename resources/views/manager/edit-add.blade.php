@@ -82,7 +82,7 @@
                                 <div class="col-md-3 form-group">
                                     <label>{{ __('bread::manager.browse_list') }}</label>
                                     <select class="form-control select2" data-placeholder="{{ __('bread::manager.select_list') }}" name="browse_list">
-                                        <option></option>
+                                        <option>{{ __('voyager::generic.none') }}</option>
                                         @foreach($bread->getLists() as $list)
                                         <option value="{{ $list->name }}" {{ ($bread->browse_list == $list->name) ? 'selected' : '' }}>{{ $list->name }}</option>
                                         @endforeach
@@ -91,7 +91,7 @@
                                 <div class="col-md-3 form-group">
                                     <label>{{ __('bread::manager.read_view') }}</label>
                                     <select class="form-control select2" data-placeholder="{{ __('bread::manager.select_view') }}" name="read_view">
-                                        <option></option>
+                                        <option>{{ __('voyager::generic.none') }}</option>
                                         @foreach($bread->getViews() as $view)
                                         <option value="{{ $view->name }}" {{ ($bread->read_view == $view->name) ? 'selected' : '' }}>{{ $view->name }}</option>
                                         @endforeach
@@ -100,7 +100,7 @@
                                 <div class="col-md-3 form-group">
                                     <label>{{ __('bread::manager.edit_view') }}</label>
                                     <select class="form-control select2" data-placeholder="{{ __('bread::manager.select_view') }}" name="edit_view">
-                                        <option></option>
+                                        <option>{{ __('voyager::generic.none') }}</option>
                                         @foreach($bread->getViews() as $view)
                                         <option value="{{ $view->name }}" {{ ($bread->edit_view == $view->name) ? 'selected' : '' }}>{{ $view->name }}</option>
                                         @endforeach
@@ -109,7 +109,7 @@
                                 <div class="col-md-3 form-group">
                                     <label>{{ __('bread::manager.add_view') }}</label>
                                     <select class="form-control select2" data-placeholder="{{ __('bread::manager.select_view') }}" name="add_view">
-                                        <option></option>
+                                        <option>{{ __('voyager::generic.none') }}</option>
                                         @foreach($bread->getViews() as $view)
                                         <option value="{{ $view->name }}" {{ ($bread->add_view == $view->name) ? 'selected' : '' }}>{{ $view->name }}</option>
                                         @endforeach

@@ -97,50 +97,12 @@
                     </div>
                 </div>
             </div>
-            <draggable v-model="currentView.elements" v-if="this.views.length > 0 && this.currentView.elements.length > 0" :options="{ handle: '.voyager-handle' }">
-                <div v-for="(item, id) in this.currentView.elements" :key="id" :class="'col-md-'+item.width">
-                    <div :class="'panel panel-bordered '+item.class"
-                    style="height:100%; margin-bottom:0 !important;"
-                    v-tooltip.notrigger="{ html: id+'_options', visible: isOptionsOpen(id), class: 'options-tooltip', placement: 'bottom' }">
-                        <div class="panel-heading">
-                            <h3 class="panel-title"></h3>
-                            <div class="panel-actions">
-                                <a class="panel-action voyager-trash" @click="deleteElement(id)"></a>
-                                <a class="panel-action voyager-settings open-settings" @click="openOptions(id)"></a>
-                                <a @mousedown="startDrag(id)" @mouseup="endDrag()" class="panel-action voyager-code drag_handle"></a>
-                                <a class="panel-action voyager-handle"></a>
-                            </div>
-                        </div>
-                        <div class="panel-body formfield-panel">
-                            <component :is="componentType(item)" v-bind="item" :show="'mockup'" :type="'view'" :translatable="'{{ $model->isTranslatable ?: false }}'"
-                            :locale="null">
 
-                            </component>
-                            <div :id="id+'_options'">
-                                <div class="pull-left">
-                                    <h4>{{ __("bread::generic.options") }}</h4>
-                                </div>
-                                <div class="pull-right" @click="openOptions(null)">
-                                    <span class="voyager-x" style="cursor:pointer;"></span>
-                                </div>
-                                <language-switcher :languages="{{ json_encode(config('voyager.multilingual.locales')) }}"></language-switcher>
-                                <div class="clearfix"></div>
-                                <div class="form-group" v-if="item.type != 'relationship' && item.type != 'paragraph' && item.type != 'heading'">
-                                    <label>{{ __("bread::manager.field") }}</label>
-                                    <select class="form-control" v-model="item.field">
-                                        <option v-for="field in fields">
-                                            @{{ field }}
-                                        </option>
-                                    </select>
-                                </div>
-                                <component :is="componentType(item)" v-bind="item" :show="'options'" :type="'view'" :fields="fields" :lists="getLists(item)" :views="getViews(item)" :translatable="'{{ $model->isTranslatable ?: false }}'"></component>
-                                <validation-form v-bind="item" v-if="item.type != 'paragraph' && item.type != 'heading'" />
-                            </div>
-                        </div>
-                    </div>
-                    <br>
-                </div>
-            </draggable>
+            <view-builder
+                v-bind:elements.sync="currentElements"
+                :fields="this.fields"
+                ref="view_builder"
+            />
         </div>
     </div>
 </div>
@@ -157,6 +119,7 @@
 @include('bread::components.validation-form')
 @include('bread::components.language-switcher')
 @include('bread::components.language-input')
+@include('bread::components.view-builder')
 <script>
 var builder = new Vue({
     el: "#view-builder",
@@ -164,54 +127,27 @@ var builder = new Vue({
         views: {!! $views->toJson() !!},
         fields: {!! $fields->toJson() !!},
         currentViewId: 0,
-        currentOptionsId: -1,
-        currentDragId: -1,
-        cols: 12,
         relationships: {!! $relationships->toJson() !!},
     },
     computed: {
         currentView() {
             return this.views[this.currentViewId];
         },
-        currentElements() {
-            return this.currentView.elements;
+        currentElements: {
+            get: function () {
+                if (!this.currentView) {
+                    return [];
+                }
+                return this.currentView.elements;
+            },
+            set: function (value) {
+                this.views[this.currentViewId].elements = value;
+            }
         },
     },
     methods: {
-        deleteElement(id) {
-            this.$snotify.confirm('{{ __("voyager::manager.delete_element_confirm") }}', '{{ __("voyager::manager.delete_element") }}', {
-				timeout: 5000,
-				showProgressBar: true,
-				closeOnClick: false,
-				pauseOnHover: true,
-				buttons: [
-					{text: '{{ __("voyager::generic.yes") }}', action: (toast) => {
-                        this.currentView.elements.splice(id, 1);
-                        this.$snotify.remove(toast.id);
-                    }, bold: false},
-					{text: '{{ __("voyager::generic.no") }}', action: (toast) => this.$snotify.remove(toast.id) },
-				]
-			});
-        },
         addElement: function(type, rl_name = '') {
-            let options = [];
-            let def_opt = document.getElementById(type+'_default_options');
-            if (!def_opt) {
-                this.$snotify.error('The formfield "'+type+'" is not supported.', 'Error');
-                return;
-            }
-            options = JSON.parse(def_opt.value);
-            let newitem = {
-                width: 12,
-                options: options,
-                type: type,
-                field: "",
-                validation_rules: []
-            };
-            if (rl_name != '') {
-                newitem.options.relationship = rl_name;
-            }
-            this.currentView.elements.push(newitem);
+            this.$refs.view_builder.addElement(type, rl_name);
         },
         deleteView() {
             this.$snotify.confirm('{{ __("voyager::manager.view_delete_confirm") }}', '{{ __("voyager::manager.view_delete") }}', {
@@ -270,73 +206,12 @@ var builder = new Vue({
                 placeholder: '{{ __("bread::generic.name") }}'
             });
         },
-        isOptionsOpen: function(id) {
-            return this.currentOptionsId == id;
-        },
-        openOptions: function(id) {
-            if (this.isOptionsOpen(id)) {
-                this.currentOptionsId = -1;
-            } else {
-                this.currentOptionsId = id;
-            }
-        },
-        startDrag: function(id) {
-            this.currentDragId = id;
-        },
-        endDrag: function() {
-            this.currentDragId = -1;
-        },
-        drag: function(e) {
-            if (this.currentDragId > -1) {
-                e.preventDefault();
-                var maxWidth = this.$refs.editWrapper.clientWidth;
-                var relative = e.clientX - this.findPos(this.$refs.editWrapper).left;
-                var threshold = maxWidth / this.cols;
-                var size = Math.min(Math.max(Math.round(relative / threshold), 2), this.cols);
 
-                this.currentView.elements[this.currentDragId].width = size;
-            }
-        },
-        findPos: function(obj) {
-            var curleft = curtop = 0;
-            if (obj.offsetParent) {
-                do {
-                    curleft += obj.offsetLeft;
-                    curtop += obj.offsetTop;
-                } while (obj = obj.offsetParent);
-            }
-            return {
-                left : curleft,
-                top : curtop
-            };
-        },
-        componentType: function(item) {
-            return 'formfield-'+item.type;
-        },
-        getLists: function(item) {
-            if (item.type == 'relationship') {
-                for (var r in this.relationships) {
-                    if (this.relationships[r].name == item.options.relationship) {
-                        return this.relationships[r].lists;
-                    }
-                }
-            }
-            return [];
-        },
-        getViews: function(item) {
-            if (item.type == 'relationship') {
-                for (var r in this.relationships) {
-                    if (this.relationships[r].name == item.options.relationship) {
-                        return this.relationships[r].views;
-                    }
-                }
-            }
-            return [];
-        },
+
+
     },
     mounted: function() {
-        window.addEventListener('mouseup', this.endDrag);
-        window.addEventListener('mousemove', this.drag);
+
     }
 });
 </script>

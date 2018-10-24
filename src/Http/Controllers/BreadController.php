@@ -226,10 +226,10 @@ class BreadController extends Controller
         extract(request()->only(['query', 'limit', 'page', 'orderBy', 'ascending']));
         $fields = SchemaManager::describeTable($this->model->getTable())->keys();
         $relationships = $this->getRelationships($this->bread);
-        $attributes = $this->getAccessors($this->bread)->toArray();
+        $accessors = $this->getAccessors($this->bread)->toArray();
 
-        $data = $this->model;
-        if (in_array('Illuminate\Database\Eloquent\SoftDeletes', class_uses($this->model))) {
+        $data = $this->model->select('*');
+        /*if (in_array('Illuminate\Database\Eloquent\SoftDeletes', class_uses($this->model))) {
             if ($layout->trashed == 'show') {
                 //Also show trashed
             } elseif ($layout->trashed == 'select') {
@@ -249,13 +249,12 @@ class BreadController extends Controller
                 //Hide trashed
                 $data = $data->whereNull('deleted_at');
             }
-        }
-        $data = $data->select('*');
+        }*/
         if ($layout->data && $layout->data == 'scope' && $layout->scope && $layout->scope != '') {
             $data = $data->{$layout->scope}();
         }
         if (isset($query) && $query) {
-            $data = $data->where(function ($q) use ($query, $fields, $data, $attributes, $relationships) {
+            $data = $data->where(function ($q) use ($query, $fields, $data, $accessors, $relationships) {
                 if (is_string($query)) {
                     //Search all searchable fields
                 } else {
@@ -263,7 +262,8 @@ class BreadController extends Controller
                         if (is_string($term)) {
                             if ($fields->contains($field)) {
                                 $q->where($field, 'LIKE', "%{$term}%");
-                            } elseif (in_array($field, $attributes)) {
+                            } elseif ($accessors->contains($field)) {
+                                //Todo: ...
                             } else {
                                 $parts = explode('|', $field, 2);
                                 if (in_array($parts[0], $relationships)) {
@@ -287,14 +287,12 @@ class BreadController extends Controller
             $direction = $ascending == 1 ? 'ASC' : 'DESC';
             if ($fields->contains($orderBy)) {
                 $data->orderBy($orderBy, $direction);
-            } elseif (in_array($orderBy, $attributes)) {
-                //
+            } elseif (in_array($orderBy, $accessors)) {
+                //Todo: Order by accessor
             } else {
                 $parts = explode('|', $orderBy, 2);
-                if (in_array($parts[0], $relationships)) {
-                    /*$relationship = $this->model->{$parts[0]}();
-                    $data = $this->getRelationshipJoin($data, $relationship);
-                    $data->orderBy($parts[0].'.'.$parts[1], $direction);*/
+                if ($relationships->contains($parts[0])) {
+                    //Todo: Order by relationship
                 }
             }
         }
@@ -308,7 +306,7 @@ class BreadController extends Controller
             foreach ($elements as $name) {
                 $data = '';
                 //Test what $name is
-                if (in_array($name, $fields) || in_array($name, $attributes)) {
+                if (in_array($name, $fields) || in_array($name, $accessors)) {
                     //Its a normal field or an accessor
                     if ($this->model->isTranslatable && $this->model->isFieldTranslatable($name)) {
                         $data = $result->getPlainValue($name);

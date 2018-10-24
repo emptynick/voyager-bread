@@ -29,8 +29,8 @@
         </div>
         @{{ translate }}
     </div>
-    <div v-else-if="show == 'relationship'">
-        @{{ translate }}
+    <div v-else-if="show == 'relationship' || show == 'browse'">
+        @{{ translate.substring(0, (options.length == '' ? null : options.length)) }}
     </div>
     <div v-else>
         @{{ translated(options.title, locale) }}
@@ -60,7 +60,10 @@ Vue.component('formfield-textarea', {
     watch: {
         translate: function (newVal, oldVal) {
             this.$bus.$emit(this.name+'_change', newVal, oldVal);
-        }
+        },
+        input: function (newVal, oldVal) {
+            this.translate = newVal;
+        },
     },
 });
 </script>
