@@ -16,13 +16,17 @@
     </div>
     <div v-if="show == 'edit' || show == 'add'">
         <div class="panel-group" id="accordionName">
-            <div class="panel panel-default" v-for="(item, i) in this.content" :key="i">
+            <div class="panel panel-bordered" v-for="(item, i) in this.content" :key="i">
                 <div class="panel-heading">
                     <h4 class="panel-title">
                         <a data-toggle="collapse" :data-parent="'#'+accordionName" :href="'#'+accordionName+'_'+i">
                             @{{ translated(options.label, locale) }} #@{{ i+1 }}
                         </a>
                     </h4>
+                    <div class="panel-actions">
+                        <a class="panel-action voyager-handle"></a>
+                        <a class="panel-action voyager-trash" @click="deleteItem(i)"></a>
+                    </div>
                 </div>
                 <div :id="accordionName+'_'+i" class="panel-collapse collapse">
                     <div class="panel-body">
@@ -47,7 +51,7 @@
                 </div>
             </div>
         </div>
-        <h4 class="text-center" style="cursor:pointer;" v-on:click="addItem()"><i class="voyager-plus"></i> Add Item</h4>
+        <h4 class="text-center" style="cursor:pointer;" v-on:click="addItem()"><i class="voyager-plus"></i> Add @{{ translated(options.label, locale) }}</h4>
     </div>
 </div>
 @endsection
@@ -69,6 +73,9 @@ Vue.component('formfield-repeater', {
                 newItem[value.attribute] = '';
             });
             this.content.push(newItem);
+        },
+        deleteItem: function(id) {
+            this.$delete(this.content, id);
         },
         getContent: function (item, attribute) {
             return item[attribute];

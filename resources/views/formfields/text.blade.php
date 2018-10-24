@@ -56,19 +56,17 @@ Vue.component('formfield-text', {
     template: `@yield('text')`,
     props: ['show', 'options', 'type', 'fields', 'name', 'input', 'locale'],
     created: function() {
-        this.setInitialTranslation(
-            this.input,
-            '{{ app()->getLocale() }}',
-            {!! json_encode(config('voyager.multilingual.locales')) !!},
-            this.options.isTranslatable
-        );
+        this.updateTranslation(this.input);
     },
     watch: {
         translate: function (newVal, oldVal) {
             this.$bus.$emit(this.name+'_change', newVal, oldVal);
         },
         input: function (newVal, oldVal) {
-            this.translate = newVal;
+            //Todo: this is old, and was replaced
+            //because removing an item from a repeater sets the text to the translation-string
+            //this.translate = newVal;
+            this.updateTranslation(newVal);
         },
     },
     mounted: function() {
@@ -78,5 +76,15 @@ Vue.component('formfield-text', {
             }
         });
     },
+    methods: {
+        updateTranslation: function(input) {
+            this.setInitialTranslation(
+                input,
+                '{{ app()->getLocale() }}',
+                {!! json_encode(config('voyager.multilingual.locales')) !!},
+                this.options.isTranslatable
+            );
+        }
+    }
 });
 </script>
