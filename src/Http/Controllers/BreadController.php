@@ -84,12 +84,21 @@ class BreadController extends Controller
         $layout = $this->getLayout('edit');
 
         $validation = $this->getValidation($layout);
-        $validator = Validator::make($request->all(), $validation['rules'], $validation['messages'])->validate();
+        $validator = Validator::make(
+            $request->all(),
+            $validation['rules'],
+            $validation['messages']
+        )->validate();
         $data = $this->getProcessedInput($request, $layout)->toArray();
 
         foreach ($data as $key => $value) {
             if ($key) {
-                $content->setAttribute($key, $value);
+                $el = $layout->elements->where('field', $key)->first();
+                if ($el->getCodename() == 'repeater') {
+                    $content->setPlainAttribute($key, $value);
+                } else {
+                    $content->setAttribute($key, $value);
+                }
             }
         }
         $content->save();
@@ -153,7 +162,11 @@ class BreadController extends Controller
         $layout = $this->getLayout('add');
 
         $validation = $this->getValidation($layout);
-        $validator = Validator::make($request->all(), $validation['rules'], $validation['messages'])->validate();
+        $validator = Validator::make(
+            $request->all(),
+            $validation['rules'],
+            $validation['messages']
+        )->validate();
 
         $data = $this->getProcessedInput($request, $layout)->toArray();
 

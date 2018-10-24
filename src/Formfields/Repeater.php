@@ -9,5 +9,11 @@ class Repeater extends BaseFormfield
     public $group = 'layout';
     public $options = [
         'elements'         => [],
+        'label'            => '',
     ];
+
+    public function store($input)
+    {
+        return json_encode(array_values($input));
+    }
 }

@@ -36,6 +36,11 @@ trait Translatable
         return $this->setTranslation($key, $value, app()->getLocale());
     }
 
+    public function setPlainAttribute($key, $value)
+    {
+        return parent::setAttribute($key, $value);
+    }
+
     public function getTranslation($key, $locale)
     {
         $trans = $this->getTranslations($key);

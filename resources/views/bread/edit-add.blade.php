@@ -37,6 +37,7 @@
                                                 :show="'{{ $content->getKey() ? 'edit' : 'add' }}'"
                                                 :input="getContentForField(item.field)"
                                                 :locale="'{{ app()->getLocale() }}'"
+                                                :errors="getErrors(item.field)"
                                                 :ref="item.field"
                                             ></component>
 

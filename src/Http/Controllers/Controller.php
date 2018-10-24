@@ -21,7 +21,6 @@ abstract class Controller extends BaseController
 
     public function getLayout($action)
     {
-        //Todo: this is not working :(
         //Collect all role-ids for the user
         $roles = collect(\Auth::user()->roles->pluck('id'));
         $roles[] = \Auth::user()->role->id;
@@ -53,7 +52,11 @@ abstract class Controller extends BaseController
             $element->options->put('isTranslatable', (
                 $model->isTranslatable && $model->isFieldTranslatable($element->field)
             ));
-
+            if ($element->type == 'repeater') {
+                foreach ($element->options['elements'] as $sub) {
+                    $sub->options->isTranslatable = $element->options['isTranslatable'];
+                }
+            }
             return $element;
         });
 
@@ -128,6 +131,18 @@ abstract class Controller extends BaseController
                 $rule_only = substr($rule->rule, 0, (strpos($rule->rule, ':') ?: strlen($rule->rule)));
                 $rules[$element->field][] = $rule->rule;
                 $messages[$element->field.'.'.$rule_only] = $rule->msg;
+            }
+            if ($element->type == 'repeater') {
+                foreach ($element->options['elements'] as $subel) {
+                    $subname = $element->field.'.*.'.$subel->attribute;
+                    $rules[$subname] = [];
+
+                    foreach ($subel->validation_rules as $rule) {
+                        $rule_only = substr($rule->rule, 0, (strpos($rule->rule, ':') ?: strlen($rule->rule)));
+                        $rules[$subname][] = $rule->rule;
+                        $messages[$subname.'.'.$rule_only] = $rule->msg;
+                    }
+                }
             }
         }
 

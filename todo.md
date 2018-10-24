@@ -7,6 +7,7 @@
 * Find a good maps package for coordinates
 * Translate markdown-editor
 * Validate bread/edit-add
+* Bring role-selector to Views
 
 # Check Formfields
 * Checkboxes
