@@ -8,6 +8,7 @@
 * Translate markdown-editor
 * Validate bread/edit-add
 * Bring role-selector to Views
+* Check repeater validation
 
 # Check Formfields
 * Checkboxes

@@ -42,7 +42,7 @@
             <span>@{{ translated(options.title, locale) }}</span>
         </label>
         <input type="text" class="form-control" :disabled="show == 'mockup'"
-               :placeholder="translated(options.placeholder)"
+               :placeholder="translated(options.placeholder, (show == 'mockup' ? null : locale))"
                :name="name+'_faker'"
                v-model="translate">
         <input type="hidden" :name="name" v-model="translationString">
