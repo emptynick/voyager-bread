@@ -35,6 +35,7 @@ abstract class Controller extends BaseController
                     return true;
                 }
             }
+
             return false;
         })->first()
             ?: $this->bread->layouts->where('name', $this->bread->{$action_type})->first();
