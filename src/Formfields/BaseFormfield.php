@@ -50,7 +50,7 @@ class BaseFormfield
         }
     }
 
-    public function getOptions($default = false)
+    public function getOptions()
     {
         return json_encode(collect($this->options));
     }

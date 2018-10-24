@@ -77,6 +77,8 @@ Vue.component('formfield-repeater', {
             this.content.push(newItem);
         },
         deleteItem: function(id) {
+            //Todo: show a confirmation here?
+            //Todo: delete files via ajax?
             this.$delete(this.content, id);
         },
         getContent: function (item, attribute) {

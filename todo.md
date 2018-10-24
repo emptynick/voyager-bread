@@ -9,6 +9,7 @@
 * Validate bread/edit-add
 * Bring role-selector to Views
 * Check repeater validation
+* Deleting a repeater item does not delete images etc.
 
 # Check Formfields
 * Checkboxes
