@@ -16,40 +16,42 @@
     </div>
     <div v-if="show == 'edit' || show == 'add'">
         <div class="panel-group" id="accordionName">
-            <div class="panel panel-bordered" v-for="(item, i) in this.content" :key="i">
-                <div class="panel-heading">
-                    <h4 class="panel-title">
-                        <a data-toggle="collapse" :data-parent="'#'+accordionName" :href="'#'+accordionName+'_'+i">
-                            @{{ translated(options.label, locale) }} #@{{ i+1 }}
-                        </a>
-                    </h4>
-                    <div class="panel-actions">
-                        <a class="panel-action voyager-handle"></a>
-                        <a class="panel-action voyager-trash" @click="deleteItem(i)"></a>
+            <draggable :list="this.content">
+                <div class="panel panel-bordered" v-for="(item, i) in this.content" :key="i">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" :data-parent="'#'+accordionName" :href="'#'+accordionName+'_'+i">
+                                @{{ translated(options.label, locale) }} #@{{ i+1 }}
+                            </a>
+                        </h4>
+                        <div class="panel-actions">
+                            <a class="panel-action voyager-handle"></a>
+                            <a class="panel-action voyager-trash" @click="deleteItem(i)"></a>
+                        </div>
                     </div>
-                </div>
-                <div :id="accordionName+'_'+i" class="panel-collapse collapse">
-                    <div class="panel-body">
-                        <div v-for="(el, key) in options.elements" :class="'col-md-'+el.width">
-                            <div class="panel">
-                                <div class="panel-body">
-                                    <div class="form-group">
-                                        <component
-                                            :is="'formfield-'+el.type"
-                                            :options="el.options"
-                                            :name="name+'['+i+']['+el.attribute+']'"
-                                            :show="'{{ (isset($content) && $content->getKey()) ? 'edit' : 'add' }}'"
-                                            :input="getContent(item, el.attribute)"
-                                            :locale="'{{ app()->getLocale() }}'"
-                                            :errors="null"
-                                        ></component>
+                    <div :id="accordionName+'_'+i" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <div v-for="(el, key) in options.elements" :class="'col-md-'+el.width">
+                                <div class="panel">
+                                    <div class="panel-body">
+                                        <div class="form-group">
+                                            <component
+                                                :is="'formfield-'+el.type"
+                                                :options="el.options"
+                                                :name="name+'['+i+']['+el.attribute+']'"
+                                                :show="'{{ (isset($content) && $content->getKey()) ? 'edit' : 'add' }}'"
+                                                :input="getContent(item, el.attribute)"
+                                                :locale="'{{ app()->getLocale() }}'"
+                                                :errors="null"
+                                            ></component>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </draggable>
         </div>
         <h4 class="text-center" style="cursor:pointer;" v-on:click="addItem()"><i class="voyager-plus"></i> Add @{{ translated(options.label, locale) }}</h4>
     </div>
