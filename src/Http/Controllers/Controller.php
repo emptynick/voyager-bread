@@ -57,6 +57,7 @@ abstract class Controller extends BaseController
                     $sub->options->isTranslatable = $element->options['isTranslatable'];
                 }
             }
+
             return $element;
         });
 
