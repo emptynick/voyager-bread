@@ -79,7 +79,7 @@ new Vue({
             }
         },
         delete: function() {
-            this.$snotify.confirm('Are you sure you want to delete this {{ get_translated_value($bread->display_name_singular) }}?', 'Delete {{ $bread->display_name_singular }}?', {
+            this.$snotify.confirm('Are you sure you want to delete this {{ get_translated_value($bread->display_name_singular) }}?', 'Delete {{ get_translated_value($bread->display_name_singular) }}?', {
 				timeout: 5000,
 				showProgressBar: true,
 				closeOnClick: false,
