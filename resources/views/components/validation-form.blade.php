@@ -16,7 +16,9 @@
             <tbody>
                 <tr v-for="(rule, key) in validation_rules" v-bind:item="rule">
                     <td><input type="text" v-model="rule.rule" class="form-control"></td>
-                    <td><input type="text" v-model="rule.msg" class="form-control"></td>
+                    <td>
+                        <language-input type="text" v-model="rule.msg" :input="rule.msg" />
+                    </td>
                     <td><button class="btn btn-danger" @click="deleteRule(key)">
                         <i class="voyager-trash"></i>
                     </button></td>

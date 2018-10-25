@@ -131,7 +131,7 @@ abstract class Controller extends BaseController
             foreach ($element->validation_rules as $rule) {
                 $rule_only = substr($rule->rule, 0, (strpos($rule->rule, ':') ?: strlen($rule->rule)));
                 $rules[$element->field][] = $rule->rule;
-                $messages[$element->field.'.'.$rule_only] = $rule->msg;
+                $messages[$element->field.'.'.$rule_only] = get_translated_value($rule->msg);
             }
             if ($element->type == 'repeater') {
                 foreach ($element->options['elements'] as $subel) {
@@ -141,7 +141,7 @@ abstract class Controller extends BaseController
                     foreach ($subel->validation_rules as $rule) {
                         $rule_only = substr($rule->rule, 0, (strpos($rule->rule, ':') ?: strlen($rule->rule)));
                         $rules[$subname][] = $rule->rule;
-                        $messages[$subname.'.'.$rule_only] = $rule->msg;
+                        $messages[$subname.'.'.$rule_only] = get_translated_value($rule->msg);
                     }
                 }
             }
