@@ -17,7 +17,7 @@
     <div v-if="show == 'edit' || show == 'add'">
         <div class="panel-group" id="accordionName">
             <draggable :list="this.content">
-                <div class="panel panel-bordered" v-for="(item, i) in this.content" :key="i">
+                <div :class="'panel panel-bordered ' + (hasRowErrors(i) ? 'panel-danger' : 'panel-bordered')" v-for="(item, i) in this.content" :key="i">
                     <div class="panel-heading">
                         <h4 class="panel-title">
                             <a data-toggle="collapse" :data-parent="'#'+accordionName" :href="'#'+accordionName+'_'+i">
@@ -34,7 +34,7 @@
                             <div v-for="(el, key) in options.elements" :class="'col-md-'+el.width">
                                 <div class="panel">
                                     <div class="panel-body">
-                                        <div class="form-group">
+                                        <div :class="'form-group ' + (hasErrors(i, el.attribute) ? 'has-error' : '')">
                                             <component
                                                 :is="'formfield-'+el.type"
                                                 :options="el.options"
@@ -42,8 +42,14 @@
                                                 :show="'{{ (isset($content) && $content->getKey()) ? 'edit' : 'add' }}'"
                                                 :input="getContent(item, el.attribute)"
                                                 :locale="'{{ app()->getLocale() }}'"
-                                                :errors="null"
                                             ></component>
+                                            <span class="help-block" style="color:#f96868" v-if="hasErrors(i, el.attribute)">
+                                                <ul>
+                                                    <li v-for="msg in getErrors(i, el.attribute)">
+                                                        @{{ msg }}
+                                                    </li>
+                                                </ul>
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
@@ -54,6 +60,11 @@
             </draggable>
         </div>
         <h4 class="text-center" style="cursor:pointer;" v-on:click="addItem()"><i class="voyager-plus"></i> Add @{{ translated(options.label, locale) }}</h4>
+        <span class="help-block" style="color:#f96868" v-if="strictErrors && strictErrors.length > 0">
+            <ul>
+                <li v-for="msg in strictErrors">@{{ msg }}</li>
+            </ul>
+        </span>
     </div>
     <div v-if="show == 'read'">
         <div class="panel panel-bordered" v-for="(item, i) in this.content" :key="i">
@@ -93,7 +104,7 @@
 <script>
 Vue.component('formfield-repeater', {
     template: `@yield('repeater')`,
-    props: ['show', 'options', 'type', 'name', 'input', 'locale', 'fields', 'errors'],
+    props: ['show', 'options', 'type', 'name', 'input', 'locale', 'fields', 'errors', 'strict-errors'],
     data: function() {
         return {
             content: null,
@@ -115,13 +126,48 @@ Vue.component('formfield-repeater', {
         },
         getContent: function (item, attribute) {
             return item[attribute];
-        }
+        },
+        hasErrors: function(i, attr) {
+            if (this.getErrors(i, attr).length > 0) {
+                return true;
+            }
+            return false;
+        },
+        getErrors: function(i, attr) {
+            var name = this.name+'.'+i+'.'+attr;
+            var errors = [];
+            this.errors.map(function(error) {
+                for (var key in error) {
+                    if (key == name) {
+                        errors.push(error[name][0]);
+                    }
+                }
+            });
+            return errors;
+        },
+        hasRowErrors: function(i) {
+            if (this.errors) {
+                for (var key in this.errors) {
+                    for (var err in this.errors[key]) {
+                        if (err.startsWith(this.name+'.'+i)) {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        },
     },
     mounted: function() {
         try {
             this.content = JSON.parse(this.input);
         } catch {
-            this.content = [];
+            //Input can be an object already
+            if (this.input instanceof Object) {
+                this.content = this.input;
+            } else {
+                this.content = [];
+            }
         }
     }
 });

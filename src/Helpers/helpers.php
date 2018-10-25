@@ -18,6 +18,22 @@ if (!function_exists('get_translated_value')) {
     }
 }
 
+if (!function_exists('get_translated_value_recursive')) {
+    function get_translated_value_recursive($input)
+    {
+        if (is_string($input)) {
+            return get_translated_value($input);
+        } elseif (is_array($input)) {
+            $data = [];
+            foreach ($input as $key => $value) {
+                $data[$key] = get_translated_value_recursive($value);
+            }
+            return $data;
+        }
+        return null;
+    }
+}
+
 if (!function_exists('get_translated_values')) {
     function get_translated_values($input)
     {

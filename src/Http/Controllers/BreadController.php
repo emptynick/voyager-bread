@@ -84,11 +84,21 @@ class BreadController extends Controller
         $layout = $this->getLayout('edit');
 
         $validation = $this->getValidation($layout);
-        $validator = Validator::make(
-            $request->all(),
-            $validation['rules'],
-            $validation['messages']
-        )->validate();
+        //We need to extract the default locale and pass it to the validator
+        $fields = $request->all();
+        foreach ($fields as $key => $value) {
+            if ($this->model->isFieldTranslatable($key)) {
+                $fields[$key] = get_translated_value_recursive($value);
+            }
+        }
+
+        $validator = Validator::make($fields, $validation['rules'], $validation['messages']);
+        if ($validator->fails()) {
+            //Push back original data to validator
+            $validator->setData($request->all());
+            throw new \Illuminate\Validation\ValidationException($validator);
+        }
+
         $data = $this->getProcessedInput($request, $layout)->toArray();
 
         foreach ($data as $key => $value) {

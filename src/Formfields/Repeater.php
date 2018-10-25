@@ -14,6 +14,6 @@ class Repeater extends BaseFormfield
 
     public function store($input)
     {
-        return json_encode(array_values($input));
+        return json_encode(array_values($input ?? array()));
     }
 }

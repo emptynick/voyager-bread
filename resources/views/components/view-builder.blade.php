@@ -41,7 +41,7 @@
                             <input type="text" class="form-control" v-model="item.attribute">
                         </div>
                         <component :is="componentType(item)" v-bind="item" :show="'options'" :type="'view'" :fields="fields" :lists="getLists(item)" :views="getViews(item)" :translatable="'{{ $model->isTranslatable ?: false }}'"></component>
-                        <validation-form v-bind="item" v-if="item.type != 'paragraph' && item.type != 'heading' && item.type != 'repeater'" />
+                        <validation-form v-bind="item" v-if="item.type != 'paragraph' && item.type != 'heading'" />
                     </div>
                 </div>
             </div>

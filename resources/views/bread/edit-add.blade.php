@@ -29,7 +29,7 @@
                             <div v-for="(item, key) in elements" :class="'col-md-'+item.width">
                                 <div class="panel">
                                     <div class="panel-body">
-                                        <div :class="'form-group '+(hasError(item.field) ? 'has-error' : '')">
+                                        <div :class="'form-group '+((hasError(item.field) && item.type != 'repeater') ? 'has-error' : '')">
                                             <component
                                                 :is="'formfield-'+item.type"
                                                 :options="item.options"
@@ -38,10 +38,11 @@
                                                 :input="getContentForField(item.field)"
                                                 :locale="'{{ app()->getLocale() }}'"
                                                 :errors="getErrors(item.field)"
+                                                :strict-errors="getErrors(item.field, true)"
                                                 :ref="item.field"
                                             ></component>
 
-                                            <span class="help-block" style="color:#f96868" v-if="hasError(item.field)">
+                                            <span class="help-block" style="color:#f96868" v-if="hasError(item.field) && item.type != 'repeater'">
                                                 <ul>
                                                     <li v-for="msg in getErrors(item.field)">
                                                         @{{ msg }}
@@ -88,7 +89,7 @@ new Vue({
     el: "#bread-edit",
     data: {
         elements: {!! $layout->elements->toJson() !!},
-        content: {!! collect($content)->merge(old())->toJson() !!},
+        content: {!! collect($content)->merge(old())->toJson() ?? 'null' !!},
         errors: {!! $errors->toJson() !!},
     },
     methods: {
@@ -100,15 +101,26 @@ new Vue({
             }
         },
         hasError: function(field) {
-            if (this.getErrors(field)) {
-                return true;
+            return (this.getErrors(field).length > 0);
+        },
+        getErrors: function(field, strict = false) {
+            let errors = this.errors[field];
+            if (!errors && !strict) {
+                errors = [];
+                for (var key in this.errors) {
+                    if (key.startsWith(field+'.')) {
+                        errors.push({ [key]: this.errors[key] });
+                    }
+                }
+
+                if (errors.length == 0) {
+                    return [];
+                }
             }
-            return false;
+
+            return errors;
         },
-        getErrors: function(field) {
-            return this.errors[field];
-        },
-    }
+    },
 });
 </script>
 @endsection
