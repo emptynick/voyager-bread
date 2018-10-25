@@ -28,9 +28,9 @@ if (!function_exists('get_translated_value_recursive')) {
             foreach ($input as $key => $value) {
                 $data[$key] = get_translated_value_recursive($value);
             }
+
             return $data;
         }
-        return null;
     }
 }
 

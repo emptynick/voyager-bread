@@ -96,6 +96,7 @@ class BreadController extends Controller
         if ($validator->fails()) {
             //Push back original data to validator
             $validator->setData($request->all());
+
             throw new \Illuminate\Validation\ValidationException($validator);
         }
 
