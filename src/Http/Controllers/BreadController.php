@@ -263,7 +263,7 @@ class BreadController extends Controller
         $accessors = $this->getAccessors($this->bread)->toArray();
 
         $data = $this->model->select('*');
-        /*if (in_array('Illuminate\Database\Eloquent\SoftDeletes', class_uses($this->model))) {
+        if (in_array('Illuminate\Database\Eloquent\SoftDeletes', class_uses($this->model))) {
             if ($layout->trashed == 'show') {
                 //Also show trashed
             } elseif ($layout->trashed == 'select') {
@@ -283,7 +283,7 @@ class BreadController extends Controller
                 //Hide trashed
                 $data = $data->whereNull('deleted_at');
             }
-        }*/
+        }
         if ($layout->data && $layout->data == 'scope' && $layout->scope && $layout->scope != '') {
             $data = $data->{$layout->scope}();
         }
