@@ -55,6 +55,12 @@
 .dropdown strong {
     font-weight: bold;
 }
+
+.dropdown-menu {
+    max-height: 500px;
+    overflow: auto;
+}
+
 .vue-swatches--inline {
     background-color: transparent !important;
 }
