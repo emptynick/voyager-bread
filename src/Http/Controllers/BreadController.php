@@ -4,6 +4,7 @@ namespace Bread\Http\Controllers;
 
 use Bread\BreadFacade;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use TCG\Voyager\Database\Schema\SchemaManager;
@@ -42,6 +43,7 @@ class BreadController extends Controller
         //Todo: check if id is accessible by the user
         //Get browse-list, check if scopes are applied, if yes, check if $model->scope->where(id, $id)->findOrFail()
         $content = $this->model->findOrFail($id);
+
         $this->authorize('read', $content);
         $layout = $this->prepareLayout($this->getLayout('read'), $this->model);
         $view = 'bread::bread.read';
@@ -62,6 +64,7 @@ class BreadController extends Controller
         //Todo: check if id is accessible by the user
         //Get browse-list, check if scopes are applied, if yes, check if $model->scope->where(id, $id)->findOrFail()
         $content = $this->model->findOrFail($id);
+
         $this->authorize('edit', $content);
         $layout = $this->prepareLayout($this->getLayout('edit'), $this->model);
         $view = 'bread::bread.edit-add';
@@ -80,6 +83,7 @@ class BreadController extends Controller
     public function update(Request $request, $id)
     {
         $content = $this->model->findOrFail($id);
+
         $this->authorize('edit', $content);
         $layout = $this->getLayout('edit');
 
@@ -237,6 +241,7 @@ class BreadController extends Controller
         }
         foreach ($ids as $id) {
             $data = $this->model->findOrFail($id);
+            $this->authorize('delete', $data);
             //Todo: Clean-up everything related
         }
         $data->destroy($ids);
@@ -257,11 +262,12 @@ class BreadController extends Controller
             $layout = $this->bread->layouts->where('type', 'list')->where('name', $request->list)->first();
         }
 
-        extract(request()->only(['query', 'limit', 'page', 'orderBy', 'ascending']));
+        extract(request()->only(['query', 'limit', 'page', 'orderBy', 'ascending', 'relationship']));
         $fields = SchemaManager::describeTable($this->model->getTable())->keys();
         $relationships = $this->getRelationships($this->bread);
         $accessors = $this->getAccessors($this->bread)->toArray();
 
+        //Todo: if $relationship...
         $data = $this->model->select('*');
         if (in_array('Illuminate\Database\Eloquent\SoftDeletes', class_uses($this->model))) {
             if ($layout->trashed == 'show') {
@@ -354,7 +360,6 @@ class BreadController extends Controller
                     if ($relationship_details) {
                         //It IS a relationship-attribute
                         $relationship = collect($result->{$relationship_details['name']}()->pluck($parts[1]));
-                        //Todo: relationship values use the current app-locale
                         $data = implode(', ', $relationship->take(3)->toArray());
                         if (count($relationship) > 3) {
                             $data .= ' and '.(count($relationship) - 3).' more';

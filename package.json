@@ -20,7 +20,7 @@
         "vue-masked-input": "^0.5.2",
         "vue-resource": "^1.5.1",
         "vue-select": "^2.5.1",
-        "vue-simplemde": "^0.4.8",
+        "vue-simplemde": "^0.4.9",
         "vue-snotify": "^3.1.0",
         "vue-swatches": "^1.0.2",
         "vue-tables-2": "^1.4.70",

@@ -15,9 +15,15 @@
                     </div>
                 </div>
                 <div class="panel-body formfield-panel">
-                    <component :is="componentType(item)" v-bind="item" :show="'mockup'" :type="'view'" :translatable="'{{ $model->isTranslatable ?: false }}'"
-                    :locale="null" :fields="this.fields">
-
+                    <component
+                        :is="componentType(item)"
+                        v-bind="item"
+                        :show="'mockup'"
+                        :type="'view'"
+                        :translatable="'{{ $model->isTranslatable ?: false }}'"
+                        :locale="null"
+                        :fields="this.fields"
+                        :relationships="relationships">
                     </component>
                     <div :id="(subid ? subid+'_' : '')+id+'_options'">
                         <div class="pull-left">
@@ -28,7 +34,7 @@
                         </div>
                         <language-switcher :languages="{{ json_encode(config('voyager.multilingual.locales')) }}"></language-switcher>
                         <div class="clearfix"></div>
-                        <div class="form-group" v-if="!fromRepeater && item.type != 'relationship' && item.type != 'paragraph' && item.type != 'heading'">
+                        <div class="form-group" v-if="!fromRepeater && item.group != 'relationship' && item.group != 'layout'">
                             <label>{{ __("bread::generic.field") }}</label>
                             <select class="form-control" v-model="item.field">
                                 <option v-for="field in fields">
@@ -40,7 +46,16 @@
                             <label>{{ __("bread::generic.attribute") }}</label>
                             <input type="text" class="form-control" v-model="item.attribute">
                         </div>
-                        <component :is="componentType(item)" v-bind="item" :show="'options'" :type="'view'" :fields="fields" :lists="getLists(item)" :views="getViews(item)" :translatable="'{{ $model->isTranslatable ?: false }}'"></component>
+                        <component
+                            :is="componentType(item)"
+                            v-bind="item"
+                            :show="'options'"
+                            :type="'view'"
+                            :fields="fields"
+                            :lists="getLists(item)"
+                            :views="getViews(item)"
+                            :translatable="'{{ $model->isTranslatable ?: false }}'">
+                        </component>
                         <validation-form v-bind="item" v-if="item.type != 'paragraph' && item.type != 'heading'" />
                     </div>
                 </div>
@@ -54,7 +69,7 @@
 <script>
 Vue.component('view-builder', {
     template: `@yield('view-builder')`,
-    props: ['elements', 'fields', 'subid', 'from-repeater'],
+    props: ['elements', 'fields', 'subid', 'from-repeater', 'relationships'],
     data: function() {
         return {
             currentOptionsId: -1,
@@ -73,7 +88,7 @@ Vue.component('view-builder', {
         }
     },
     methods: {
-        addElement: function(type, rl_name = '') {
+        addElement: function(type, group) {
             let options = [];
             let def_opt = document.getElementById(type+'_default_options');
             if (!def_opt) {
@@ -88,8 +103,11 @@ Vue.component('view-builder', {
                 field: "",
                 validation_rules: []
             };
-            if (rl_name != '') {
-                newitem.options.relationship = rl_name;
+            if (group == 'formfield' || group == 'layout') {
+                newitem.group = group;
+            } else {
+                newitem.group = 'relationship';
+                newitem.options.relationship = group;
             }
             this.elements.push(newitem);
         },
@@ -159,9 +177,9 @@ Vue.component('view-builder', {
             };
         },
         getLists: function(item) {
-            if (item.type == 'relationship') {
+            if (item.group == 'relationship') {
                 for (var r in this.relationships) {
-                    if (this.relationships[r].name == item.options.relationship) {
+                    if (this.relationships[r] && this.relationships[r].name == item.options.relationship) {
                         return this.relationships[r].lists;
                     }
                 }
@@ -169,9 +187,9 @@ Vue.component('view-builder', {
             return [];
         },
         getViews: function(item) {
-            if (item.type == 'relationship') {
+            if (item.group == 'relationship') {
                 for (var r in this.relationships) {
-                    if (this.relationships[r].name == item.options.relationship) {
+                    if (this.relationships[r] && this.relationships[r].name == item.options.relationship) {
                         return this.relationships[r].views;
                     }
                 }

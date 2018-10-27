@@ -1,15 +1,13 @@
 # Todo
 
 * Make accessors not orderable automatically
-* Display arrays from Vue, not static from PHP
-* PHP &gt;= 7.0 only
 * Check checkboxes for functionality \(single, multiple, etc\)
 * Find a good maps package for coordinates
 * Translate markdown-editor
-* Validate bread/edit-add
 * Bring role-selector to Views
-* Check repeater validation
 * Deleting a repeater item does not delete images etc.
+* Make a nice relationship mockup
+* Check TabControl errors and content (especially with repeaters)
 
 # Check Formfields
 * Checkboxes

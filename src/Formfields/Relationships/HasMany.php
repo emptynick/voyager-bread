@@ -9,6 +9,6 @@ class HasMany extends BaseRelationshipFormfield
     public $options = [
         'title'          => '',
         'help_text'      => '',
-        'scope'          => '',
+        'relationship'   => '',
     ];
 }

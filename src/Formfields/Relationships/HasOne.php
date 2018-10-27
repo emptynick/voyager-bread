@@ -7,6 +7,8 @@ class HasOne extends BaseRelationshipFormfield
     protected $name = 'HasOne';
     protected $codename = 'hasone';
     public $options = [
-
+        'title'          => '',
+        'help_text'      => '',
+        'relationship'   => '',
     ];
 }

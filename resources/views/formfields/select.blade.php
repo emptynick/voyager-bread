@@ -40,7 +40,7 @@
 
     </div>
     <div v-else-if="show == 'relationship' || show == 'browse'">
-        
+
     </div>
     <div v-else>
         <label v-if="options.title.length > 0">@{{ translated(options.title, locale) }}</label>

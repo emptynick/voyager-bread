@@ -112,6 +112,7 @@ new Vue({
         layout: {!! collect($layout)->toJson() !!},
         columns: {!! $layout->elements->pluck('field')->prepend('bread_delete')->push('bread_actions')->toJson() !!},
         options: {
+            debounce: 750,
             filterByColumn: true,
             filterable: {!! $layout->elements->where('searchable', true)->pluck('field')->toJson() !!},
             sortable: {!! $layout->elements->where('orderable', true)->pluck('field')->toJson() !!},

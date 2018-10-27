@@ -122,6 +122,7 @@ class BreadServiceProvider extends ServiceProvider
             \Bread\Formfields\Richtextbox::class,
             \Bread\Formfields\Select::class,
             \Bread\Formfields\DynamicSelect::class,
+            \Bread\Formfields\TabControl::class,
             \Bread\Formfields\Tags::class,
             \Bread\Formfields\Text::class,
             \Bread\Formfields\Textarea::class,

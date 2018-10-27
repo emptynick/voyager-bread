@@ -72,19 +72,20 @@ abstract class Controller extends BaseController
                 $relationships = collect($model->relationships)->map(function ($name) use ($model) {
                     $relationship = $model->{$name}();
                     $related = $relationship->getRelated();
-                    $related_bread = BreadFacade::getBread($related->getTable());
-                    $info = collect([]);
-                    $info->put('name', $name);
-                    $info->put('type', class_basename($relationship));
-                    $info->put('type_slug', str_slug(class_basename($relationship)));
-                    $info->put('has_bread', boolval($related_bread));
+                    $related_bread = BreadFacade::getBreadByTable($related->getTable());
+
                     if ($related_bread !== null) {
+                        $info = collect([]);
+                        $info->put('name', $name);
+                        $info->put('type', class_basename($relationship));
+                        $info->put('type_slug', str_slug(class_basename($relationship)));
+                        $info->put('has_bread', boolval($related_bread));
                         $info->put('lists', $related_bread->layouts->where('type', 'list'));
                         $info->put('views', $related_bread->layouts->where('type', 'view'));
-                    }
-                    $info->put('attributes', SchemaManager::describeTable($related->getTable())->keys()->merge($this->getModelAccessors($related)));
+                        $info->put('attributes', SchemaManager::describeTable($related->getTable())->keys()->merge($this->getModelAccessors($related)));
 
-                    return $info;
+                        return $info;
+                    }
                 });
 
                 return $relationships;

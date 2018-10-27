@@ -36,7 +36,7 @@
                         <li class="dropdown-header">{{ __("bread::generic.formfields") }}</li>
                         @foreach(\Bread\BreadFacade::formfields()->where('group', 'formfield')->sortBy('name') as $formfield)
     					<li>
-                            <a href="#" v-on:click="addElement('{{ $formfield->getCodeName() }}')">
+                            <a href="#" v-on:click="addElement('{{ $formfield->getCodeName() }}', 'formfield')">
                                 {{ $formfield->getName() }}
                             </a>
                         </li>
@@ -44,7 +44,7 @@
                         <li class="dropdown-header">{{ __("bread::generic.layout_elements") }}</li>
                         @foreach(\Bread\BreadFacade::formfields()->where('group', 'layout') as $formfield)
     					<li>
-                            <a href="#" v-on:click="addElement('{{ $formfield->getCodeName() }}')">
+                            <a href="#" v-on:click="addElement('{{ $formfield->getCodeName() }}', 'layout')">
                                 {{ $formfield->getName() }}
                             </a>
                         </li>
@@ -52,11 +52,13 @@
                         @if (count($relationships) > 0)
                             <li class="dropdown-header">{{ __("bread::generic.relationships") }}</li>
                             @foreach($relationships as $relationship)
+                            @if ($relationship)
                             <li>
                                 <a href="#" v-on:click="addElement('{{ $relationship['type_slug'] }}', '{{ $relationship['name'] }}')">
                                     {{ $relationship['name'] }}
                                 </a>
                             </li>
+                            @endif
                             @endforeach
                         @endif
                     </ul>
@@ -101,6 +103,7 @@
             <view-builder
                 v-bind:elements.sync="currentElements"
                 :fields="this.fields"
+                :relationships="this.relationships"
                 ref="view_builder"
             />
         </div>
@@ -146,8 +149,8 @@ var builder = new Vue({
         },
     },
     methods: {
-        addElement: function(type, rl_name = '') {
-            this.$refs.view_builder.addElement(type, rl_name);
+        addElement: function(type, group) {
+            this.$refs.view_builder.addElement(type, group);
         },
         deleteView() {
             this.$snotify.confirm('{{ __("voyager::manager.view_delete_confirm") }}', '{{ __("voyager::manager.view_delete") }}', {
@@ -206,13 +209,7 @@ var builder = new Vue({
                 placeholder: '{{ __("bread::generic.name") }}'
             });
         },
-
-
-
     },
-    mounted: function() {
-
-    }
 });
 </script>
 @endsection

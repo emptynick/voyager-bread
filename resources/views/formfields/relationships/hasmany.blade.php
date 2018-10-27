@@ -9,10 +9,6 @@
             <label>Help text</label>
             <language-input type="text" v-model="options.help_text" :input="options.help_text" />
         </div>
-        <div class="form-group" v-if="type == 'view'">
-            <label>Scope</label>
-            <input type="text" class="form-control" v-model="options.scope">
-        </div>
     </div>
     <div v-else-if="show == 'read'">
 

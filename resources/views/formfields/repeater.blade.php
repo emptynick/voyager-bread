@@ -12,6 +12,7 @@
             :fields="this.fields"
             :subid="this._uid"
             :from-repeater="true"
+            :relationships="this.relationships"
         />
     </div>
     <div v-if="show == 'edit' || show == 'add'">
@@ -42,6 +43,8 @@
                                                 :show="'{{ (isset($content) && $content->getKey()) ? 'edit' : 'add' }}'"
                                                 :input="getContent(item, el.attribute)"
                                                 :locale="'{{ app()->getLocale() }}'"
+                                                :lists="el.lists"
+                                                :views="el.views"
                                             ></component>
                                             <span class="help-block" style="color:#f96868" v-if="hasErrors(i, el.attribute)">
                                                 <ul>
@@ -104,7 +107,7 @@
 <script>
 Vue.component('formfield-repeater', {
     template: `@yield('repeater')`,
-    props: ['show', 'options', 'type', 'name', 'input', 'locale', 'fields', 'errors', 'strict-errors'],
+    props: ['show', 'options', 'type', 'name', 'input', 'locale', 'fields', 'errors', 'strict-errors', 'relationships'],
     data: function() {
         return {
             content: null,

@@ -35,11 +35,13 @@
                                                 :options="item.options"
                                                 :name="item.field"
                                                 :show="'{{ $content->getKey() ? 'edit' : 'add' }}'"
-                                                :input="getContentForField(item.field)"
+                                                :input="item.type == 'tabcontrol' ? this.content : getContentForField(item.field)"
                                                 :locale="'{{ app()->getLocale() }}'"
-                                                :errors="getErrors(item.field)"
+                                                :errors="item.type == 'tabcontrol' ? this.errors : getErrors(item.field)"
                                                 :strict-errors="getErrors(item.field, true)"
                                                 :ref="item.field"
+                                                :lists="item.lists"
+                                                :views="item.views"
                                             ></component>
 
                                             <span class="help-block" style="color:#f96868" v-if="hasError(item.field) && item.type != 'repeater'">
