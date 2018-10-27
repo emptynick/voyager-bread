@@ -10,5 +10,11 @@ In your lists you can select how soft-deleted entries are handled
 
 **Hide** hides trashed entries
 
+**Only** only shows trashed elements
+
 **Select** displays a select on the browse-page where your users can select what they want to show, either **show** them, **hide** trashed objects or **only** show trashed entries.
+
+{% hint style="warning" %}
+This will work in the same way when a list is used for a relationship **except** that you wont get the select. Make sure to either select **Show** or **Hide**!
+{% endhint %}
 
