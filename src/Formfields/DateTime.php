@@ -14,7 +14,7 @@ class DateTime extends BaseFormfield
         'min_from'       => '',
     ];
 
-    public function store($input)
+    public function store($input, $model = null)
     {
         if ($this->options['type'] == 'datetime') {
             return \Carbon\Carbon::parse($input)->toDateTimeString();

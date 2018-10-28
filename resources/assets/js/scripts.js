@@ -11,6 +11,10 @@ Object.defineProperties(Vue.prototype, {
     }
 });
 
+//Lodash
+//Todo: This is only used for debounce and takes ~500kb
+import _ from 'lodash';
+
 // Vue resources
 import VueResource from 'vue-resource';
 Vue.use(VueResource);
@@ -45,6 +49,10 @@ Vue.component('datetime', Datetime);
 //Vue Swatches
 import Swatches from 'vue-swatches';
 Vue.component('swatches', Swatches);
+
+//Vue-JS-Modal
+import VModal from 'vue-js-modal';
+Vue.use(VModal);
 
 import VueSimplemde from 'vue-simplemde';
 Vue.use(VueSimplemde);

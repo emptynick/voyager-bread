@@ -1,4 +1,4 @@
-@extends('voyager::master')
+@extends($ajax ? 'bread::ajax' : 'voyager::master')
 @section('page_title', __('voyager::generic.'.($content->getKey() ? 'edit' : 'add')).' '.get_translated_value($bread->display_name_singular))
 
 @section('content')
@@ -16,7 +16,7 @@
     <div class="page-content edit-add container-fluid">
         <div class="row">
             <div class="col-md-12">
-                <form action="@if($content->getKey()){{ route('voyager.'.get_translated_value($bread->slug).'.update', $content->getKey()) }}@else{{ route('voyager.'.$bread->slug.'.store') }}@endif"
+                <form action="@if($content->getKey()){{ route('voyager.'.get_translated_value($bread->slug).'.update', $content->getKey()) }}@else{{ route('voyager.'.get_translated_value($bread->slug).'.store') }}@endif"
                         method="POST" enctype="multipart/form-data">
                     {{ csrf_field() }}
                     @if($content->getKey())
@@ -35,7 +35,7 @@
                                                 :options="item.options"
                                                 :name="item.field"
                                                 :show="'{{ $content->getKey() ? 'edit' : 'add' }}'"
-                                                :input="item.type == 'tabcontrol' ? this.content : getContentForField(item.field)"
+                                                :input="item.type == 'tabcontrol' ? this.content : getContent(item)"
                                                 :locale="'{{ app()->getLocale() }}'"
                                                 :errors="item.type == 'tabcontrol' ? this.errors : getErrors(item.field)"
                                                 :strict-errors="getErrors(item.field, true)"
@@ -55,19 +55,19 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="panel-footer">
-                            <button type="submit" name="submit_action" value="" class="btn btn-primary">Save</button>
-                            @can('edit', $model)
-                            @if (config('bread.bread_buttons.save_edit', true))
-                                <button type="submit" name="submit_action" value="edit" class="btn btn-primary">Save and edit</button>
-                            @endif
-                            @endcan
-                            @can('add', $model)
-                            @if (config('bread.bread_buttons.save_new', true))
-                                <button type="submit" name="submit_action" value="add" class="btn btn-primary">Save and create new</button>
-                            @endif
-                            @endcan
+                            <div>
+                                <button type="submit" name="submit_action" value="" class="btn btn-primary">Save</button>
+                                @can('edit', $model)
+                                @if (config('bread.bread_buttons.save_edit', true))
+                                    <button type="submit" name="submit_action" value="edit" class="btn btn-primary">Save and edit</button>
+                                @endif
+                                @endcan
+                                @can('add', $model)
+                                @if (config('bread.bread_buttons.save_new', true))
+                                    <button type="submit" name="submit_action" value="add" class="btn btn-primary">Save and create new</button>
+                                @endif
+                                @endcan
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -86,6 +86,7 @@
 @include($formfield->getComponent('view'))
 @endforeach
 @include('bread::components.language-switcher')
+@include('bread::components.relationship-create')
 <script>
 new Vue({
     el: "#bread-edit",
@@ -95,9 +96,12 @@ new Vue({
         errors: {!! $errors->toJson() !!},
     },
     methods: {
-        getContentForField: function(field) {
+        getContent: function(item) {
             if (this.content) {
-                return this.content[field];
+                if (item.group == 'relationship') {
+                    return this.content[item.options.relationship];
+                }
+                return this.content[item.field];
             } else {
                 return '';
             }
@@ -128,4 +132,9 @@ new Vue({
 @endsection
 @section('css')
 <link rel="stylesheet" href="{{ route('voyager.bread.styles') }}">
+<style>
+.panel-footer {
+    z-index: 1 !important;
+}
+</style>
 @endsection

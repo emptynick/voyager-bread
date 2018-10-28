@@ -196,6 +196,9 @@ Vue.component('view-builder', {
             }
             return [];
         },
+        ucfirst: function(input) {
+            return input.charAt(0).toUpperCase() + input.slice(1)
+        },
     },
     mounted: function() {
         var vm = this;

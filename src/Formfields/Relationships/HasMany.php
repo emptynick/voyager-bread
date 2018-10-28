@@ -11,4 +11,11 @@ class HasMany extends BaseRelationshipFormfield
         'help_text'      => '',
         'relationship'   => '',
     ];
+
+    public function store($input, $model = null)
+    {
+        $relationship = $model->{$this->options['relationship']}();
+        
+        return false; //Exclude from query
+    }
 }

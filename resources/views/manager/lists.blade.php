@@ -123,7 +123,9 @@
                         <div class="col-xs-1">
                             <input type="radio" :value="element.id" v-model="currentList.initial_ordered">
                         </div>
-                        <div class="col-xs-1"><input type="checkbox" v-model="element.relationship_show"></div>
+                        <div class="col-xs-1">
+                            <input type="radio" :value="element.id" v-model="currentList.relationship">
+                        </div>
                         <div class="col-xs-2">
                             <button class="btn btn-primary" v-on:click="openOptions(element.id)">{{ __('bread::generic.options') }}</button>
                             <button class="btn btn-danger" v-on:click="deleteElement(element.id)">{{ __('voyager::generic.delete') }}</button>
@@ -188,6 +190,11 @@
                         <div class="radio">
                             <label>
                                 <input type="radio" value="hide" v-model="currentList.trashed">{{ __('bread::generic.hide') }}
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" value="only" v-model="currentList.trashed">Only
                             </label>
                         </div>
                         <div class="radio">

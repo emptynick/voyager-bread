@@ -14,7 +14,7 @@ class Password extends BaseFormfield
         'keep_password'  => true,
     ];
 
-    public function store($input)
+    public function store($input, $model = null)
     {
         if ($this->options->keep_password && (!$input || $input == '')) {
             return false; //Returning false will exclude the field from the update-query

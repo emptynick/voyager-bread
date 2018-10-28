@@ -30,9 +30,22 @@
                     <div class="panel-body">
                         <v-server-table :url="tableUrl" :columns="columns" :options="options" ref="browse_table">
                             <template v-for="col in this.columns" :slot="col" slot-scope="props">
+                                <div v-if="typeof props.row[col].data === 'object'">
+                                    <component
+                                        v-for="(item, key) in props.row[col].data.slice(0, 3)"
+                                        :key="key"
+                                        :is="'formfield-'+props.row[col].type"
+                                        :options="getOptions(props.row[col].options)"
+                                        :name="''"
+                                        :show="'browse'"
+                                        :locale="'{{ app()->getLocale() }}'"
+                                        :input="item"
+                                    ></component>
+                                </div>
                                 <component
+                                    v-else
                                     :is="'formfield-'+props.row[col].type"
-                                    :options="JSON.parse(props.row[col].options)"
+                                    :options="getOptions(props.row[col].options)"
                                     :name="''"
                                     :show="'browse'"
                                     :locale="'{{ app()->getLocale() }}'"
@@ -214,6 +227,11 @@ new Vue({
 					{text: '{{ __("voyager::generic.no") }}', action: (toast) => this.$snotify.remove(toast.id) },
 				]
 			});
+        },
+        getOptions: function(input) {
+            var data = JSON.parse(input);
+            data.isTranslatable = true;
+            return data;
         },
     },
     watch: {

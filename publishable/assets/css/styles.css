@@ -2753,3 +2753,7 @@ fieldset[disabled] .vue-swatches{pointer-events:none}.vue-swatches{position:rela
   text-align: center;
 }
 
+.v-select .dropdown-menu {
+  position: relative !important;
+}
+

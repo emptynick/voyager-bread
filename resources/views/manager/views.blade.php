@@ -123,6 +123,7 @@
 @include('bread::components.language-switcher')
 @include('bread::components.language-input')
 @include('bread::components.view-builder')
+@include('bread::components.relationship-create')
 <script>
 var builder = new Vue({
     el: "#view-builder",

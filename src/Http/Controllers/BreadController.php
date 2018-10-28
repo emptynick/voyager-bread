@@ -40,8 +40,6 @@ class BreadController extends Controller
 
     public function show($id)
     {
-        //Todo: check if id is accessible by the user
-        //Get browse-list, check if scopes are applied, if yes, check if $model->scope->where(id, $id)->findOrFail()
         $content = $this->model->findOrFail($id);
 
         $this->authorize('read', $content);
@@ -59,14 +57,19 @@ class BreadController extends Controller
         ]);
     }
 
-    public function edit($id)
+    public function edit(Request $request, $id)
     {
-        //Todo: check if id is accessible by the user
-        //Get browse-list, check if scopes are applied, if yes, check if $model->scope->where(id, $id)->findOrFail()
-        $content = $this->model->findOrFail($id);
+        $content = $id instanceof Model ? $id : $this->model->findOrFail($id);
 
         $this->authorize('edit', $content);
         $layout = $this->prepareLayout($this->getLayout('edit'), $this->model);
+        //Load relationships
+        $layout->elements->where('group', 'relationship')->each(function ($el) use ($content) {
+            if (!$content->relationLoaded($el->options['relationship'])) {
+                $content->load($el->options['relationship'].':id'); //Todo: replace this
+            }
+        });
+
         $view = 'bread::bread.edit-add';
         if (view()->exists('bread::'.$this->bread->slug.'.edit-add')) {
             $view = 'bread::'.$this->bread->slug.'.edit-add';
@@ -77,6 +80,7 @@ class BreadController extends Controller
             'model'   => $this->model,
             'layout'  => $layout,
             'content' => $content,
+            'ajax'    => $request->ajax(),
         ]);
     }
 
@@ -86,6 +90,9 @@ class BreadController extends Controller
 
         $this->authorize('edit', $content);
         $layout = $this->getLayout('edit');
+
+        $data = $this->getProcessedInput($request, $layout)->toArray();
+        dd($data);
 
         $validation = $this->getValidation($layout);
         //We need to extract the default locale and pass it to the validator
@@ -144,7 +151,7 @@ class BreadController extends Controller
                 ]);
     }
 
-    public function create()
+    public function create(Request $request)
     {
         $this->authorize('add', $this->model);
         $layout = $this->prepareLayout($this->getLayout('add'), $this->model);
@@ -168,6 +175,7 @@ class BreadController extends Controller
             'model'   => $this->model,
             'layout'  => $layout,
             'content' => $content,
+            'ajax'    => $request->ajax(),
         ]);
     }
 
@@ -202,6 +210,10 @@ class BreadController extends Controller
             }
         }
         $content->save();
+
+        if ($request->ajax()) {
+            return $content->getKey();
+        }
 
         if ($request->has('submit_action')) {
             if ($request->submit_action == 'edit') {
@@ -262,22 +274,17 @@ class BreadController extends Controller
             $layout = $this->bread->layouts->where('type', 'list')->where('name', $request->list)->first();
         }
 
-        extract(request()->only(['query', 'limit', 'page', 'orderBy', 'ascending', 'relationship']));
+        extract(request()->only(['query', 'limit', 'page', 'orderBy', 'ascending', 'scope']));
         $fields = SchemaManager::describeTable($this->model->getTable())->keys();
         $relationships = $this->getRelationships($this->bread);
         $accessors = $this->getAccessors($this->bread)->toArray();
 
-        //Todo: if $relationship...
         $data = $this->model->select('*');
         if (in_array('Illuminate\Database\Eloquent\SoftDeletes', class_uses($this->model))) {
-            if ($layout->trashed == 'show') {
-                //Also show trashed
-            } elseif ($layout->trashed == 'select') {
+            if ($layout->trashed == 'select') {
                 //Let the user decide what to show
                 if ($request->has('withTrashed')) {
-                    if ($request->withTrashed == 'yes') {
-                        //
-                    } elseif ($request->withTrashed == 'no') {
+                    if ($request->withTrashed == 'no') {
                         $data = $data->whereNull('deleted_at');
                     } elseif ($request->withTrashed == 'only') {
                         $data = $data->whereNotNull('deleted_at');
@@ -285,6 +292,9 @@ class BreadController extends Controller
                 } else {
                     $data = $data->whereNull('deleted_at');
                 }
+            } elseif ($layout->trashed == 'only') {
+                //Only show trashed
+                $data = $data->whereNotNull('deleted_at');
             } else {
                 //Hide trashed
                 $data = $data->whereNull('deleted_at');
@@ -294,16 +304,18 @@ class BreadController extends Controller
             $data = $data->{$layout->scope}();
         }
         if (isset($query) && $query) {
-            $data = $data->where(function ($q) use ($query, $fields, $data, $accessors, $relationships) {
+            $data = $data->where(function ($q) use ($query, $fields, $data, $accessors, $relationships, $layout) {
                 if (is_string($query)) {
-                    //Search all searchable fields
+                    foreach ($layout->elements->where('searchable', true)->pluck('field') as $searchable) {
+                        $q->orWhere($searchable, 'LIKE', "%{$query}%");
+                    }
                 } else {
                     foreach ($query as $field => $term) {
                         if (is_string($term)) {
                             if ($fields->contains($field)) {
                                 $q->where($field, 'LIKE', "%{$term}%");
                             } elseif ($accessors->contains($field)) {
-                                //Todo: ...
+                                //Todo: search by accessor
                             } else {
                                 $parts = explode('|', $field, 2);
                                 if (in_array($parts[0], $relationships)) {
@@ -338,11 +350,35 @@ class BreadController extends Controller
         }
 
         $results = $data->get();
+        if ($request->has('include') && $request->include && $request->include != 'null') {
+            //We NEED to include the ID(s) passed.
+            if (str_contains($request->include, ',')) {
+                foreach (explode($request->include, ',') as $id) {
+                    $prepend = $this->model->find($id);
+                    if (!$results->contains($prepend)) {
+                        $results->prepend($prepend);
+                    }
+                }
+            } else {
+                $prepend = $this->model->find($request->include);
+                if (!$results->contains($prepend)) {
+                    $results->prepend($prepend);
+                }
+            }
+        }
         $final = [];
         $fields = $fields->toArray();
-        $elements = $layout->elements->pluck('field');
+        if ($request->has('list')) {
+            //Coming from a relationship-select
+            $elements = $layout->elements->where('id', $layout->relationship)->pluck('field');
+        } else {
+            $elements = $layout->elements->pluck('field');
+        }
 
         foreach ($results as $key => $result) {
+            if (!$result) {
+                continue;
+            }
             foreach ($elements as $name) {
                 $data = '';
                 //Test what $name is
@@ -359,14 +395,15 @@ class BreadController extends Controller
                     $relationship_details = $relationships->where('name', $parts[0])->first();
                     if ($relationship_details) {
                         //It IS a relationship-attribute
-                        $relationship = collect($result->{$relationship_details['name']}()->pluck($parts[1]));
-                        $data = implode(', ', $relationship->take(3)->toArray());
+                        $rl = $result->{$relationship_details['name']}();
+                        $data = collect($rl->pluck($parts[1]));
+                        /*$data = implode(', ', $relationship->take(3)->toArray());
                         if (count($relationship) > 3) {
                             $data .= ' and '.(count($relationship) - 3).' more';
                         }
                         if (count($relationship) == 0) {
                             $data = __('voyager::generic.none');
-                        }
+                        }*/
                     }
                 }
 
@@ -378,12 +415,12 @@ class BreadController extends Controller
             }
 
             //Add static stuff
-            $final[$key]['bread_read'] = route('voyager.'.get_translated_value($this->bread->slug).'.show', $result[$this->model->getKeyName()]);
-            $final[$key]['bread_edit'] = route('voyager.'.get_translated_value($this->bread->slug).'.edit', $result[$this->model->getKeyName()]);
+            $final[$key]['bread_read']   = route('voyager.'.get_translated_value($this->bread->slug).'.show', $result[$this->model->getKeyName()]);
+            $final[$key]['bread_edit']   = route('voyager.'.get_translated_value($this->bread->slug).'.edit', $result[$this->model->getKeyName()]);
             $final[$key]['bread_delete'] = route('voyager.'.get_translated_value($this->bread->slug).'.destroy', $result[$this->model->getKeyName()]);
-            $final[$key]['bread_key'] = $result->getKey();
-            $final[$key]['deleted_at'] = $result['deleted_at'] ?? '';
-            $final[$key]['restore'] = route('voyager.'.get_translated_value($this->bread->slug).'.restore', $result[$this->model->getKeyName()]);
+            $final[$key]['bread_key']    = $result->getKey();
+            $final[$key]['deleted_at']   = $result['deleted_at'] ?? '';
+            $final[$key]['restore']      = route('voyager.'.get_translated_value($this->bread->slug).'.restore', $result[$this->model->getKeyName()]);
         }
 
         return [

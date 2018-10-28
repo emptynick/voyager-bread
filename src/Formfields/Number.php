@@ -22,7 +22,7 @@ class Number extends BaseFormfield
         'help_text'      => '',
     ];
 
-    public function store($input)
+    public function store($input, $model = null)
     {
         if ($this->options['min'] && $this->options['min'] != '') {
             if ($input < $this->options['min']) {

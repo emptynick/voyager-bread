@@ -12,7 +12,7 @@ class Repeater extends BaseFormfield
         'label'            => '',
     ];
 
-    public function store($input)
+    public function store($input, $model = null)
     {
         return json_encode(array_values($input ?? []));
     }

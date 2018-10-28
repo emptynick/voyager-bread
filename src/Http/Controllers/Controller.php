@@ -46,15 +46,34 @@ abstract class Controller extends BaseController
         return $layout;
     }
 
-    public function prepareLayout($layout, $model)
+    //Do some common tasks with a layout
+    public function prepareLayout($layout, $model, $parse_relationships = true)
     {
-        $layout->elements = $layout->elements->map(function ($element) use ($model) {
+        $layout->elements->transform(function ($element) use ($model, $parse_relationships) {
             $element->options->put('isTranslatable', (
                 $model->isTranslatable && $model->isFieldTranslatable($element->field)
             ));
             if ($element->type == 'repeater') {
                 foreach ($element->options['elements'] as $sub) {
                     $sub->options->isTranslatable = $element->options['isTranslatable'];
+                }
+            }
+            if ($element->group == 'relationship' && $parse_relationships) {
+                //Inject visible relationship element-names
+                $relationship = $this->model->{$element->options['relationship']}();
+                $related = $relationship->getRelated();
+                $related_bread = BreadFacade::getBreadByTable($related->getTable());
+                $list = $related_bread->layouts->where('type', 'list')->where('name', $element->options['list'])->first();
+                $list = $this->prepareLayout($list, app($related_bread->model), false);
+                $rl_model = app($related_bread->model);
+                $element->options['relationship_element'] = $list->elements->get($list->relationship);
+                $element->options['relationship_url'] = route('voyager.'.get_translated_value($related_bread->slug).'.data');
+                $element->options['isTranslatable'] = $rl_model->isTranslatable && $rl_model->isFieldTranslatable($element->options['relationship_element']->field);
+                if ($element->options['allow_add'] && $element->options['add_view'] != '') {
+                    $view = $related_bread->getViews()->where('name', $element->options['add_view'])->first();
+                    $view->isTranslatable = $rl_model->isTranslatable ?? false;
+                    $element->options['view'] = $this->prepareLayout($view, $rl_model, false);
+                    $element->options['create_url']= route('voyager.'.get_translated_value($related_bread->slug).'.store');
                 }
             }
 
@@ -159,7 +178,11 @@ abstract class Controller extends BaseController
         $data = collect();
 
         foreach ($layout->elements as $element) {
-            $returned = $element->store($request->{$element->field});
+            if ($element->group == 'relationship') {
+                $returned = $element->store($request->{$element->options['relationship']}, $this->model);
+            } else {
+                $returned = $element->store($request->{$element->field});
+            }
             if ($returned !== false) {
                 if (gettype($returned) == 'array') {
                     foreach ($returned as $key => $value) {

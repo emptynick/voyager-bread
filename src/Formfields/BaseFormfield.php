@@ -16,7 +16,7 @@ class BaseFormfield
         return $input;
     }
 
-    public function store($input)
+    public function store($input, $model = null)
     {
         return $input;
     }

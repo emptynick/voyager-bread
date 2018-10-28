@@ -13,7 +13,7 @@ class TabControl extends BaseFormfield
         'default_tab'      => 0,
     ];
 
-    public function store($input)
+    public function store($input, $model = null)
     {
         return json_encode(array_values($input ?? []));
     }
