@@ -73,7 +73,7 @@ abstract class Controller extends BaseController
                     $view = $related_bread->getViews()->where('name', $element->options['add_view'])->first();
                     $view->isTranslatable = $rl_model->isTranslatable ?? false;
                     $element->options['view'] = $this->prepareLayout($view, $rl_model, false);
-                    $element->options['create_url']= route('voyager.'.get_translated_value($related_bread->slug).'.store');
+                    $element->options['create_url'] = route('voyager.'.get_translated_value($related_bread->slug).'.store');
                 }
             }
 

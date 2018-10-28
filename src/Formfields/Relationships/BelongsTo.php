@@ -29,6 +29,7 @@ class BelongsTo extends BaseRelationshipFormfield
                 $input = '';
             }
         }
+
         return [$relationship->getForeignKey() => $input];
     }
 }

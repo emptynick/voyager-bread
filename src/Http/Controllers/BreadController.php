@@ -415,12 +415,12 @@ class BreadController extends Controller
             }
 
             //Add static stuff
-            $final[$key]['bread_read']   = route('voyager.'.get_translated_value($this->bread->slug).'.show', $result[$this->model->getKeyName()]);
-            $final[$key]['bread_edit']   = route('voyager.'.get_translated_value($this->bread->slug).'.edit', $result[$this->model->getKeyName()]);
+            $final[$key]['bread_read'] = route('voyager.'.get_translated_value($this->bread->slug).'.show', $result[$this->model->getKeyName()]);
+            $final[$key]['bread_edit'] = route('voyager.'.get_translated_value($this->bread->slug).'.edit', $result[$this->model->getKeyName()]);
             $final[$key]['bread_delete'] = route('voyager.'.get_translated_value($this->bread->slug).'.destroy', $result[$this->model->getKeyName()]);
-            $final[$key]['bread_key']    = $result->getKey();
-            $final[$key]['deleted_at']   = $result['deleted_at'] ?? '';
-            $final[$key]['restore']      = route('voyager.'.get_translated_value($this->bread->slug).'.restore', $result[$this->model->getKeyName()]);
+            $final[$key]['bread_key'] = $result->getKey();
+            $final[$key]['deleted_at'] = $result['deleted_at'] ?? '';
+            $final[$key]['restore'] = route('voyager.'.get_translated_value($this->bread->slug).'.restore', $result[$this->model->getKeyName()]);
         }
 
         return [
