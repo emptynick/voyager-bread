@@ -41,6 +41,7 @@
                                         :locale="'{{ app()->getLocale() }}'"
                                         :input="item"
                                     ></component>
+                                    <span v-if="props.row[col].data.length == 0">{{ __('voyager::generic.none') }}</span>
                                 </div>
                                 <component
                                     v-else
