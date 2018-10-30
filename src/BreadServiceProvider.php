@@ -55,8 +55,8 @@ class BreadServiceProvider extends ServiceProvider
         });
 
         try {
-
-        } catch (\Exception $e) { }
+        } catch (\Exception $e) {
+        }
     }
 
     protected function registerFormfields()

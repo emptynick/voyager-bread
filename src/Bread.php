@@ -2,8 +2,6 @@
 
 namespace Bread;
 
-use Bread\Classes\Bread as BreadClass;
-
 class Bread
 {
     protected $formfields = [];
@@ -31,36 +29,29 @@ class Bread
 
     public function getBread($slug)
     {
-
     }
 
     public function getBreadByTable($table)
     {
-
     }
 
     public function getBreads()
     {
-
     }
 
     public function hasBread($slug)
     {
-
     }
 
     public function hasBreadByTable($table)
     {
-
     }
 
     public function saveBread($table, $content)
     {
-        
     }
 
     public function deleteBread($table)
     {
-
     }
 }
