@@ -42,8 +42,7 @@ class Bread
     public function getBreads()
     {
         if (!$this->breads) {
-            $this->breads = \Cache::remember('breads', now()->addHours(24), function ()
-            {
+            $this->breads = \Cache::remember('breads', now()->addHours(24), function () {
                 $breads = collect();
                 $files = scandir(config('bread.bread_path'));
                 foreach ($files as $file) {
@@ -77,6 +76,7 @@ class Bread
     public function saveBread($bread)
     {
         $path = config('bread.bread_path').DIRECTORY_SEPARATOR.$bread->table.'.json';
+
         return file_put_contents($path, json_encode($bread, JSON_PRETTY_PRINT));
     }
 
