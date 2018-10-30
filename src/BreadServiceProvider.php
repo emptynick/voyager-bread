@@ -47,7 +47,7 @@ class BreadServiceProvider extends ServiceProvider
             //Index
             $router->get('/', [
                 'uses' => $namespace.'ManagerController@index',
-                'as' => 'index'
+                'as'   => 'index',
             ]);
             //Create
             $router->get('{table}/create', [
@@ -88,7 +88,7 @@ class BreadServiceProvider extends ServiceProvider
     protected function registerFormfields()
     {
         $formfields = [
-            \Bread\Formfields\Text::class
+            \Bread\Formfields\Text::class,
         ];
         foreach ($formfields as $formfield) {
             BreadFacade::addFormfield($formfield);
