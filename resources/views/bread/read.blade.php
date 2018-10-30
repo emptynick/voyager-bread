@@ -41,6 +41,7 @@
                                 <component
                                     :is="'formfield-'+item.type"
                                     :options="item.options"
+                                    :computed="item.computed"
                                     :name="item.field"
                                     :ref="item.field"
                                     :show="'read'"

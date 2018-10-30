@@ -1,13 +1,13 @@
 @section('relationship-create')
 <div>
-    <modal :name="options.relationship+'_modal'" :ref="options.relationship+'_modal'">
+    <modal :name="options.relationship+'_modal'" :ref="computed.relationship+'_modal'">
         <div class="panel panel-default">
             <div class="panel-body">
-                <div class="row" v-if="options.view.isTranslatable">
+                <div class="row" v-if="computed.view.isTranslatable">
                     <language-switcher :languages="{{ json_encode(config('voyager.multilingual.locales')) }}"></language-switcher>
                 </div>
-                <form :id="options.relationship+'_form'" @submit.prevent="submit">
-                    <div v-for="(item, key) in options.view.elements" :class="'col-md-'+item.width">
+                <form :id="computed.relationship+'_form'" @submit.prevent="submit">
+                    <div v-for="(item, key) in computed.view.elements" :class="'col-md-'+item.width">
                         <div class="panel">
                             <div class="panel-body">
                                 <div :class="'form-group '+((hasError(item.field) && item.type != 'repeater') ? 'has-error' : '')">
@@ -15,6 +15,7 @@
                                         v-if="item.group != 'relationship' && item.froup != 'layout'"
                                         :is="'formfield-'+item.type"
                                         :options="item.options"
+                                        :computed="item.computed"
                                         :name="item.field"
                                         :show="'add'"
                                         :input="''"
@@ -46,7 +47,7 @@
 <script>
 Vue.component('relationship-create', {
     template: `@yield('relationship-create')`,
-    props: ['name', 'options'],
+    props: ['name', 'options', 'computed'],
     data: function() {
         return {
             errors: [],
@@ -56,9 +57,9 @@ Vue.component('relationship-create', {
         submit: function(e) {
             var data = new FormData(e.target);
             data.append('_token', '{{ csrf_token() }}');
-            this.$http.post(this.options.create_url, data).then(response => {
+            this.$http.post(this.computed.create_url, data).then(response => {
                 var key = response.body;
-                this.$bus.$emit(this.options.relationship+'Added', key);
+                this.$bus.$emit(this.computed.relationship+'Added', key);
                 this.close();
             }, response => {
                 if (response.status == 422) {
@@ -70,7 +71,7 @@ Vue.component('relationship-create', {
             });
         },
         close: function() {
-            this.$modal.hide(this.options.relationship+'_modal');
+            this.$modal.hide(this.computed.relationship+'_modal');
         },
         hasError: function(field) {
             return (this.getErrors(field).length > 0);
@@ -95,14 +96,14 @@ Vue.component('relationship-create', {
     },
     mounted: function() {
         var vm = this;
-        this.$bus.$on(this.options.relationship+'modalShow', function() {
-            if (vm.options.relationship != '') {
-                vm.$modal.show(vm.options.relationship+'_modal');
+        this.$bus.$on(this.computed.relationship+'modalShow', function() {
+            if (vm.computed.relationship != '') {
+                vm.$modal.show(vm.computed.relationship+'_modal');
             }
         });
-        this.$bus.$on(this.options.relationship+'modalHide', function() {
-            if (vm.options.relationship != '') {
-                vm.$modal.hide(vm.options.relationship+'_modal');
+        this.$bus.$on(this.computed.relationship+'modalHide', function() {
+            if (vm.computed.relationship != '') {
+                vm.$modal.hide(vm.computed.relationship+'_modal');
             }
         });
     }

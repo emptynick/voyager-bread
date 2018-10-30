@@ -33,6 +33,7 @@
                                             <component
                                                 :is="'formfield-'+item.type"
                                                 :options="item.options"
+                                                :computed="item.computed"
                                                 :name="item.field"
                                                 :show="'{{ $content->getKey() ? 'edit' : 'add' }}'"
                                                 :input="item.type == 'tabcontrol' ? this.content : getContent(item)"

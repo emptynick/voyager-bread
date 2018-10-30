@@ -35,7 +35,8 @@
                                         v-for="(item, key) in props.row[col].data.slice(0, 3)"
                                         :key="key"
                                         :is="'formfield-'+props.row[col].type"
-                                        :options="getOptions(props.row[col].options)"
+                                        :options="props.row[col].options"
+                                        :computed="props.row[col].computed"
                                         :name="''"
                                         :show="'browse'"
                                         :locale="'{{ app()->getLocale() }}'"
@@ -46,7 +47,8 @@
                                 <component
                                     v-else
                                     :is="'formfield-'+props.row[col].type"
-                                    :options="getOptions(props.row[col].options)"
+                                    :options="props.row[col].options"
+                                    :computed="props.row[col].computed"
                                     :name="''"
                                     :show="'browse'"
                                     :locale="'{{ app()->getLocale() }}'"
@@ -228,11 +230,6 @@ new Vue({
 					{text: '{{ __("voyager::generic.no") }}', action: (toast) => this.$snotify.remove(toast.id) },
 				]
 			});
-        },
-        getOptions: function(input) {
-            var data = JSON.parse(input);
-            data.isTranslatable = true;
-            return data;
         },
     },
     watch: {

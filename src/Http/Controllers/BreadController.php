@@ -14,6 +14,7 @@ class BreadController extends Controller
 {
     public function __construct(Request $request)
     {
+        //Todo: throw exception if something is not there
         $this->bread = BreadFacade::getBread($this->getSlug($request));
         if ($this->bread) {
             $this->model = app($this->bread->model);
@@ -24,7 +25,7 @@ class BreadController extends Controller
     {
         $this->authorize('browse', $this->model);
 
-        $layout = $this->getLayout('browse');
+        $layout = $this->getLayout('browse')->prepare($this->bread, $this->model);
         $view = 'bread::bread.browse';
         if (view()->exists('bread::'.$this->bread->slug.'.browse')) {
             $view = 'bread::'.$this->bread->slug.'.browse';
@@ -43,7 +44,7 @@ class BreadController extends Controller
         $content = $this->model->findOrFail($id);
 
         $this->authorize('read', $content);
-        $layout = $this->prepareLayout($this->getLayout('read'), $this->model);
+        $layout = $this->getLayout('read')->prepare($this->bread, $this->model, $content);
         $view = 'bread::bread.read';
         if (view()->exists('bread::'.$this->bread->slug.'.read')) {
             $view = 'bread::'.$this->bread->slug.'.read';
@@ -62,13 +63,7 @@ class BreadController extends Controller
         $content = $id instanceof Model ? $id : $this->model->findOrFail($id);
 
         $this->authorize('edit', $content);
-        $layout = $this->prepareLayout($this->getLayout('edit'), $this->model);
-        //Load relationships
-        $layout->elements->where('group', 'relationship')->each(function ($el) use ($content) {
-            if (!$content->relationLoaded($el->options['relationship'])) {
-                $content->load($el->options['relationship'].':id'); //Todo: replace this
-            }
-        });
+        $layout = $this->getLayout('edit')->prepare($this->bread, $this->model, $content);
 
         $view = 'bread::bread.edit-add';
         if (view()->exists('bread::'.$this->bread->slug.'.edit-add')) {
@@ -154,7 +149,7 @@ class BreadController extends Controller
     public function create(Request $request)
     {
         $this->authorize('add', $this->model);
-        $layout = $this->prepareLayout($this->getLayout('add'), $this->model);
+        $layout = $this->getLayout('add')->prepare($this->bread, $this->model);
 
         $view = 'bread::bread.edit-add';
         if (view()->exists('bread::'.$this->bread->slug.'.edit-add')) {
@@ -269,7 +264,7 @@ class BreadController extends Controller
     public function data(Request $request)
     {
         //Todo: authorize!!!
-        $layout = $this->prepareLayout($this->getLayout('browse'), $this->model);
+        $layout = $this->getLayout('browse')->prepare($this->bread, $this->model);
         if ($request->has('list')) {
             $layout = $this->bread->layouts->where('type', 'list')->where('name', $request->list)->first();
         }
@@ -397,13 +392,6 @@ class BreadController extends Controller
                         //It IS a relationship-attribute
                         $rl = $result->{$relationship_details['name']}();
                         $data = collect($rl->pluck($parts[1]));
-                        /*$data = implode(', ', $relationship->take(3)->toArray());
-                        if (count($relationship) > 3) {
-                            $data .= ' and '.(count($relationship) - 3).' more';
-                        }
-                        if (count($relationship) == 0) {
-                            $data = __('voyager::generic.none');
-                        }*/
                     }
                 }
 
@@ -412,6 +400,7 @@ class BreadController extends Controller
                 $final[$key][$name]['data'] = $data;
                 $final[$key][$name]['type'] = $element->getCodename();
                 $final[$key][$name]['options'] = $element->getOptions();
+                $final[$key][$name]['computed'] = $element->computed;
             }
 
             //Add static stuff

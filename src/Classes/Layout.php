@@ -32,6 +32,7 @@ class Layout
             if (isset($formfield)) {
                 $new_element = new $formfield();
                 $new_element->setData($element);
+                $new_element->setLayout($this);
                 $this->elements[] = $new_element;
             }
         }
@@ -49,5 +50,13 @@ class Layout
         return $this->elements->unique(function ($item) use ($action) {
             return $item->getComponent($action);
         });
+    }
+
+    public function prepare($bread, $model, $content = null)
+    {
+        $this->elements->transform(function ($element) use ($bread, $model, $content) {
+            return $element->prepare($bread, $model, $content);
+        });
+        return $this;
     }
 }

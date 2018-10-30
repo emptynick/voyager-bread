@@ -29,7 +29,8 @@
     </div>
     <div v-else>
         <label v-if="options.title.length > 0">@{{ translated(options.title, locale) }}</label>
-        <quill-editor v-model="translate" :options="this.config" />
+        <tiptap :doc="translate">
+        </tiptap>
         <input type="hidden" :name="name" v-model="translationString">
         <small v-if="options.help_text.length > 0">@{{ translated(options.help_text, locale) }}</small>
     </div>
@@ -47,14 +48,6 @@ Vue.component('formfield-richtextbox', {
             {!! json_encode(config('voyager.multilingual.locales')) !!},
             this.options.isTranslatable
         );
-    },
-    data () {
-        return {
-            config: {
-                placeholder: this.options.placeholder,
-                readOnly: (this.show == 'mockup'),
-            }
-        }
     }
 });
 </script>

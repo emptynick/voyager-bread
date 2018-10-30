@@ -120,7 +120,7 @@ class ManagerController extends Controller
     public function storeLayouts(Request $request, $table)
     {
         $bread = BreadFacade::getBreadByTable($table);
-
+        //Todo: Exclude computed property in $views
         if ($bread) {
             if ($request->has('views')) {
                 $views = json_decode($request->input('views'));

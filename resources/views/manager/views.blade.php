@@ -52,7 +52,7 @@
                         @if (count($relationships) > 0)
                             <li class="dropdown-header">{{ __("bread::generic.relationships") }}</li>
                             @foreach($relationships as $relationship)
-                            @if ($relationship)
+                            @if ($relationship['has_bread'])
                             <li>
                                 <a href="#" v-on:click="addElement('{{ $relationship['type_slug'] }}', '{{ $relationship['name'] }}')">
                                     {{ $relationship['name'] }}
@@ -114,6 +114,7 @@
 
 @section('javascript')
 <script src="{{ route('voyager.bread.scripts') }}"></script>
+@include('bread::components.formfields.formfield')
 @foreach(\Bread\BreadFacade::formfields() as $formfield)
 @include($formfield->getComponent('view'))
 <input type="hidden" id="{{ $formfield->getCodeName() }}_default_options" value="{{ $formfield->getOptions('view') }}">

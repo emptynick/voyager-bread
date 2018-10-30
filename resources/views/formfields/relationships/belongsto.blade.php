@@ -57,21 +57,21 @@
                 <template slot="no-options">No options</template>
                 <template slot="option" slot-scope="option">
                     <component
-                        :is="'formfield-'+options.relationship_element.type"
-                        :options="options.relationship_element.options"
-                        :input="option[options.relationship_element.field].data"
+                        :is="'formfield-'+computed.relationship_element.type"
+                        :options="computed.relationship_element.options"
+                        :computed="option[computed.relationship_element.field].computed"
+                        :input="option[computed.relationship_element.field].data"
                         :show="'relationship'"
-                        :translatable="options.relationship_element.isTranslatable"
                         :locale="null"
                     ></component>
                 </template>
                 <template slot="selected-option" slot-scope="option">
                     <component
-                        :is="'formfield-'+options.relationship_element.type"
-                        :options="options.relationship_element.options"
-                        :input="option[options.relationship_element.field].data"
+                        :is="'formfield-'+computed.relationship_element.type"
+                        :options="computed.relationship_element.options"
+                        :computed="option[computed.relationship_element.field].computed"
+                        :input="option[computed.relationship_element.field].data"
                         :show="'relationship'"
-                        :translatable="options.relationship_element.isTranslatable"
                         :locale="null"
                     ></component>
                 </template>
@@ -79,10 +79,10 @@
             <div v-else>
                 @{{ translated(selectedValue) }}
             </div>
-            <input type="hidden" :name="this.options.relationship" :value="this.selectedId">
+            <input type="hidden" :name="this.computed.relationship" :value="this.selectedId">
         </div>
         <small v-if="options.help_text.length > 0">@{{ translated(options.help_text, locale) }}</small>
-        <relationship-create :options="options" v-if="options.allow_add && options.add_view != ''" />
+        <relationship-create :options="options" :computed="computed" v-if="options.allow_add && options.add_view != '' && show != 'mockup' && show != 'read'" />
     </div>
 </div>
 @endsection
@@ -90,7 +90,7 @@
 <script>
 Vue.component('formfield-belongsto', {
     template: `@yield('belongsto')`,
-    props: ['show', 'options', 'type', 'fields', 'name', 'input', 'locale', 'lists', 'views'],
+    props: ['show', 'options', 'computed', 'type', 'fields', 'name', 'input', 'locale', 'lists', 'views'],
     data: function() {
         return {
             results: [],
@@ -103,7 +103,7 @@ Vue.component('formfield-belongsto', {
             if (this.results) {
                 for (var i in this.results) {
                     if (this.results[i].bread_key == this.selectedId) {
-                        return this.results[i][this.options.relationship_element.field].data;
+                        return this.results[i][this.computed.relationship_element.field].data;
                     }
                 }
             }
@@ -118,12 +118,15 @@ Vue.component('formfield-belongsto', {
                 loading(true);
             if (select)
                 vm.selectedId = select;
-            vm.$http.get(vm.options.relationship_url+'?limit=10&page=1&list='+vm.options.list+'&query='+search+'&include='+vm.selectedId).then(response => {
+            vm.$http.get(vm.computed.relationship_url+'?limit=10&page=1&list='+vm.options.list+'&query='+search+'&include='+vm.selectedId).then(response => {
                 vm.results = response.body.data;
                 if (vm.options.allow_empty) {
                     vm.results.unshift({
-                        name: {
-                            data: '{{ __('voyager::generic.none') }}'
+                        [vm.computed.relationship_element.field]: {
+                            data: '{{ __('voyager::generic.none') }}',
+                            computed: {
+                                isTranslatable: false,
+                            },
                         },
                         bread_key: ''
                     });
@@ -149,7 +152,7 @@ Vue.component('formfield-belongsto', {
                 loading(false);
         }, 350),
         addRelationship: function() {
-            this.$bus.$emit(this.options.relationship+'modalShow');
+            this.$bus.$emit(this.computed.relationship+'modalShow');
         },
     },
     watch: {
@@ -163,7 +166,7 @@ Vue.component('formfield-belongsto', {
             this.search('', null, this);
         }
 
-        this.$bus.$on(this.options.relationship+'Added', function(key) {
+        this.$bus.$on(this.computed.relationship+'Added', function(key) {
             vm.search('', null, vm, key);
         });
     }

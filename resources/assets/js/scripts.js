@@ -54,6 +54,36 @@ Vue.component('swatches', Swatches);
 import VModal from 'vue-js-modal';
 Vue.use(VModal);
 
+//Vue TipTap
+import { Editor } from 'tiptap';
+Vue.component('tiptap', Editor);
+import {
+  // Nodes
+  BlockquoteNode,
+  BulletListNode,
+  CodeBlockNode,
+  CodeBlockHighlightNode,
+  HardBreakNode,
+  HeadingNode,
+  ImageNode,
+  ListItemNode,
+  OrderedListNode,
+  TodoItemNode,
+  TodoListNode,
+
+  // Marks
+  BoldMark,
+  CodeMark,
+  ItalicMark,
+  LinkMark,
+  StrikeMark,
+  UnderlineMark,
+
+  // General Extensions
+  HistoryExtension,
+  PlaceholderExtension,
+} from 'tiptap-extensions';
+
 import VueSimplemde from 'vue-simplemde';
 Vue.use(VueSimplemde);
 

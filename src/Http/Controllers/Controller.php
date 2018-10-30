@@ -46,43 +46,6 @@ abstract class Controller extends BaseController
         return $layout;
     }
 
-    //Do some common tasks with a layout
-    public function prepareLayout($layout, $model, $parse_relationships = true)
-    {
-        $layout->elements->transform(function ($element) use ($model, $parse_relationships) {
-            $element->options->put('isTranslatable', (
-                $model->isTranslatable && $model->isFieldTranslatable($element->field)
-            ));
-            if ($element->type == 'repeater') {
-                foreach ($element->options['elements'] as $sub) {
-                    $sub->options->isTranslatable = $element->options['isTranslatable'];
-                }
-            }
-            if ($element->group == 'relationship' && $parse_relationships) {
-                //Inject visible relationship element-names
-                $relationship = $this->model->{$element->options['relationship']}();
-                $related = $relationship->getRelated();
-                $related_bread = BreadFacade::getBreadByTable($related->getTable());
-                $list = $related_bread->layouts->where('type', 'list')->where('name', $element->options['list'])->first();
-                $list = $this->prepareLayout($list, app($related_bread->model), false);
-                $rl_model = app($related_bread->model);
-                $element->options['relationship_element'] = $list->elements->get($list->relationship);
-                $element->options['relationship_url'] = route('voyager.'.get_translated_value($related_bread->slug).'.data');
-                $element->options['isTranslatable'] = $rl_model->isTranslatable && $rl_model->isFieldTranslatable($element->options['relationship_element']->field);
-                if ($element->options['allow_add'] && $element->options['add_view'] != '') {
-                    $view = $related_bread->getViews()->where('name', $element->options['add_view'])->first();
-                    $view->isTranslatable = $rl_model->isTranslatable ?? false;
-                    $element->options['view'] = $this->prepareLayout($view, $rl_model, false);
-                    $element->options['create_url'] = route('voyager.'.get_translated_value($related_bread->slug).'.store');
-                }
-            }
-
-            return $element;
-        });
-
-        return $layout;
-    }
-
     public function getRelationships($bread)
     {
         if (isset($bread->model) && class_exists($bread->model)) {
@@ -92,19 +55,19 @@ abstract class Controller extends BaseController
                     $relationship = $model->{$name}();
                     $related = $relationship->getRelated();
                     $related_bread = BreadFacade::getBreadByTable($related->getTable());
+                    $info = collect([]);
+                    $info->put('name', $name);
+                    $info->put('type', class_basename($relationship));
+                    $info->put('type_slug', str_slug(class_basename($relationship)));
+                    $info->put('has_bread', boolval($related_bread));
+                    $info->put('attributes', SchemaManager::describeTable($related->getTable())->keys()->merge($this->getModelAccessors($related)));
 
                     if ($related_bread !== null) {
-                        $info = collect([]);
-                        $info->put('name', $name);
-                        $info->put('type', class_basename($relationship));
-                        $info->put('type_slug', str_slug(class_basename($relationship)));
-                        $info->put('has_bread', boolval($related_bread));
                         $info->put('lists', $related_bread->layouts->where('type', 'list'));
                         $info->put('views', $related_bread->layouts->where('type', 'view'));
-                        $info->put('attributes', SchemaManager::describeTable($related->getTable())->keys()->merge($this->getModelAccessors($related)));
-
-                        return $info;
                     }
+
+                    return $info;
                 });
 
                 return $relationships;

@@ -26,8 +26,8 @@
 </div>
 @endsection
 <!--https://medium.com/founders-factory/building-a-custom-google-map-component-with-vue-js-d1c01ddd0b0a-->
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBttGFf_yYcUqVWI9kRVW_UtTnXXzNYIyA"></script>
-<script>
+<!--<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBttGFf_yYcUqVWI9kRVW_UtTnXXzNYIyA"></script>
+--><script>
 Vue.component('formfield-coordinates', {
     template: `@yield('coordinates')`,
     props: ['show', 'options', 'type', 'fields', 'name', 'input', 'locale'],

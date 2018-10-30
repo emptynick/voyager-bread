@@ -6,10 +6,17 @@ class BaseFormfield
 {
     protected $name;
     protected $codename;
+    protected $layout;
     public $group = 'formfield';
     public $field;
     public $options = [];
     public $validation_rules = [];
+    public $computed;
+
+    public function __construct()
+    {
+        $this->computed = collect([]);
+    }
 
     public function update($input)
     {
@@ -63,5 +70,34 @@ class BaseFormfield
     public function getName()
     {
         return $this->name;
+    }
+
+    public function prepare($bread, $model, $content = null)
+    {
+        if (is_array($this->computed)) {
+            $this->computed = collect();
+        }
+        if (str_contains($this->field, '|')) {
+            //Inject isTranslatable for a relationship
+            $parts = explode('|', $this->field);
+            if (method_exists($model, $parts[0])) {
+                $relationship = $model->{$parts[0]}();
+                $related = $relationship->getRelated();
+                $this->computed->put('isTranslatable',
+                    ($related->isTranslatable && $related->isFieldTranslatable($parts[1]))
+                );
+            }
+        } else {
+            $this->computed->put('isTranslatable',
+                ($model->isTranslatable && $model->isFieldTranslatable($this->field))
+            );
+        }
+
+        return $this;
+    }
+
+    public function setLayout($layout)
+    {
+        $this->layout = $layout;
     }
 }
