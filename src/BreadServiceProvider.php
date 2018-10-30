@@ -41,41 +41,7 @@ class BreadServiceProvider extends ServiceProvider
             'as'     => 'bread.',
             'prefix' => 'bread',
         ], function () use ($namespace, $router) {
-            $router->get('getTranslation/{key?}', function ($key = null) {
-                return __($key);
-            })->name('getTranslation');
-            $router->get('/', [
-                'uses' => $namespace.'ManagerController@index',
-                'as'   => 'index',
-            ]);
-            $router->get('{table}/create', [
-                'uses' => $namespace.'ManagerController@create',
-                'as'   => 'create',
-            ]);
-            $router->post('/', [
-                'uses' => $namespace.'ManagerController@store',
-                'as'   => 'store',
-            ]);
-            $router->get('{table}/edit', [
-                'uses' => $namespace.'ManagerController@edit',
-                'as'   => 'edit',
-            ]);
-            $router->delete('{id}', [
-                'uses' => $namespace.'ManagerController@destroy',
-                'as'   => 'delete',
-            ]);
-            $router->get('{table}/views/{name?}', [
-                'uses'  => $namespace.'ManagerController@views',
-                'as'    => 'views.edit',
-            ]);
-            $router->get('{table}/lists/{name?}', [
-                'uses'  => $namespace.'ManagerController@lists',
-                'as'    => 'lists.edit',
-            ]);
-            $router->post('{table}/storelayouts', [
-                'uses'  => $namespace.'ManagerController@storeLayouts',
-                'as'    => 'storelayouts',
-            ]);
+            $router->resource('manager', $namespace.'ManagerController');
 
             //Assets
             $router->get('/styles.css', [
@@ -89,50 +55,14 @@ class BreadServiceProvider extends ServiceProvider
         });
 
         try {
-            foreach (BreadFacade::getBreads(true) as $bread) {
-                $slugs = collect(get_translated_values($bread->slug));
-                foreach ($slugs as $lang_slug) {
-                    if ($lang_slug == '') {
-                        continue;
-                    }
-                    $router->resource($lang_slug, $bread->controller ?: '\Bread\Http\Controllers\BreadController');
-                    $router->get($lang_slug.'/data/get', ($bread->controller ?: '\Bread\Http\Controllers\BreadController').'@data')->name($lang_slug.'.data');
-                    $router->post($lang_slug.'/restore/{id}', ($bread->controller ?: '\Bread\Http\Controllers\BreadController').'@restore')->name($lang_slug.'.restore');
-                }
-            }
-        } catch (\Exception $e) {
-        }
+
+        } catch (\Exception $e) { }
     }
 
     protected function registerFormfields()
     {
         $formfields = [
-            \Bread\Formfields\Checkboxes::class,
-            \Bread\Formfields\Color::class,
-            \Bread\Formfields\Coordinates::class,
-            \Bread\Formfields\DateTime::class,
-            \Bread\Formfields\Heading::class,
-            \Bread\Formfields\Markdown::class,
-            \Bread\Formfields\MaskedInput::class,
-            \Bread\Formfields\Number::class,
-            \Bread\Formfields\Paragraph::class,
-            \Bread\Formfields\Password::class,
-            \Bread\Formfields\RadioButtons::class,
-            \Bread\Formfields\Repeater::class,
-            \Bread\Formfields\Richtextbox::class,
-            \Bread\Formfields\Select::class,
-            \Bread\Formfields\DynamicSelect::class,
-            \Bread\Formfields\TabControl::class,
-            \Bread\Formfields\Tags::class,
-            \Bread\Formfields\Text::class,
-            \Bread\Formfields\Textarea::class,
-            /*\Bread\Formfields\MaskedInput::class,
-            \Bread\Formfields\RichTextEditor::class,*/
 
-            \Bread\Formfields\Relationships\HasOne::class,
-            \Bread\Formfields\Relationships\HasMany::class,
-            \Bread\Formfields\Relationships\BelongsTo::class,
-            \Bread\Formfields\Relationships\BelongsToMany::class,
         ];
         foreach ($formfields as $formfield) {
             BreadFacade::addFormfield($formfield);
