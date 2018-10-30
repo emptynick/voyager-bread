@@ -7,6 +7,6 @@ class Text extends BaseFormfield
     public $codename = 'text';
     public $name = 'Text';
     public $options = [
-        
+
     ];
 }

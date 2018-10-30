@@ -32,7 +32,7 @@ class ManagerController extends Controller
                 'slug'                  => str_slug($table),
                 'model_name'            => 'App\\'.title_case(str_singular($table)),
             ])),
-            'table' => $table
+            'table' => $table,
         ]);
     }
 
@@ -52,7 +52,7 @@ class ManagerController extends Controller
         if ($bread) {
             return view('bread::manager.edit-add', [
                 'bread' => json_encode($bread),
-                'table' => null
+                'table' => null,
             ]);
         }
 
