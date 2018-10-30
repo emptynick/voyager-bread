@@ -57,6 +57,7 @@ class Layout
         $this->elements->transform(function ($element) use ($bread, $model, $content) {
             return $element->prepare($bread, $model, $content);
         });
+
         return $this;
     }
 }

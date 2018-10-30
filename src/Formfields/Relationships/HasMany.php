@@ -2,8 +2,6 @@
 
 namespace Bread\Formfields\Relationships;
 
-use Bread\BreadFacade;
-
 class HasMany extends BaseRelationshipFormfield
 {
     protected $name = 'HasMany';
