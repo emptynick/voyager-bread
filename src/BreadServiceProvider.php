@@ -14,6 +14,9 @@ class BreadServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(
             dirname(__DIR__).'/publishable/config/bread.php', 'bread'
         );
+
+        \View::share('locale', app()->getLocale());
+        \View::share('locales', config('voyager.multilingual.locales', []));
     }
 
     public function register()
@@ -41,8 +44,31 @@ class BreadServiceProvider extends ServiceProvider
             'as'     => 'bread.',
             'prefix' => 'bread',
         ], function () use ($namespace, $router) {
-            $router->resource('manager', $namespace.'ManagerController');
-
+            //Index
+            $router->get('/', [
+                'uses' => $namespace.'ManagerController@index',
+                'as' => 'index'
+            ]);
+            //Create
+            $router->get('{table}/create', [
+                'uses' => $namespace.'ManagerController@create',
+                'as'   => 'create',
+            ]);
+            //Store
+            $router->post('/', [
+                'uses' => $namespace.'ManagerController@store',
+                'as'   => 'store',
+            ]);
+            //Edit
+            $router->get('{table}/edit', [
+                'uses' => $namespace.'ManagerController@edit',
+                'as'   => 'edit',
+            ]);
+            //Delete
+            $router->delete('{id}', [
+                'uses' => $namespace.'ManagerController@destroy',
+                'as'   => 'delete',
+            ]);
             //Assets
             $router->get('/styles.css', [
                 'uses' => $namespace.'AssetController@styles',
@@ -62,7 +88,7 @@ class BreadServiceProvider extends ServiceProvider
     protected function registerFormfields()
     {
         $formfields = [
-
+            \Bread\Formfields\Text::class
         ];
         foreach ($formfields as $formfield) {
             BreadFacade::addFormfield($formfield);
