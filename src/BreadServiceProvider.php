@@ -79,7 +79,7 @@ class BreadServiceProvider extends ServiceProvider
                 'uses' => $namespace.'AssetController@scripts',
                 'as'   => 'scripts',
             ]);
-            $router->post('/clear-cache', function() {
+            $router->post('/clear-cache', function () {
                 //Add any other cache-keys here
                 \Cache::forget('breads');
             })->name('clear-cache');
