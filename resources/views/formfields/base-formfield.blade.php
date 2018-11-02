@@ -1,12 +1,12 @@
-@section('formfield-text')
+@section('base-formfield')
 <div>
-    Hallo
+    <slot></slot>
 </div>
 @endsection
 
 <script>
-Vue.component('formfield-text', {
-    template: `@yield('formfield-text')`,
+Vue.component('base-formfield', {
+    template: `@yield('base-formfield')`,
     props: [],
     data: function() {
         return {

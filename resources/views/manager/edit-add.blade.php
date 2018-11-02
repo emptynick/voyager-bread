@@ -22,7 +22,7 @@
                                 <a data-toggle="collapse" href="#bread-settings">BREAD settings</a>
                             </h4>
                         </div>
-                        <div id="bread-settings" class="panel-collapse collapse in">
+                        <div id="bread-settings" :class="'panel-collapse collapse'+(table ? 'in' : '')">
                             <div class="panel-body">
                                 <div class="row clearfix">
                                     <div class="col-md-4 form-group">
@@ -65,8 +65,7 @@
         <!-- END Settings -->
 
         <!-- View and List builder -->
-        <button class="btn btn-primary" v-on:click.prevent="saveBread()">Save BREAD</button>
-        <div class="row" v-if="!table">
+        <div class="row">
             <div class="col-md-12">
                 <!-- Add Layout -->
                 <div class="dropdown" style="display:inline">
@@ -96,7 +95,7 @@
                     <ul class="dropdown-menu">
                         <!-- Formfields -->
                         <li class="dropdown-header">Formfield</li>
-                        <li v-for="formfield in formfields">
+                        <li v-for="formfield in formfields" v-if="true"> <!-- Type == view && group == layout -->
                             <a href="#" v-on:click.prevent="addElement('formfield', formfield.codename)">
                                 @{{ formfield.name }}
                             </a>
@@ -115,16 +114,27 @@
                 <!-- Breakpoint -->
                 <div class="dropdown" style="display:inline">
                     <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
-                        Breakpoint
+                        Breakpoint (@{{ current_breakpoint.toUpperCase() }})
                         <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu">
-                        
+                        <li v-for="(width, breakpoint) in breakpoints">
+                            <a href="#" v-on:click.prevent="">@{{ breakpoint.toUpperCase() }}</a>
+                        </li>
                     </ul>
                 </div>
                 <button v-if="currentLayout" v-on:click.prevent="deleteLayout()" class="btn btn-primary">Delete Layout</button>
-                <view-builder v-if="currentLayout && currentLayout.type == 'view'" :view="currentLayout"></view-builder>
-                <list-builder v-if="currentLayout && currentLayout.type == 'list'" :list="currentLayout"></list-builder>
+                <button class="btn btn-primary" v-on:click.prevent="saveBread()">Save BREAD</button>
+                <view-builder v-if="currentLayout && currentLayout.type == 'view'" :view="currentLayout" :parent="getThis()"></view-builder>
+                <list-builder v-if="currentLayout && currentLayout.type == 'list'" :list="currentLayout" :parent="getThis()"></list-builder>
+                <!-- View Options -->
+                <div v-if="currentLayout && currentLayout.type == 'view'">
+
+                </div>
+                <!-- List Options -->
+                <div v-if="currentLayout && currentLayout.type == 'list'">
+
+                </div>
             </div>
         </div>
         <!-- END View and List builder -->
@@ -137,6 +147,9 @@
 @include('bread::components.language-input')
 @include('bread::components.view-builder')
 @include('bread::components.list-builder')
+@include('bread::formfields.base-formfield')
+@include('bread::formfields.base-layout-element')
+@include('bread::formfields.base-relationship')
 
 @foreach(\Bread\BreadFacade::formfields() as $formfield)
     @include($formfield->getComponent())
@@ -151,12 +164,15 @@ var builder = new Vue({
         fields: {!! $fields ?? '[]' !!},
         accessors: {!! $accessors ?? '[]' !!},
         relationships: {!! $relationships ?? '[]' !!},
+        breakpoints: {!! $breakpoints !!},
         formfields: {!! \Bread\BreadFacade::formfields() !!},
+        roles: {!! \TCG\Voyager\Models\Role::pluck('id', 'display_name') !!},
         store_url: '{{ route("voyager.bread.store", "#") }}',
         update_url: '{{ route("voyager.bread.update", "#") }}',
 
         current_layout: null,
         current_options: null,
+        current_breakpoint: '{!! $breakpoints->keys()->last() !!}',
     },
     computed: {
         lists: function() {
@@ -208,14 +224,14 @@ var builder = new Vue({
                 this.$snotify.error(error);
                 return;
             }
-            var url = this.getUrl(this.store_url, this.table);
+            var url = this.getUrl(this.store_url, this.bread.table);
             this.$http.post(url, {
                 _token: '{{ csrf_token() }}',
                 bread: JSON.stringify(this.bread),
             }).then(response => {
                 this.$snotify.success('The BREAD was saved.');
             }, response => {
-                this.$snotify.error('There was a problem saving this BREAD: ' + response.statusText);
+                this.$snotify.error('There was a problem saving this BREAD: ' + response.body.message);
             });
         },
         addLayout: function(type) {
@@ -264,9 +280,17 @@ var builder = new Vue({
 				]
 			});
         },
-        addElement: function(type, name) {
-            //type = formfield|relationship
-            //name = text|a relationship object
+        addElement: function(group, type) {
+            //group = formfield|relationship
+            //type = text|a relationship object
+            this.currentLayout.elements.push({
+                group: group,
+                type: type,
+                options: [],
+            });
+        },
+        getThis: function() {
+            return this;
         }
     },
     mounted: function() {

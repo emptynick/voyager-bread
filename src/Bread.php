@@ -12,9 +12,9 @@ class Bread
     public function addFormfield($formfield)
     {
         if (gettype($formfield) == 'string') {
-            $formfield = app($formfield);
+            $formfield = new $formfield([]);
         }
-        $this->formfields[$formfield->name] = $formfield;
+        $this->formfields[$formfield->codename] = $formfield;
 
         return $this;
     }

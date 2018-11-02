@@ -47,6 +47,9 @@
                             </td>
                         </tr>
                     </table>
+                    <div class="pull-right">
+                        <button class="btn btn-primary" v-on:click.prevent="clearCache()">Clear cache</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -66,13 +69,16 @@ var builder = new Vue({
         add_url: '{{ route("voyager.bread.create", "#") }}',
     },
     methods: {
-        hasBread: function(table) {
+        getBread: function(table) {
             for (i in this.breads) {
                 if (this.breads[i].table == table) {
-                    return true;
+                    return this.breads[i];
                 }
             }
-            return false;
+            return null;
+        },
+        hasBread: function(table) {
+            return this.getBread(table) ? true : false;
         },
         deleteBread: function(table) {
             this.$snotify.confirm('Are you sure you want to delete this BREAD?', 'Delete BREAD?', {
@@ -87,7 +93,7 @@ var builder = new Vue({
                             //Todo: remove BREAD from this.breads
                         }, response => {
                             this.$snotify.remove(toast.id);
-                            this.$snotify.error('There was a problem deleting this BREAD: ' + response.statusText);
+                            this.$snotify.error('There was a problem deleting this BREAD: ' + response.body.message);
                         });
                     }},
                     { text: 'No', action: (toast) => this.$snotify.remove(toast.id)},
@@ -96,6 +102,15 @@ var builder = new Vue({
         },
         getUrl: function(url, variable) {
             return url.replace('#', variable);
+        },
+        clearCache: function() {
+            this.$http.post('{{ route("voyager.bread.clear-cache") }}', {
+                _token: '{{ csrf_token() }}',
+            }).then(response => {
+                this.$snotify.success('The Cache was cleared');
+            }, response => {
+                this.$snotify.error('There was a problem clearing the cache: ' + response.body.message);
+            });
         }
     }
 });

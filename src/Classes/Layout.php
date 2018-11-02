@@ -9,6 +9,9 @@ class Layout
     public $name;
     public $type;
     public $elements;
+    public $browse_roles = [];
+    public $edit_roles = [];
+    public $add_roles = [];
 
     public function __construct($content)
     {
@@ -18,7 +21,7 @@ class Layout
                 foreach ($value as $element) {
                     $class = BreadFacade::formfield($element->type);
                     $formfield = new $class($element->options);
-                    $this->elements->put($formfield);
+                    $this->elements->push($formfield);
                 }
             } else {
                 $this->{$key} = $value;

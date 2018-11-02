@@ -1,12 +1,12 @@
-@section('formfield-text')
+@section('base-relationship')
 <div>
-    Hallo
+
 </div>
 @endsection
 
 <script>
-Vue.component('formfield-text', {
-    template: `@yield('formfield-text')`,
+Vue.component('base-relationship', {
+    template: `@yield('base-relationship')`,
     props: [],
     data: function() {
         return {

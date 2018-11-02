@@ -17,6 +17,7 @@ class BreadServiceProvider extends ServiceProvider
 
         \View::share('locale', app()->getLocale());
         \View::share('locales', config('voyager.multilingual.locales', []));
+        \View::share('breakpoints', collect(config('bread.breakpoints', []))->sort());
     }
 
     public function register()
@@ -78,6 +79,10 @@ class BreadServiceProvider extends ServiceProvider
                 'uses' => $namespace.'AssetController@scripts',
                 'as'   => 'scripts',
             ]);
+            $router->post('/clear-cache', function() {
+                //Add any other cache-keys here
+                \Cache::forget('breads');
+            })->name('clear-cache');
         });
 
         try {

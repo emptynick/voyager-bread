@@ -68,7 +68,7 @@
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(module) {/*!
- * @name JavaScript/NodeJS Merge v1.2.0
+ * @name JavaScript/NodeJS Merge v1.2.1
  * @author yeikos
  * @repository https://github.com/yeikos/js.merge
 
@@ -196,6 +196,8 @@
 			if (type !== 'object') continue;
 
 			for (var key in item) {
+
+				if (key === '__proto__') continue;
 
 				var sitem = clone ? Public.clone(item[key]) : item[key];
 
@@ -84533,7 +84535,7 @@ function () {
    * @example DateTime.utc(2014, 7, 13).toSQL() //=> '2014-07-13 00:00:00.000 Z'
    * @example DateTime.local(2014, 7, 13).toSQL() //=> '2014-07-13 00:00:00.000 -04:00'
    * @example DateTime.local(2014, 7, 13).toSQL({ includeOffset: false }) //=> '2014-07-13 00:00:00.000'
-   * @example DateTime.local(2014, 7, 13).toSQL({ includeZone: false }) //=> '2014-07-13 00:00:00.000 America/New_York'
+   * @example DateTime.local(2014, 7, 13).toSQL({ includeZone: true }) //=> '2014-07-13 00:00:00.000 America/New_York'
    * @return {string}
    */
 
@@ -90376,13 +90378,13 @@ var MentionNode = (function (Node$$1) {
 					class: this$1.options.mentionClass,
 					'data-mention-id': node.attrs.id,
 				},
-				("@" + (node.attrs.label)) ]; },
+				("" + (this$1.options.matcher.char) + (node.attrs.label)) ]; },
 			parseDOM: [
 				{
 					tag: 'span[data-mention-id]',
 					getAttrs: function (dom) {
 						var id = dom.getAttribute('data-mention-id');
-						var label = dom.innerText.split('@').join('');
+						var label = dom.innerText.split(this$1.options.matcher.char).join('');
 						return { id: id, label: label }
 					},
 				} ],
