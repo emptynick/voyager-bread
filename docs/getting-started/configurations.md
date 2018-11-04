@@ -23,5 +23,9 @@ Here you can decide which buttons will be displayed when editing/adding entries.
 
 `save_new` saves the entry and redirects to the add-page
 
-![](https://github.com/emptynick/voyager-bread/tree/099b50acdca3181aa6317dbfdcee2abce8b2d21b/docs/.gitbook/assets/bread_buttons.png)
+## fully\_validate\_translatable\_fields
+
+Sets wether translatable inputs should be validated for all locales or only for the current.
+
+Defaults to `false`
 
