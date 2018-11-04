@@ -12,7 +12,7 @@ Object.defineProperties(Vue.prototype, {
 });
 
 //Lodash
-//Todo: This is only used for debounce and takes ~500kb
+//Todo: This is only used for debounce and takes ~550kb
 import _ from 'lodash';
 
 // Vue resources
@@ -91,6 +91,11 @@ import MaskedInput from 'vue-masked-input';
 Vue.component('masked-input', MaskedInput);
 
 const helper = {
+    data: function() {
+        return {
+            locale: null,
+        };
+    },
     methods: {
         getUrl: function() {
             var url = arguments[0];
@@ -98,7 +103,30 @@ const helper = {
                 url = url.replace('#', arguments[i]);
             }
             return url;
+        },
+        translate: function(input) {
+            if (input) {
+                if (typeof input == 'string') {
+                    try {
+                        var json = JSON.parse(input);
+                        input = json;
+                    } catch (err) {
+                        return input;
+                    }
+                }
+                return input[this.locale];
+            }
+            return '';
+        },
+        slugify: function(input) {
+            //Todo: implement slugify
+            return input;
         }
     },
+    created: function() {
+        this.$bus.$on('setLocale', (locale) => {
+            this.locale = locale;
+        });
+    }
 }
 Vue.mixin(helper);

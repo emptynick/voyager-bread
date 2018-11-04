@@ -2,8 +2,10 @@
 
 namespace Bread;
 
+use Bread\BreadFacade;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Support\ServiceProvider;
+use TCG\Voyager\Facades\Voyager;
 
 class BreadServiceProvider extends ServiceProvider
 {
@@ -17,7 +19,9 @@ class BreadServiceProvider extends ServiceProvider
 
         \View::share('locale', app()->getLocale());
         \View::share('locales', config('voyager.multilingual.locales', []));
-        \View::share('breakpoints', collect(config('bread.breakpoints', []))->sort());
+        \View::share('breakpoints', collect(config('bread.breakpoints', []))->sort()->reverse());
+
+        Voyager::useModel('Category', \App\Category::class);
     }
 
     public function register()
@@ -86,6 +90,16 @@ class BreadServiceProvider extends ServiceProvider
         });
 
         try {
+            //BREADs
+            foreach (BreadFacade::getBreads() as $bread) {
+                $controller = $bread->controller_name ?? $namespace.'BreadController';
+                $slugs = collect($bread->slug);
+                foreach ($slugs as $slug) {
+                    $router->resource($slug, $controller);
+                    $router->post($slug.'/data', $controller.'@data')->name($slug.'.data');
+                    $router->delete($slug.'/restore/{id}', $controller.'@restore')->name($slug.'.restore');
+                }
+            }
         } catch (\Exception $e) {
         }
     }

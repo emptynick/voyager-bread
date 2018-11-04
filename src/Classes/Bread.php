@@ -27,4 +27,25 @@ class Bread
             }
         }
     }
+
+    public function getLayout($action)
+    {
+        $roles = collect(\Auth::user()->roles->pluck('id'));
+        $roles[] = \Auth::user()->role->id;
+        $roles = $roles->unique()->toArray();
+
+        $layout = $this->layouts->filter(function ($layout) use ($action, $roles) {
+            foreach ($roles as $role) {
+                if (in_array($role, $layout->{$action.'_roles'})) {
+                    return true;
+                }
+            }
+            return false;
+        })->first();
+        if (!$layout) {
+            throw new \Exception('There\'s no layout for this action ('.$action.') and your roles!');
+        }
+
+        return $layout;
+    }
 }

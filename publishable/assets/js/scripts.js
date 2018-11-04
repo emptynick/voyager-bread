@@ -42341,7 +42341,7 @@ Object.defineProperties(Vue.prototype, {
 });
 
 //Lodash
-//Todo: This is only used for debounce and takes ~500kb
+//Todo: This is only used for debounce and takes ~550kb
 
 
 // Vue resources
@@ -42395,6 +42395,11 @@ Vue.use(__WEBPACK_IMPORTED_MODULE_13_vue_simplemde___default.a);
 Vue.component('masked-input', __WEBPACK_IMPORTED_MODULE_14_vue_masked_input__["a" /* default */]);
 
 var helper = {
+    data: function data() {
+        return {
+            locale: null
+        };
+    },
     methods: {
         getUrl: function getUrl() {
             var url = arguments[0];
@@ -42402,7 +42407,31 @@ var helper = {
                 url = url.replace('#', arguments[i]);
             }
             return url;
+        },
+        translate: function translate(input) {
+            if (input) {
+                if (typeof input == 'string') {
+                    try {
+                        var json = JSON.parse(input);
+                        input = json;
+                    } catch (err) {
+                        return input;
+                    }
+                }
+                return input[this.locale];
+            }
+            return '';
+        },
+        slugify: function slugify(input) {
+            return input;
         }
+    },
+    created: function created() {
+        var _this = this;
+
+        this.$bus.$on('setLocale', function (locale) {
+            _this.locale = locale;
+        });
     }
 };
 Vue.mixin(helper);

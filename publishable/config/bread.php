@@ -14,4 +14,5 @@ return [
         'xs'            => 480,
         'xxs'           => 0,
     ],
+    'fully_validate_translatable_fields' => false,
 ];

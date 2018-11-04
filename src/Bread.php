@@ -12,7 +12,7 @@ class Bread
     public function addFormfield($formfield)
     {
         if (gettype($formfield) == 'string') {
-            $formfield = new $formfield([]);
+            $formfield = new $formfield();
         }
         $this->formfields[$formfield->codename] = $formfield;
 
@@ -31,7 +31,14 @@ class Bread
 
     public function getBread($slug)
     {
-        return $this->getBreads()->where('slug', $slug)->first();
+        return $this->getBreads()->filter(function ($bread) use ($slug) {
+            $slugs = collect($bread->slug);
+            foreach ($slugs as $translated_slug) {
+                if ($translated_slug == $slug) {
+                    return true;
+                }
+            }
+        })->first();
     }
 
     public function getBreadByTable($table)

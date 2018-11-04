@@ -1,13 +1,31 @@
 @section('language-input')
 <div>
-    <input type="text" class="form-control" v-bind:value="currentTranslated" v-on:input="input($event.target.value)">
+    <input type="text" ref="ahjo" class="form-control" :name="name" v-bind:value="currentTranslated" v-on:input="input($event.target.value)" :placeholder="translate(placeholder)">
 </div>
 @endsection
 
 <script>
 Vue.component('language-input', {
     template: `@yield('language-input')`,
-    props: ['value', 'name', 'slug', 'prefill'],
+    props: {
+        value: [String, Object, Number, Array],
+        name: {
+            type: String,
+            default: "",
+        },
+        slug: {
+            type: String,
+            default: "",
+        },
+        prefill: {
+            type: Boolean,
+            default: true,
+        },
+        placeholder: {
+            type: String,
+            default: ''
+        },
+    },
     data: function() {
         return {
             translated: this.value,

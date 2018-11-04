@@ -1,0 +1,1 @@
+@extends('voyager::master')

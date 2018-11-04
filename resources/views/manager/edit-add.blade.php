@@ -27,15 +27,15 @@
                                 <div class="row clearfix">
                                     <div class="col-md-4 form-group">
                                         <label>Display Name singular</label>
-                                        <language-input v-model="bread.display_name_singular" prefill="true" />
+                                        <language-input v-model="bread.display_name_singular" />
                                     </div>
                                     <div class="col-md-4 form-group">
                                         <label>Display Name Plural</label>
-                                        <language-input v-model="bread.display_name_plural" :name="'display_name_plural'" prefill="true" />
+                                        <language-input v-model="bread.display_name_plural" :name="'display_name_plural'" />
                                     </div>
                                     <div class="col-md-4 form-group">
                                         <label>Slug</label>
-                                        <language-input v-model="bread.slug" :slug="'display_name_plural'" prefill="true" />
+                                        <language-input v-model="bread.slug" :slug="'display_name_plural'" />
                                     </div>
                                 </div>
                                 <div class="row clearfix">
@@ -67,73 +67,156 @@
         <!-- View and List builder -->
         <div class="row">
             <div class="col-md-12">
-                <!-- Add Layout -->
-                <div class="dropdown" style="display:inline">
-                    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
-                        Layouts <span v-if="currentLayout">(@{{ currentLayout.name }})</span>
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li>
-                            <a href="#" v-on:click.prevent="addLayout('view')">Add View</a>
-                            <a href="#" v-on:click.prevent="addLayout('list')">Add List</a>
-                        </li>
-                        <li class="divider" v-if="bread.layouts.length > 0"></li>
-                        <li v-for="(layout, key) in bread.layouts">
-                            <a href="#" v-on:click.prevent="current_layout = key">
-                                @{{ layout.name }} (@{{ layout.type.charAt(0).toUpperCase()+layout.type.slice(1) }})
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-                <!-- Add Element -->
-                <div class="dropdown" style="display:inline">
-                    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
-                        Add Element
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu">
-                        <!-- Formfields -->
-                        <li class="dropdown-header">Formfield</li>
-                        <li v-for="formfield in formfields" v-if="true"> <!-- Type == view && group == layout -->
-                            <a href="#" v-on:click.prevent="addElement('formfield', formfield.codename)">
-                                @{{ formfield.name }}
-                            </a>
-                        </li>
-                        <!-- Relationship -->
-                        <li class="dropdown-header" v-if="currentLayout && currentLayout.type == 'view'">
-                            Relationship
-                        </li>
-                        <li v-for="relationship in relationships" v-if="currentLayout.type == 'view'">
-                            <a href="#" v-on:click.prevent="addElement('relationship', relationship)">
-                                @{{ relationship }}
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-                <!-- Breakpoint -->
-                <div class="dropdown" style="display:inline">
-                    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
-                        Breakpoint (@{{ current_breakpoint.toUpperCase() }})
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li v-for="(width, breakpoint) in breakpoints">
-                            <a href="#" v-on:click.prevent="">@{{ breakpoint.toUpperCase() }}</a>
-                        </li>
-                    </ul>
-                </div>
-                <button v-if="currentLayout" v-on:click.prevent="deleteLayout()" class="btn btn-primary">Delete Layout</button>
-                <button class="btn btn-primary" v-on:click.prevent="saveBread()">Save BREAD</button>
-                <view-builder v-if="currentLayout && currentLayout.type == 'view'" :view="currentLayout" :parent="getThis()"></view-builder>
-                <list-builder v-if="currentLayout && currentLayout.type == 'list'" :list="currentLayout" :parent="getThis()"></list-builder>
-                <!-- View Options -->
-                <div v-if="currentLayout && currentLayout.type == 'view'">
-
-                </div>
-                <!-- List Options -->
-                <div v-if="currentLayout && currentLayout.type == 'list'">
-
+                <div class="panel panel-bordered">
+                    <div class="panel-body" style="overflow: visible">
+                        <!-- Add Layout -->
+                        <div class="dropdown" style="display:inline">
+                            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                                Layouts <span v-if="currentLayout">(@{{ currentLayout.name }})</span>
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="#" v-on:click.prevent="addLayout('view')">Add View</a>
+                                    <a href="#" v-on:click.prevent="addLayout('list')">Add List</a>
+                                </li>
+                                <li class="divider" v-if="bread.layouts.length > 0"></li>
+                                <li v-for="(layout, key) in bread.layouts">
+                                    <a href="#" v-on:click.prevent="current_layout = key">
+                                        @{{ layout.name }} (@{{ layout.type.charAt(0).toUpperCase()+layout.type.slice(1) }})
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- Add Element -->
+                        <div class="dropdown" style="display:inline">
+                            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                                Add Element
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <!-- Formfields -->
+                                <li class="dropdown-header">Formfield</li>
+                                <li v-for="formfield in formfields" v-if="true"> <!-- Type == view && group == layout -->
+                                    <a href="#" v-on:click.prevent="addElement('formfield', formfield.codename, formfield.name)">
+                                        @{{ formfield.name }}
+                                    </a>
+                                </li>
+                                <!-- Relationship -->
+                                <li class="dropdown-header" v-if="currentLayout && currentLayout.type == 'view'">
+                                    Relationships
+                                </li>
+                                <li v-for="relationship in relationships" v-if="currentLayout && currentLayout.type == 'view' && relationship.lists.length > 0">
+                                    <a href="#" v-on:click.prevent="addElement('relationship', relationship)">
+                                        @{{ relationship.name }}
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        {{--
+                        <!-- Breakpoint -->
+                        <div class="dropdown" style="display:inline">
+                            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                                Breakpoint (@{{ current_breakpoint.toUpperCase() }})
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li v-for="(width, breakpoint) in breakpoints">
+                                    <a href="#" v-on:click.prevent="current_breakpoint = breakpoint">@{{ breakpoint.toUpperCase() }} (@{{ width }}px)</a>
+                                </li>
+                            </ul>
+                        </div>
+                        --}}
+                        <button v-if="currentLayout" v-on:click.prevent="deleteLayout()" class="btn btn-primary">Delete Layout</button>
+                        <button class="btn btn-primary" v-on:click.prevent="saveBread()">Save BREAD</button>
+                        <component
+                            v-if="currentLayout"
+                            :is="currentLayout.type+'-builder'"
+                            :layout="currentLayout"
+                            :parent="getThis()"
+                            :fields="fields"
+                            :accessors="accessors"
+                            :relationships="relationships">
+                        </component>
+                        <div class="clearfix"></div>
+                        <!-- View Options -->
+                        <div v-if="currentLayout && currentLayout.type == 'view'">
+                            <!-- Read roles -->
+                            <div class="col-md-4">
+                                <div class="panel panel-bordered" v-if="this.views.length > 0">
+                                   <div class="panel-heading">
+                                       <h3 class="panel-title">
+                                           <i class="voyager-people"></i> Read roles
+                                           <span class="panel-desc"> The roles which use this view for reading</span>
+                                       </h3>
+                                   </div>
+                                   <div class="panel-body" style="overflow: visible">
+                                       <select v-model="currentLayout.read_roles" multiple="true" class="form-control">
+                                           <option v-for="(id, role) in roles" :value="id">
+                                               @{{ role }}
+                                           </option>
+                                       </select>
+                                   </div>
+                                </div>
+                            </div>
+                            <!-- Edit roles -->
+                            <div class="col-md-4">
+                                <div class="panel panel-bordered" v-if="this.views.length > 0">
+                                   <div class="panel-heading">
+                                       <h3 class="panel-title">
+                                           <i class="voyager-people"></i> Edit roles
+                                           <span class="panel-desc"> The roles which use this view for editing</span>
+                                       </h3>
+                                   </div>
+                                   <div class="panel-body" style="overflow: visible">
+                                       <select v-model="currentLayout.edit_roles" multiple="true" class="form-control">
+                                           <option v-for="(id, role) in roles" :value="id">
+                                               @{{ role }}
+                                           </option>
+                                       </select>
+                                   </div>
+                                </div>
+                            </div>
+                            <!-- Add roles -->
+                            <div class="col-md-4">
+                                <div class="panel panel-bordered" v-if="this.views.length > 0">
+                                   <div class="panel-heading">
+                                       <h3 class="panel-title">
+                                           <i class="voyager-people"></i> Add roles
+                                           <span class="panel-desc"> The roles which use this view for adding</span>
+                                       </h3>
+                                   </div>
+                                   <div class="panel-body" style="overflow: visible">
+                                       <select v-model="currentLayout.add_roles" multiple="true" class="form-control">
+                                           <option v-for="(id, role) in roles" :value="id">
+                                               @{{ role }}
+                                           </option>
+                                       </select>
+                                   </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- List Options -->
+                        <div v-if="currentLayout && currentLayout.type == 'list'">
+                            <div class="col-md-4">
+                                <div class="panel panel-bordered" v-if="this.lists.length > 0">
+                                   <div class="panel-heading">
+                                       <h3 class="panel-title">
+                                           <i class="voyager-people"></i> Roles
+                                           <span class="panel-desc"> The roles which use this list for browsing</span>
+                                       </h3>
+                                   </div>
+                                   <div class="panel-body" style="overflow: visible">
+                                       <select v-model="currentLayout.browse_roles" multiple="true" class="form-control">
+                                           <option v-for="(id, role) in roles" :value="id">
+                                               @{{ role }}
+                                           </option>
+                                       </select>
+                                   </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -145,6 +228,7 @@
 <script src="{{ route('voyager.bread.scripts') }}"></script>
 @include('bread::components.language-switcher')
 @include('bread::components.language-input')
+@include('bread::components.validation-form')
 @include('bread::components.view-builder')
 @include('bread::components.list-builder')
 @include('bread::formfields.base-formfield')
@@ -153,6 +237,7 @@
 
 @foreach(\Bread\BreadFacade::formfields() as $formfield)
     @include($formfield->getComponent())
+    <input type="hidden" id="{{ $formfield->codename }}_default_options" value="{{ json_encode($formfield->options) }}">
 @endforeach
 
 <script>
@@ -172,7 +257,7 @@ var builder = new Vue({
 
         current_layout: null,
         current_options: null,
-        current_breakpoint: '{!! $breakpoints->keys()->last() !!}',
+        current_breakpoint: '{!! $breakpoints->keys()->first() !!}',
     },
     computed: {
         lists: function() {
@@ -280,13 +365,17 @@ var builder = new Vue({
 				]
 			});
         },
-        addElement: function(group, type) {
-            //group = formfield|relationship
-            //type = text|a relationship object
+        addElement: function(group, codename, name) {
+
+            var options = document.getElementById(codename+'_default_options').value;
             this.currentLayout.elements.push({
                 group: group,
-                type: type,
-                options: [],
+                codename: codename,
+                name: name,
+                width: 12,
+                field: '',
+                validation: [],
+                options: JSON.parse(options),
             });
         },
         getThis: function() {
@@ -297,10 +386,17 @@ var builder = new Vue({
         if (this.bread && this.bread.layouts.length > 0) {
             this.current_layout = 0;
         }
-    }
+        this.$bus.$emit('setLocale', '{{ $locale }}');
+    },
 });
 </script>
 @endsection
 @section('css')
 <link rel="stylesheet" href="{{ route('voyager.bread.styles') }}">
+<style>
+.formfield-panel {
+    overflow-y: visible !important;
+    overflow-x: visible !important;
+}
+</style>
 @endsection

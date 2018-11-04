@@ -6,3 +6,63 @@
 @import "~vue-swatches/dist/vue-swatches.min.css";
 //Vue Markdown editor
 @import '~simplemde/dist/simplemde.min.css';
+
+// View and list-builder
+.options-tooltip {
+    z-index: 10000 !important;
+    width: 25% !important;
+    max-width: 25% !important;
+    background-color: #353d47 !important;
+}
+.resizable-handle {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    bottom: 0;
+    right: 0px;
+    text-align: right;
+}
+.resizable-handle::after {
+    content: "";
+    position: absolute;
+    right: 3px;
+    bottom: 3px;
+    width: 5px;
+    height: 5px;
+    border-right: 2px solid #FFFFFF;
+    border-bottom: 2px solid #FFFFFF;
+}
+.floating-actions {
+    position: absolute;
+    top: 25px;
+    right: 5px;
+    text-align: right;
+}
+.floating-actions .panel-action {
+    color: #a3afb7;
+}
+.panel-100-height {
+    height: 100%;
+}
+.vue-responsive-grid-layout {
+    display:block;
+    position:relative;
+}
+.dropdown .dropdown-header {
+    font-weight: bold;
+    padding-left: 10px;
+}
+.dropdown strong {
+    font-weight: bold;
+}
+
+.dropdown-menu {
+    max-height: 500px;
+}
+
+.vue-swatches--inline {
+    background-color: transparent !important;
+}
+.panel-body .vue-swatches--inline {
+    text-align: center;
+}

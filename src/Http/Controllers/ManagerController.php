@@ -30,9 +30,10 @@ class ManagerController extends Controller
                 'display_name_singular' => title_case(str_singular($table)),
                 'display_name_plural'   => title_case($table),
                 'slug'                  => str_slug($table),
-                'model_name'            => 'App\\'.title_case(str_singular($table)),
+                'model_name'            => 'App\\'.title_case(str_singular($table))
             ])),
-            'table' => $table,
+            'table'  => $table,
+            'fields' => SchemaManager::describeTable($table)->keys()
         ]);
     }
 
@@ -50,9 +51,20 @@ class ManagerController extends Controller
     {
         $bread = BreadFacade::getBreadByTable($table);
         if ($bread) {
+            $model = null;
+            if (class_exists($bread->model_name)) {
+                $model = app($bread->model_name);
+            } else {
+                \Session::flash('message', 'The model for this BREAD does not exist. You can not select relationships or accessors!');
+                \Session::flash('alert-type', 'error');
+            }
+
             return view('bread::manager.edit-add', [
-                'bread' => json_encode($bread),
-                'table' => null,
+                'bread'         => json_encode($bread),
+                'table'         => null,
+                'fields'        => SchemaManager::describeTable($bread->table)->keys(),
+                'accessors'     => $this->getAccessors($model),
+                'relationships' => $this->getRelationships($model, true),
             ]);
         }
 
