@@ -113,7 +113,7 @@ class BreadController extends Controller
     public function destroy(Request $request, $id)
     {
         //$this->authorize('delete', $this->model);
-        $keys = collect($id == 0 ?$request->keys : $id);
+        $keys = collect($id == 0 ? $request->keys : $id);
         // Todo: Delete
     }
 

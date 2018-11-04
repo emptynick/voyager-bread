@@ -30,10 +30,10 @@ class ManagerController extends Controller
                 'display_name_singular' => title_case(str_singular($table)),
                 'display_name_plural'   => title_case($table),
                 'slug'                  => str_slug($table),
-                'model_name'            => 'App\\'.title_case(str_singular($table))
+                'model_name'            => 'App\\'.title_case(str_singular($table)),
             ])),
             'table'  => $table,
-            'fields' => SchemaManager::describeTable($table)->keys()
+            'fields' => SchemaManager::describeTable($table)->keys(),
         ]);
     }
 

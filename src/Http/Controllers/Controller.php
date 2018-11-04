@@ -28,11 +28,11 @@ class Controller extends BaseController
                 $this->middleware(function ($request, $next) {
                     if ($this->action == 'index' || $this->action == 'data') {
                         $this->layout = $this->bread->getLayout('browse')->prepare($this->bread, $this->model);
-                    } else if ($this->action == 'show') {
+                    } elseif ($this->action == 'show') {
                         $this->layout = $this->bread->getLayout('read')->prepare($this->bread, $this->model);
-                    } else if ($this->action == 'edit' || $this->action == 'update') {
+                    } elseif ($this->action == 'edit' || $this->action == 'update') {
                         $this->layout = $this->bread->getLayout('edit')->prepare($this->bread, $this->model);
-                    } else if ($this->action == 'create' || $this->action == 'store') {
+                    } elseif ($this->action == 'create' || $this->action == 'store') {
                         $this->layout = $this->bread->getLayout('add')->prepare($this->bread, $this->model);
                     }
 
@@ -121,6 +121,7 @@ class Controller extends BaseController
                 }
             }
         }
+
         return $data;
     }
 
@@ -140,9 +141,9 @@ class Controller extends BaseController
                     $rules[$element->field][] = $rule->rule;
                     $messages[$element->field.'.'.$rule_only] = get_translated_value($rule->msg);
                 }
-
             }
         }
+
         return [
             'rules'    => $rules,
             'messages' => $messages,

@@ -40,6 +40,7 @@ class Bread
                     return true;
                 }
             }
+
             return false;
         })->first();
         if (!$layout) {

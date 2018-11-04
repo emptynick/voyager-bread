@@ -18,7 +18,7 @@ abstract class BaseFormfield
         if ($element) {
             foreach ($element as $key => $value) {
                 if ($key == 'options') {
-                    $this->options = array_merge($this->options, (array)$value);
+                    $this->options = array_merge($this->options, (array) $value);
                 } else {
                     $this->{$key} = $value;
                 }

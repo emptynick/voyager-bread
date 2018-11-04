@@ -53,6 +53,7 @@ class Layout
 
             return $element->prepare($bread, $model);
         });
+
         return $this;
     }
 }
