@@ -6,11 +6,11 @@ Except for resizing, the workwise of lists is the same as for [views](views.md).
 
 ### Field
 
-The field is the column in your database-table where data is read from. It can also be an accessor or a relationship-field if your model has them.
+The field is the column in your database-table where data is read from. It can also be an [accessor ](accessors.md)or a [relationship-field](untitled.md) if your model has them.
 
-### Label
+### Title
 
-This is the label of the field showed in the header of the browse-table.
+The title is shown in the header of the browse-table.
 
 ### Searchable
 
@@ -20,11 +20,7 @@ This checkbox gives you the ability to make the field searchable. Be aware that 
 
 Is this field orderable or not.
 
-### Initial order
+### First ordered
 
 The first time you visit the BREAD-browse page, the list will be ordered by this field.
-
-### Show in relationship
-
-If you use this list in a relationship, you can make this property visible in the select-dropdown when adding/editing or as plain-text when reading.
 
