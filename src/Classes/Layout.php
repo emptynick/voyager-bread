@@ -21,8 +21,10 @@ class Layout
                 $this->elements = collect();
                 foreach ($value as $element) {
                     $class = BreadFacade::formfield($element->codename);
-                    $formfield = new $class($element);
-                    $this->elements->push($formfield);
+                    if ($class) {
+                        $formfield = new $class($element);
+                        $this->elements->push($formfield);
+                    }
                 }
             } else {
                 $this->{$key} = $value;
