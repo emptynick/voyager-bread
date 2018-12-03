@@ -19,8 +19,6 @@ class BreadServiceProvider extends ServiceProvider
         \View::share('locale', app()->getLocale());
         \View::share('locales', config('voyager.multilingual.locales', []));
         \View::share('breakpoints', collect(config('bread.breakpoints', []))->sort()->reverse());
-
-        Voyager::useModel('Category', \App\Category::class);
     }
 
     public function register()
