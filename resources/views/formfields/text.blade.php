@@ -28,8 +28,11 @@
     <div v-else-if="show == 'edit' || show == 'add'">
         <input class="form-control" type="text" v-model="inputLocal">
     </div>
-    <div v-else-if="show == 'browse' || show == 'read'">
-
+    <div v-else-if="show == 'read'">
+        @{{ inputLocal }}
+    </div>
+    <div v-else-if="show == 'browse'">
+        @{{ inputLocal ? inputLocal.substring(0, options.display_length) : '' }}
     </div>
 </div>
 @endsection
