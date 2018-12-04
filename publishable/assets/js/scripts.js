@@ -42327,112 +42327,101 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_13_vue_simplemde__ = __webpack_require__(258);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_13_vue_simplemde___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_13_vue_simplemde__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_14_vue_masked_input__ = __webpack_require__(270);
-window.Vue = __webpack_require__(6);
+window.Vue = __webpack_require__(6); //Global events
 
-//Global events
 var EventBus = new Vue();
-
 Object.defineProperties(Vue.prototype, {
-    $bus: {
-        get: function get() {
-            return EventBus;
-        }
+  $bus: {
+    get: function get() {
+      return EventBus;
     }
-});
-
-//Lodash
+  }
+}); //Lodash
 //Todo: This is only used for debounce and takes ~550kb
 
+ // Vue resources
 
-// Vue resources
 
-Vue.use(__WEBPACK_IMPORTED_MODULE_1_vue_resource__["a" /* default */]);
+Vue.use(__WEBPACK_IMPORTED_MODULE_1_vue_resource__["a" /* default */]); //Vue Snotify
 
-//Vue Snotify
 
-Vue.use(__WEBPACK_IMPORTED_MODULE_2_vue_snotify__["a" /* default */]);
+Vue.use(__WEBPACK_IMPORTED_MODULE_2_vue_snotify__["a" /* default */]); //Tooltip
 
-//Tooltip
 
 
 Vue.use(__WEBPACK_IMPORTED_MODULE_3_vue_directive_tooltip___default.a, {
-    placement: 'bottom'
-});
+  placement: 'bottom'
+}); //Vue Draggable
 
-//Vue Draggable
 
-Vue.component('draggable', __WEBPACK_IMPORTED_MODULE_5_vuedraggable___default.a);
+Vue.component('draggable', __WEBPACK_IMPORTED_MODULE_5_vuedraggable___default.a); //Vue Multi-Select
 
-//Vue Multi-Select
 
-Vue.component('v-select', __WEBPACK_IMPORTED_MODULE_6_vue_select___default.a);
+Vue.component('v-select', __WEBPACK_IMPORTED_MODULE_6_vue_select___default.a); //Vue Datatable
 
-//Vue Datatable
 
-Vue.use(__WEBPACK_IMPORTED_MODULE_7_vue_tables_2__["ServerTable"]);
+Vue.use(__WEBPACK_IMPORTED_MODULE_7_vue_tables_2__["ServerTable"]); //Vue Datetime
 
-//Vue Datetime
 
-Vue.component('datetime', __WEBPACK_IMPORTED_MODULE_8_vue_datetime__["Datetime"]);
+Vue.component('datetime', __WEBPACK_IMPORTED_MODULE_8_vue_datetime__["Datetime"]); //Vue Swatches
 
-//Vue Swatches
 
-Vue.component('swatches', __WEBPACK_IMPORTED_MODULE_9_vue_swatches___default.a);
+Vue.component('swatches', __WEBPACK_IMPORTED_MODULE_9_vue_swatches___default.a); //Vue-JS-Modal
 
-//Vue-JS-Modal
 
-Vue.use(__WEBPACK_IMPORTED_MODULE_10_vue_js_modal___default.a);
+Vue.use(__WEBPACK_IMPORTED_MODULE_10_vue_js_modal___default.a); //Vue TipTap
 
-//Vue TipTap
 
 Vue.component('tiptap', __WEBPACK_IMPORTED_MODULE_11_tiptap__["a" /* Editor */]);
 
 
-
 Vue.use(__WEBPACK_IMPORTED_MODULE_13_vue_simplemde___default.a);
 
-
 Vue.component('masked-input', __WEBPACK_IMPORTED_MODULE_14_vue_masked_input__["a" /* default */]);
-
 var helper = {
-    data: function data() {
-        return {
-            locale: null
-        };
-    },
-    methods: {
-        getUrl: function getUrl() {
-            var url = arguments[0];
-            for (var i = 1; i < arguments.length; i++) {
-                url = url.replace('#', arguments[i]);
-            }
-            return url;
-        },
-        translate: function translate(input) {
-            if (input) {
-                if (typeof input == 'string') {
-                    try {
-                        var json = JSON.parse(input);
-                        input = json;
-                    } catch (err) {
-                        return input;
-                    }
-                }
-                return input[this.locale];
-            }
-            return '';
-        },
-        slugify: function slugify(input) {
-            return input;
-        }
-    },
-    created: function created() {
-        var _this = this;
+  data: function data() {
+    return {
+      locale: null
+    };
+  },
+  methods: {
+    getUrl: function getUrl() {
+      var url = arguments[0];
 
-        this.$bus.$on('setLocale', function (locale) {
-            _this.locale = locale;
-        });
+      for (var i = 1; i < arguments.length; i++) {
+        url = url.replace('#', arguments[i]);
+      }
+
+      return url;
+    },
+    translate: function translate(input) {
+      if (input) {
+        if (typeof input == 'string') {
+          try {
+            var json = JSON.parse(input);
+            input = json;
+          } catch (err) {
+            return input;
+          }
+        }
+
+        return input[this.locale];
+      }
+
+      return '';
+    },
+    slugify: function slugify(input) {
+      //Todo: implement slugify
+      return input;
     }
+  },
+  created: function created() {
+    var _this = this;
+
+    this.$bus.$on('setLocale', function (locale) {
+      _this.locale = locale;
+    });
+  }
 };
 Vue.mixin(helper);
 
@@ -66444,6 +66433,8 @@ module.exports = function (css) {
 "use strict";
 
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
@@ -66581,12 +66572,20 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
             this.transitionMode = true;
           }
         }
+        var headerOffset = 0;
         var children = slots;
-        var footer = this.$slots.footer;
+        var _$slots = this.$slots,
+            header = _$slots.header,
+            footer = _$slots.footer;
 
-        if (footer) {
-          children = slots ? [].concat(_toConsumableArray(slots), _toConsumableArray(footer)) : [].concat(_toConsumableArray(footer));
+        if (header) {
+          headerOffset = header.length;
+          children = children ? [].concat(_toConsumableArray(header), _toConsumableArray(children)) : [].concat(_toConsumableArray(header));
         }
+        if (footer) {
+          children = children ? [].concat(_toConsumableArray(children), _toConsumableArray(footer)) : [].concat(_toConsumableArray(footer));
+        }
+        this.headerOffset = headerOffset;
         var attributes = null;
         var update = function update(name, value) {
           attributes = buildAttribute(attributes, name, value);
@@ -66626,7 +66625,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         this.computeIndexes();
       },
       beforeDestroy: function beforeDestroy() {
-        this._sortable.destroy();
+        if (this._sortable !== undefined) this._sortable.destroy();
       },
 
 
@@ -66771,6 +66770,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           draggingElement = evt.item;
         },
         onDragAdd: function onDragAdd(evt) {
+          this.updateEvenemt(evt);
           var element = evt.item._underlying_vm_;
           if (element === undefined) {
             return;
@@ -66783,6 +66783,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           this.emitChanges({ added: added });
         },
         onDragRemove: function onDragRemove(evt) {
+          this.updateEvenemt(evt);
           insertNodeAt(this.rootContainer, evt.item, evt.oldIndex);
           if (this.isCloning) {
             removeNode(evt.clone);
@@ -66795,6 +66796,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           this.emitChanges({ removed: removed });
         },
         onDragUpdate: function onDragUpdate(evt) {
+          this.updateEvenemt(evt);
           removeNode(evt.item);
           insertNodeAt(evt.from, evt.item, evt.oldIndex);
           var oldIndex = this.context.index;
@@ -66802,6 +66804,13 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           this.updatePosition(oldIndex, newIndex);
           var moved = { element: this.context.element, oldIndex: oldIndex, newIndex: newIndex };
           this.emitChanges({ moved: moved });
+        },
+        updateEvenemt: function updateEvenemt(evt) {
+          this.updateProperty(evt, 'newIndex');
+          this.updateProperty(evt, 'oldIndex');
+        },
+        updateProperty: function updateProperty(evt, propertyName) {
+          evt.hasOwnProperty(propertyName) && (evt[propertyName] += this.headerOffset);
         },
         computeFutureIndex: function computeFutureIndex(relatedContext, evt) {
           if (!relatedContext.element) {
@@ -78448,7 +78457,7 @@ function parseZoneInfo(ts, offsetFormat, locale, timeZone) {
     var without = new Intl.DateTimeFormat(locale, intlOpts).format(date),
         included = new Intl.DateTimeFormat(locale, modified).format(date),
         diffed = included.substring(without.length),
-        trimmed = diffed.replace(/^[, ]+/, "");
+        trimmed = diffed.replace(/^[, \u200e]+/, "");
     return trimmed;
   } else {
     return null;
@@ -78834,7 +78843,7 @@ function (_LuxonError) {
   _inheritsLoose(InvalidDateTimeError, _LuxonError);
 
   function InvalidDateTimeError(reason) {
-    return _LuxonError.call(this, "Invalid DateTime: " + reason) || this;
+    return _LuxonError.call(this, "Invalid DateTime: " + reason.toMessage()) || this;
   }
 
   return InvalidDateTimeError;
@@ -78849,7 +78858,7 @@ function (_LuxonError2) {
   _inheritsLoose(InvalidIntervalError, _LuxonError2);
 
   function InvalidIntervalError(reason) {
-    return _LuxonError2.call(this, "Invalid Interval: " + reason) || this;
+    return _LuxonError2.call(this, "Invalid Interval: " + reason.toMessage()) || this;
   }
 
   return InvalidIntervalError;
@@ -78864,7 +78873,7 @@ function (_LuxonError3) {
   _inheritsLoose(InvalidDurationError, _LuxonError3);
 
   function InvalidDurationError(reason) {
-    return _LuxonError3.call(this, "Invalid Duration: " + reason) || this;
+    return _LuxonError3.call(this, "Invalid Duration: " + reason.toMessage()) || this;
   }
 
   return InvalidDurationError;
@@ -79331,15 +79340,17 @@ function (_Zone) {
   return FixedOffsetZone;
 }(Zone);
 
-var singleton$2 = null;
-
 var InvalidZone =
 /*#__PURE__*/
 function (_Zone) {
   _inheritsLoose(InvalidZone, _Zone);
 
-  function InvalidZone() {
-    return _Zone.apply(this, arguments) || this;
+  function InvalidZone(zoneName) {
+    var _this;
+
+    _this = _Zone.call(this) || this;
+    _this.zoneName = zoneName;
+    return _this;
   }
 
   var _proto = InvalidZone.prototype;
@@ -79364,7 +79375,7 @@ function (_Zone) {
   }, {
     key: "name",
     get: function get() {
-      return null;
+      return this.zoneName;
     }
   }, {
     key: "universal",
@@ -79375,15 +79386,6 @@ function (_Zone) {
     key: "isValid",
     get: function get() {
       return false;
-    }
-  }], [{
-    key: "instance",
-    get: function get() {
-      if (singleton$2 === null) {
-        singleton$2 = new InvalidZone();
-      }
-
-      return singleton$2;
     }
   }]);
 
@@ -79405,15 +79407,15 @@ function normalizeZone(input, defaultZone) {
     if (lowered === "local") return LocalZone.instance;else if (lowered === "utc" || lowered === "gmt") return FixedOffsetZone.utcInstance;else if ((offset = IANAZone.parseGMTOffset(input)) != null) {
       // handle Etc/GMT-4, which V8 chokes on
       return FixedOffsetZone.instance(offset);
-    } else if (IANAZone.isValidSpecifier(lowered)) return new IANAZone(input);else return FixedOffsetZone.parseSpecifier(lowered) || InvalidZone.instance;
+    } else if (IANAZone.isValidSpecifier(lowered)) return new IANAZone(input);else return FixedOffsetZone.parseSpecifier(lowered) || new InvalidZone(input);
   } else if (isNumber(input)) {
     return FixedOffsetZone.instance(input);
-  } else if (typeof input === "object" && input.offset) {
+  } else if (typeof input === "object" && input.offset && typeof input.offset === "number") {
     // This is dumb, but the instanceof check above doesn't seem to really work
     // so we're duck checking it
     return input;
   } else {
-    return InvalidZone.instance;
+    return new InvalidZone(input);
   }
 }
 
@@ -79635,10 +79637,7 @@ function () {
       opts = {};
     }
 
-    var formatOpts = Object.assign({}, {
-      round: true
-    }, opts);
-    return new Formatter(locale, formatOpts);
+    return new Formatter(locale, opts);
   };
 
   Formatter.parseFormat = function parseFormat(fmt) {
@@ -80060,7 +80059,7 @@ function () {
           return _this.num(dt.quarter, 2);
 
         case "X":
-          return _this.num(dt.ts / 1000);
+          return _this.num(Math.floor(dt.ts / 1000));
 
         case "x":
           return _this.num(dt.ts);
@@ -80130,6 +80129,42 @@ function () {
   return Formatter;
 }();
 
+var intlDTCache = {};
+
+function getCachedDTF(locString, opts) {
+  if (opts === void 0) {
+    opts = {};
+  }
+
+  var key = JSON.stringify([locString, opts]);
+  var dtf = intlDTCache[key];
+
+  if (!dtf) {
+    dtf = new Intl.DateTimeFormat(locString, opts);
+    intlDTCache[key] = dtf;
+  }
+
+  return dtf;
+}
+
+var intlNumCache = {};
+
+function getCachendINF(locString, opts) {
+  if (opts === void 0) {
+    opts = {};
+  }
+
+  var key = JSON.stringify([locString, opts]);
+  var inf = intlNumCache[key];
+
+  if (!inf) {
+    inf = new Intl.NumberFormat(locString, opts);
+    intlNumCache[key] = inf;
+  }
+
+  return inf;
+}
+
 var sysLocaleCache = null;
 
 function systemLocale() {
@@ -80162,9 +80197,9 @@ function parseLocaleString(localeStr) {
     var smaller = localeStr.substring(0, uIndex);
 
     try {
-      options = Intl.DateTimeFormat(localeStr).resolvedOptions();
+      options = getCachedDTF(localeStr).resolvedOptions();
     } catch (e) {
-      options = Intl.DateTimeFormat(smaller).resolvedOptions();
+      options = getCachedDTF(smaller).resolvedOptions();
     }
 
     var _options = options,
@@ -80248,7 +80283,6 @@ var SimpleNumberFormatter =
 function () {
   function SimpleNumberFormatter(opts) {
     this.padTo = opts.padTo || 0;
-    this.round = opts.round || false;
     this.floor = opts.floor || false;
   }
 
@@ -80256,7 +80290,7 @@ function () {
 
   _proto.format = function format(i) {
     // to match the browser's numberformatter defaults
-    var fixed = this.floor ? Math.floor(i) : roundTo(i, this.round ? 0 : 3);
+    var fixed = this.floor ? Math.floor(i) : roundTo(i, 3);
     return padStart(fixed, this.padTo);
   };
 
@@ -80275,19 +80309,15 @@ function () {
       intlOpts.minimumIntegerDigits = opts.padTo;
     }
 
-    if (opts.round) {
-      intlOpts.maximumFractionDigits = 0;
-    }
-
     this.floor = opts.floor;
-    this.intl = new Intl.NumberFormat(intl, intlOpts);
+    this.inf = getCachendINF(intl, intlOpts);
   }
 
   var _proto2 = IntlNumberFormatter.prototype;
 
   _proto2.format = function format(i) {
     var fixed = this.floor ? Math.floor(i) : i;
-    return this.intl.format(fixed);
+    return this.inf.format(fixed);
   };
 
   return IntlNumberFormatter;
@@ -80330,13 +80360,13 @@ function () {
     }
 
     if (this.hasIntl) {
-      var realIntlOpts = Object.assign({}, this.opts);
+      var intlOpts = Object.assign({}, this.opts);
 
       if (z) {
-        realIntlOpts.timeZone = z;
+        intlOpts.timeZone = z;
       }
 
-      this.dtf = new Intl.DateTimeFormat(intl, realIntlOpts);
+      this.dtf = getCachedDTF(intl, intlOpts);
     }
   }
 
@@ -80403,6 +80433,8 @@ function () {
 
   Locale.resetCache = function resetCache() {
     sysLocaleCache = null;
+    intlDTCache = {};
+    intlNumCache = {};
   };
 
   Locale.fromObject = function fromObject(_temp) {
@@ -80440,7 +80472,6 @@ function () {
 
   var _proto4 = Locale.prototype;
 
-  // todo: cache me
   _proto4.listingMode = function listingMode(defaultOK) {
     if (defaultOK === void 0) {
       defaultOK = true;
@@ -80777,7 +80808,7 @@ function extractIANAZone(match, cursor) {
 } // ISO duration parsing
 
 
-var isoDuration = /^P(?:(?:(\d{1,9})Y)?(?:(\d{1,9})M)?(?:(\d{1,9})D)?(?:T(?:(\d{1,9})H)?(?:(\d{1,9})M)?(?:(\d{1,9})(?:[.,](\d{1,9}))?S)?)?|(\d{1,9})W)$/;
+var isoDuration = /^P(?:(?:(-?\d{1,9})Y)?(?:(-?\d{1,9})M)?(?:(-?\d{1,9})D)?(?:T(?:(-?\d{1,9})H)?(?:(-?\d{1,9})M)?(?:(-?\d{1,9})(?:[.,](-?\d{1,9}))?S)?)?|(-?\d{1,9})W)$/;
 
 function extractISODuration(match) {
   var yearStr = match[1],
@@ -80915,8 +80946,28 @@ function parseSQL(s) {
   return parse(s, [combineRegexes(sqlYmdRegex, sqlTimeExtensionRegex), combineExtractors(extractISOYmd, extractISOTime, extractISOOffset, extractIANAZone)], [combineRegexes(sqlTimeRegex), combineExtractors(extractISOTime, extractISOOffset, extractIANAZone)]);
 }
 
-var INVALID = "Invalid Duration",
-    UNPARSABLE = "unparsable"; // unit conversion constants
+var Invalid =
+/*#__PURE__*/
+function () {
+  function Invalid(reason, explanation) {
+    this.reason = reason;
+    this.explanation = explanation;
+  }
+
+  var _proto = Invalid.prototype;
+
+  _proto.toMessage = function toMessage() {
+    if (this.explanation) {
+      return this.reason + ": " + this.explanation;
+    } else {
+      return this.reason;
+    }
+  };
+
+  return Invalid;
+}();
+
+var INVALID = "Invalid Duration"; // unit conversion constants
 
 var lowOrderMatrix = {
   weeks: {
@@ -81018,24 +81069,19 @@ function clone(dur, alts, clear) {
     conversionAccuracy: alts.conversionAccuracy || dur.conversionAccuracy
   };
   return new Duration(conf);
-} // some functions really care about the absolute value of a duration, so combined with
-// normalize() this tells us whether this duration is positive or negative
+}
 
-
-function isHighOrderNegative(obj) {
-  // only rule is that the highest-order part must be non-negative
-  for (var _i = 0; _i < orderedUnits.length; _i++) {
-    var k = orderedUnits[_i];
-    if (obj[k]) return obj[k] < 0;
-  }
-
-  return false;
+function antiTrunc(n) {
+  return n < 0 ? Math.floor(n) : Math.ceil(n);
 } // NB: mutates parameters
 
 
 function convert(matrix, fromMap, fromUnit, toMap, toUnit) {
   var conv = matrix[toUnit][fromUnit],
-      added = Math.floor(fromMap[fromUnit] / conv);
+      raw = fromMap[fromUnit] / conv,
+      sameSign = Math.sign(raw) === Math.sign(toMap[toUnit]),
+      // ok, so this is wild, but see the matrix in the tests
+  added = !sameSign && toMap[toUnit] !== 0 && Math.abs(raw) <= 1 ? antiTrunc(raw) : Math.trunc(raw);
   toMap[toUnit] += added;
   fromMap[fromUnit] -= added * conv;
 } // NB: mutates parameters
@@ -81055,22 +81101,6 @@ function normalizeValues(matrix, vals) {
   }, null);
 }
 /**
- * @private
- */
-
-
-function friendlyDuration(duration) {
-  if (isNumber(duration)) {
-    return Duration.fromMillis(duration);
-  } else if (duration instanceof Duration) {
-    return duration;
-  } else if (typeof duration === "object") {
-    return Duration.fromObject(duration);
-  } else {
-    throw new InvalidArgumentError("Unknown duration argument");
-  }
-}
-/**
  * A Duration object represents a period of time, like "2 months" or "1 day, 1 hour". Conceptually, it's just a map of units to their quantities, accompanied by some additional configuration and methods for creating, parsing, interrogating, transforming, and formatting them. They can be used on their own or in conjunction with other Luxon types; for example, you can use {@link DateTime.plus} to add a Duration object to a DateTime, producing another DateTime.
  *
  * Here is a brief overview of commonly used methods and getters in Duration:
@@ -81083,6 +81113,7 @@ function friendlyDuration(duration) {
  *
  * There's are more methods documented below. In addition, for more information on subtler topics like internationalization and validity, see the external documentation.
  */
+
 
 var Duration =
 /*#__PURE__*/
@@ -81111,12 +81142,17 @@ function () {
      * @access private
      */
 
-    this.invalid = config.invalidReason || null;
+    this.invalid = config.invalid || null;
     /**
      * @access private
      */
 
     this.matrix = accurate ? accurateMatrix : casualMatrix;
+    /**
+     * @access private
+     */
+
+    this.isLuxonDuration = true;
   }
   /**
    * Create Duration from a number of milliseconds.
@@ -81156,7 +81192,7 @@ function () {
 
   Duration.fromObject = function fromObject(obj) {
     if (obj == null || typeof obj !== "object") {
-      throw new InvalidArgumentError("Duration.fromObject: argument expected to be an object.");
+      throw new InvalidArgumentError("Duration.fromObject: argument expected to be an object, got " + typeof obj);
     }
 
     return new Duration({
@@ -81188,26 +81224,33 @@ function () {
       var obj = Object.assign(parsed, opts);
       return Duration.fromObject(obj);
     } else {
-      return Duration.invalid(UNPARSABLE);
+      return Duration.invalid("unparsable", "the input \"" + text + "\" can't be parsed as ISO 8601");
     }
   };
   /**
    * Create an invalid Duration.
-   * @param {string} reason - reason this is invalid
+   * @param {string} reason - simple string of why this datetime is invalid. Should not contain parameters or anything else data-dependent
+   * @param {string} [explanation=null] - longer explanation, may include parameters and other useful debugging information
    * @return {Duration}
    */
 
 
-  Duration.invalid = function invalid(reason) {
+  Duration.invalid = function invalid(reason, explanation) {
+    if (explanation === void 0) {
+      explanation = null;
+    }
+
     if (!reason) {
       throw new InvalidArgumentError("need to specify a reason the Duration is invalid");
     }
 
+    var invalid = reason instanceof Invalid ? reason : new Invalid(reason, explanation);
+
     if (Settings.throwOnInvalid) {
-      throw new InvalidDurationError(reason);
+      throw new InvalidDurationError(invalid);
     } else {
       return new Duration({
-        invalidReason: reason
+        invalid: invalid
       });
     }
   };
@@ -81245,6 +81288,16 @@ function () {
     return normalized;
   };
   /**
+   * Check if an object is a Duration. Works across context boundaries
+   * @param {object} o
+   * @return {boolean}
+   */
+
+
+  Duration.isDuration = function isDuration(o) {
+    return o.isLuxonDuration;
+  };
+  /**
    * Get  the locale of a Duration, such 'en-GB'
    * @type {string}
    */
@@ -81277,18 +81330,10 @@ function () {
       opts = {};
     }
 
-    // reverse-compat since 1.2; we always round down now, never up, and we do it by default. So:
-    // 1. always turn off rounding in the underlying formatter
-    // 2. turn off flooring if either rounding is turned off or flooring is turned off, otherwise leave it on
+    // reverse-compat since 1.2; we always round down now, never up, and we do it by default
     var fmtOpts = Object.assign({}, opts, {
-      floor: true,
-      round: false
+      floor: opts.round !== false && opts.floor !== false
     });
-
-    if (opts.round === false || opts.floor === false) {
-      fmtOpts.floor = false;
-    }
-
     return this.isValid ? Formatter.create(this.loc, fmtOpts).formatDurationFromString(this, fmt) : INVALID;
   };
   /**
@@ -81331,17 +81376,14 @@ function () {
   _proto.toISO = function toISO() {
     // we could use the formatter, but this is an easier way to get the minimum string
     if (!this.isValid) return null;
-    var s = "P",
-        norm = this.normalize(); // ISO durations are always positive, so take the absolute value
-
-    norm = isHighOrderNegative(norm.values) ? norm.negate() : norm;
-    if (norm.years > 0) s += norm.years + "Y";
-    if (norm.months > 0 || norm.quarters > 0) s += norm.months + norm.quarters * 3 + "M";
-    if (norm.days > 0 || norm.weeks > 0) s += norm.days + norm.weeks * 7 + "D";
-    if (norm.hours > 0 || norm.minutes > 0 || norm.seconds > 0 || norm.milliseconds > 0) s += "T";
-    if (norm.hours > 0) s += norm.hours + "H";
-    if (norm.minutes > 0) s += norm.minutes + "M";
-    if (norm.seconds > 0 || norm.milliseconds > 0) s += norm.seconds + norm.milliseconds / 1000 + "S";
+    var s = "P";
+    if (this.years !== 0) s += this.years + "Y";
+    if (this.months !== 0 || this.quarters !== 0) s += this.months + this.quarters * 3 + "M";
+    if (this.days !== 0 || this.weeks !== 0) s += this.days + this.weeks * 7 + "D";
+    if (this.hours !== 0 || this.minutes !== 0 || this.seconds !== 0 || this.milliseconds !== 0) s += "T";
+    if (this.hours !== 0) s += this.hours + "H";
+    if (this.minutes !== 0) s += this.minutes + "M";
+    if (this.seconds !== 0 || this.milliseconds !== 0) s += this.seconds + this.milliseconds / 1000 + "S";
     return s;
   };
   /**
@@ -81383,8 +81425,8 @@ function () {
     var dur = friendlyDuration(duration),
         result = {};
 
-    for (var _i2 = 0; _i2 < orderedUnits.length; _i2++) {
-      var k = orderedUnits[_i2];
+    for (var _i = 0; _i < orderedUnits.length; _i++) {
+      var k = orderedUnits[_i];
 
       if (dur.values.hasOwnProperty(k) || this.values.hasOwnProperty(k)) {
         result[k] = dur.get(k) + this.get(k);
@@ -81485,11 +81527,9 @@ function () {
 
   _proto.normalize = function normalize() {
     if (!this.isValid) return this;
-    var neg = isHighOrderNegative(this.values),
-        vals = (neg ? this.negate() : this).toObject();
+    var vals = this.toObject();
     normalizeValues(this.matrix, vals);
-    var dur = Duration.fromObject(vals);
-    return neg ? dur.negate() : dur;
+    return Duration.fromObject(vals);
   };
   /**
    * Convert this Duration into its representation in a different set of units.
@@ -81518,8 +81558,8 @@ function () {
     var lastUnit;
     normalizeValues(this.matrix, vals);
 
-    for (var _i3 = 0; _i3 < orderedUnits.length; _i3++) {
-      var k = orderedUnits[_i3];
+    for (var _i2 = 0; _i2 < orderedUnits.length; _i2++) {
+      var k = orderedUnits[_i2];
 
       if (units.indexOf(k) >= 0) {
         lastUnit = k;
@@ -81539,7 +81579,8 @@ function () {
 
         var i = Math.trunc(own);
         built[k] = i;
-        accumulated[k] = own - i; // plus anything further down the chain that should be rolled up in to this
+        accumulated[k] = own - i; // we'd like to absorb these fractions in another unit
+        // plus anything further down the chain that should be rolled up in to this
 
         for (var down in vals) {
           if (orderedUnits.indexOf(down) > orderedUnits.indexOf(k)) {
@@ -81556,7 +81597,7 @@ function () {
     if (lastUnit) {
       for (var key in accumulated) {
         if (accumulated.hasOwnProperty(key)) {
-          if (accumulated[key] > 0) {
+          if (accumulated[key] !== 0) {
             built[lastUnit] += key === lastUnit ? accumulated[key] : accumulated[key] / this.matrix[lastUnit][key];
           }
         }
@@ -81580,8 +81621,8 @@ function () {
 
     var _arr = Object.keys(this.values);
 
-    for (var _i4 = 0; _i4 < _arr.length; _i4++) {
-      var k = _arr[_i4];
+    for (var _i3 = 0; _i3 < _arr.length; _i3++) {
+      var k = _arr[_i3];
       negated[k] = -this.values[k];
     }
 
@@ -81610,8 +81651,8 @@ function () {
       return false;
     }
 
-    for (var _i5 = 0; _i5 < orderedUnits.length; _i5++) {
-      var u = orderedUnits[_i5];
+    for (var _i4 = 0; _i4 < orderedUnits.length; _i4++) {
+      var u = orderedUnits[_i4];
 
       if (this.values[u] !== other.values[u]) {
         return false;
@@ -81731,27 +81772,56 @@ function () {
   }, {
     key: "isValid",
     get: function get() {
-      return this.invalidReason === null;
+      return this.invalid === null;
     }
     /**
-     * Returns an explanation of why this Duration became invalid, or null if the Duration is valid
+     * Returns an error code if this Duration became invalid, or null if the Duration is valid
      * @return {string}
      */
 
   }, {
     key: "invalidReason",
     get: function get() {
-      return this.invalid;
+      return this.invalid ? this.invalid.reason : null;
+    }
+    /**
+     * Returns an explanation of why this Duration became invalid, or null if the Duration is valid
+     * @type {string}
+     */
+
+  }, {
+    key: "invalidExplanation",
+    get: function get() {
+      return this.invalid ? this.invalid.explanation : null;
     }
   }]);
 
   return Duration;
 }();
+function friendlyDuration(durationish) {
+  if (isNumber(durationish)) {
+    return Duration.fromMillis(durationish);
+  } else if (Duration.isDuration(durationish)) {
+    return durationish;
+  } else if (typeof durationish === "object") {
+    return Duration.fromObject(durationish);
+  } else {
+    throw new InvalidArgumentError("Unknown duration argument " + durationish + " of type " + typeof durationish);
+  }
+}
 
 var INVALID$1 = "Invalid Interval"; // checks if the start is equal to or before the end
 
 function validateStartEnd(start, end) {
-  return !!start && !!end && start.isValid && end.isValid && start <= end;
+  if (!start || !start.isValid) {
+    return new Invalid("missing or invalid start");
+  } else if (!end || !end.isValid) {
+    return new Invalid("missing or invalid end");
+  } else if (end < start) {
+    return new Invalid("end before start", "The end of an interval must be after its start, but you had start=" + start.toISO() + " and end=" + end.toISO());
+  } else {
+    return null;
+  }
 }
 /**
  * An Interval object represents a half-open interval of time, where each endpoint is a {@link DateTime}. Conceptually, it's a container for those two endpoints, accompanied by methods for creating, parsing, interrogating, comparing, transforming, and formatting them.
@@ -81787,24 +81857,37 @@ function () {
      * @access private
      */
 
-    this.invalid = config.invalidReason || null;
+    this.invalid = config.invalid || null;
+    /**
+     * @access private
+     */
+
+    this.isLuxonInterval = true;
   }
   /**
    * Create an invalid Interval.
+   * @param {string} reason - simple string of why this Interval is invalid. Should not contain parameters or anything else data-dependent
+   * @param {string} [explanation=null] - longer explanation, may include parameters and other useful debugging information
    * @return {Interval}
    */
 
 
-  Interval.invalid = function invalid(reason) {
-    if (!reason) {
-      throw new InvalidArgumentError("need to specify a reason the DateTime is invalid");
+  Interval.invalid = function invalid(reason, explanation) {
+    if (explanation === void 0) {
+      explanation = null;
     }
 
+    if (!reason) {
+      throw new InvalidArgumentError("need to specify a reason the Interval is invalid");
+    }
+
+    var invalid = reason instanceof Invalid ? reason : new Invalid(reason, explanation);
+
     if (Settings.throwOnInvalid) {
-      throw new InvalidIntervalError(reason);
+      throw new InvalidIntervalError(invalid);
     } else {
       return new Interval({
-        invalidReason: reason
+        invalid: invalid
       });
     }
   };
@@ -81822,7 +81905,7 @@ function () {
     return new Interval({
       start: builtStart,
       end: builtEnd,
-      invalidReason: validateStartEnd(builtStart, builtEnd) ? null : "invalid endpoints"
+      invalid: validateStartEnd(builtStart, builtEnd)
     });
   };
   /**
@@ -81854,15 +81937,15 @@ function () {
   /**
    * Create an Interval from an ISO 8601 string.
    * Accepts `<start>/<end>`, `<start>/<duration>`, and `<duration>/<end>` formats.
-   * @param {string} string - the ISO string to parse
+   * @param {string} text - the ISO string to parse
    * @param {Object} [opts] - options to pass {@link DateTime.fromISO} and optionally {@link Duration.fromISO}
    * @see https://en.wikipedia.org/wiki/ISO_8601#Time_intervals
    * @return {Interval}
    */
 
 
-  Interval.fromISO = function fromISO(string, opts) {
-    var _split = (string || "").split("/", 2),
+  Interval.fromISO = function fromISO(text, opts) {
+    var _split = (text || "").split("/", 2),
         s = _split[0],
         e = _split[1];
 
@@ -81889,7 +81972,17 @@ function () {
       }
     }
 
-    return Interval.invalid("invalid ISO format");
+    return Interval.invalid("unparsable", "the input \"" + text + "\" can't be parsed asISO 8601");
+  };
+  /**
+   * Check if an object is an Interval. Works across context boundaries
+   * @param {object} o
+   * @return {boolean}
+   */
+
+
+  Interval.isInterval = function isInterval(o) {
+    return o instanceof Interval || o.isLuxonInterval;
   };
   /**
    * Returns the start of the Interval
@@ -82354,14 +82447,24 @@ function () {
       return this.invalidReason === null;
     }
     /**
-     * Returns an explanation of why this Interval became invalid, or null if the Interval is valid
+     * Returns an error code if this Interval is invalid, or null if the Interval is valid
      * @type {string}
      */
 
   }, {
     key: "invalidReason",
     get: function get() {
-      return this.invalid;
+      return this.invalid ? this.invalid.reason : null;
+    }
+    /**
+     * Returns an explanation of why this Interval became invalid, or null if the Interval is valid
+     * @type {string}
+     */
+
+  }, {
+    key: "invalidExplanation",
+    get: function get() {
+      return this.invalid ? this.invalid.explanation : null;
     }
   }]);
 
@@ -83102,6 +83205,10 @@ function parseFromTokens(locale, input, format) {
 var nonLeapLadder = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334],
     leapLadder = [0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335];
 
+function unitOutOfRange(unit, value) {
+  return new Invalid("unit out of range", "you specified " + value + " (of type " + typeof value + ") as a " + unit + ", which is invalid");
+}
+
 function dayOfWeek(year, month, day) {
   var js = new Date(Date.UTC(year, month - 1, day)).getUTCDay();
   return js === 0 ? 7 : js;
@@ -83166,7 +83273,7 @@ function weekToGregorian(weekData) {
     ordinal += daysInYear(year);
   } else if (ordinal > yearInDays) {
     year = weekYear + 1;
-    ordinal -= daysInYear(year);
+    ordinal -= daysInYear(weekYear);
   } else {
     year = weekYear;
   }
@@ -83210,11 +83317,11 @@ function hasInvalidWeekData(obj) {
       validWeekday = numberBetween(obj.weekday, 1, 7);
 
   if (!validYear) {
-    return "weekYear out of range";
+    return unitOutOfRange("weekYear", obj.weekYear);
   } else if (!validWeek) {
-    return "week out of range";
+    return unitOutOfRange("week", obj.week);
   } else if (!validWeekday) {
-    return "weekday out of range";
+    return unitOutOfRange("weekday", obj.weekday);
   } else return false;
 }
 function hasInvalidOrdinalData(obj) {
@@ -83222,9 +83329,9 @@ function hasInvalidOrdinalData(obj) {
       validOrdinal = numberBetween(obj.ordinal, 1, daysInYear(obj.year));
 
   if (!validYear) {
-    return "year out of range";
+    return unitOutOfRange("year", obj.year);
   } else if (!validOrdinal) {
-    return "ordinal out of range";
+    return unitOutOfRange("ordinal", obj.ordinal);
   } else return false;
 }
 function hasInvalidGregorianData(obj) {
@@ -83233,11 +83340,11 @@ function hasInvalidGregorianData(obj) {
       validDay = numberBetween(obj.day, 1, daysInMonth(obj.year, obj.month));
 
   if (!validYear) {
-    return "year out of range";
+    return unitOutOfRange("year", obj.year);
   } else if (!validMonth) {
-    return "month out of range";
+    return unitOutOfRange("month", obj.month);
   } else if (!validDay) {
-    return "day out of range";
+    return unitOutOfRange("day", obj.day);
   } else return false;
 }
 function hasInvalidTimeData(obj) {
@@ -83247,20 +83354,22 @@ function hasInvalidTimeData(obj) {
       validMillisecond = numberBetween(obj.millisecond, 0, 999);
 
   if (!validHour) {
-    return "hour out of range";
+    return unitOutOfRange("hour", obj.hour);
   } else if (!validMinute) {
-    return "minute out of range";
+    return unitOutOfRange("minute", obj.minute);
   } else if (!validSecond) {
-    return "second out of range";
+    return unitOutOfRange("second", obj.secon);
   } else if (!validMillisecond) {
-    return "millisecond out of range";
+    return unitOutOfRange("millisecond", obj.millisecond);
   } else return false;
 }
 
-var INVALID$2 = "Invalid DateTime",
-    INVALID_INPUT = "invalid input",
-    UNSUPPORTED_ZONE = "unsupported zone",
-    UNPARSABLE$1 = "unparsable"; // we cache week data on the DT object and this intermediates the cache
+var INVALID$2 = "Invalid DateTime";
+
+function unsupportedZone(zone) {
+  return new Invalid("unsupported zone", "the zone \"" + zone.name + "\" is not supported");
+} // we cache week data on the DT object and this intermediates the cache
+
 
 function possiblyCachedWeekData(dt) {
   if (dt.weekData === null) {
@@ -83279,7 +83388,7 @@ function clone$1(inst, alts) {
     c: inst.c,
     o: inst.o,
     loc: inst.loc,
-    invalidReason: inst.invalidReason
+    invalid: inst.invalid
   };
   return new DateTime(Object.assign({}, current, alts, {
     old: current
@@ -83379,7 +83488,7 @@ function adjustTime(inst, dur) {
 // by handling the zone options
 
 
-function parseDataToDateTime(parsed, parsedZone, opts) {
+function parseDataToDateTime(parsed, parsedZone, opts, format, text) {
   var setZone = opts.setZone,
       zone = opts.zone;
 
@@ -83390,7 +83499,7 @@ function parseDataToDateTime(parsed, parsedZone, opts) {
     }));
     return setZone ? inst : inst.setZone(zone);
   } else {
-    return DateTime.invalid(UNPARSABLE$1);
+    return DateTime.invalid(new Invalid("unparsable", "the input \"" + text + "\" can't be parsed as " + format));
   }
 } // if you want to output a technical format (e.g. RFC 2822), this helper
 // helps handle the details
@@ -83514,10 +83623,10 @@ function quickDT(obj, zone) {
     }
   }
 
-  var invalidReason = hasInvalidGregorianData(obj) || hasInvalidTimeData(obj);
+  var invalid = hasInvalidGregorianData(obj) || hasInvalidTimeData(obj);
 
-  if (invalidReason) {
-    return DateTime.invalid(invalidReason);
+  if (invalid) {
+    return DateTime.invalid(invalid);
   }
 
   var tsNow = Settings.now(),
@@ -83562,7 +83671,7 @@ function () {
    */
   function DateTime(config) {
     var zone = config.zone || Settings.defaultZone,
-        invalidReason = config.invalidReason || (Number.isNaN(config.ts) ? INVALID_INPUT : null) || (!zone.isValid ? UNSUPPORTED_ZONE : null);
+        invalid = config.invalid || (Number.isNaN(config.ts) ? new Invalid("invalid input") : null) || (!zone.isValid ? unsupportedZone(zone) : null);
     /**
      * @access private
      */
@@ -83571,7 +83680,7 @@ function () {
     var c = null,
         o = null;
 
-    if (!invalidReason) {
+    if (!invalid) {
       var unchanged = config.old && config.old.ts === this.ts && config.old.zone.equals(zone);
       c = unchanged ? config.old.c : tsToObj(this.ts, zone.offset(this.ts));
       o = unchanged ? config.old.o : zone.offset(this.ts);
@@ -83591,7 +83700,7 @@ function () {
      * @access private
      */
 
-    this.invalid = invalidReason;
+    this.invalid = invalid;
     /**
      * @access private
      */
@@ -83607,6 +83716,11 @@ function () {
      */
 
     this.o = o;
+    /**
+     * @access private
+     */
+
+    this.isLuxonDateTime = true;
   } // CONSTRUCT
 
   /**
@@ -83734,6 +83848,33 @@ function () {
     }
   };
   /**
+   * Create a DateTime from a number of seconds since the epoch (i.e. since 1 January 1970 00:00:00 UTC). Uses the default zone.
+   * @param {number} seconds - a number of seconds since 1970 UTC
+   * @param {Object} options - configuration options for the DateTime
+   * @param {string|Zone} [options.zone='local'] - the zone to place the DateTime into
+   * @param {string} [options.locale] - a locale to set on the resulting DateTime instance
+   * @param {string} options.outputCalendar - the output calendar to set on the resulting DateTime instance
+   * @param {string} options.numberingSystem - the numbering system to set on the resulting DateTime instance
+   * @return {DateTime}
+   */
+
+
+  DateTime.fromSeconds = function fromSeconds(seconds, options) {
+    if (options === void 0) {
+      options = {};
+    }
+
+    if (!isNumber(seconds)) {
+      throw new InvalidArgumentError("fromSeconds requires a numerical input");
+    } else {
+      return new DateTime({
+        ts: seconds * 1000,
+        zone: normalizeZone(options.zone, Settings.defaultZone),
+        loc: Locale.fromObject(options)
+      });
+    }
+  };
+  /**
    * Create a DateTime from a Javascript object with keys like 'year' and 'hour' with reasonable defaults.
    * @param {Object} obj - the object to create the DateTime from
    * @param {number} obj.year - a year, such as 1987
@@ -83766,7 +83907,7 @@ function () {
     var zoneToUse = normalizeZone(obj.zone, Settings.defaultZone);
 
     if (!zoneToUse.isValid) {
-      return DateTime.invalid(UNSUPPORTED_ZONE);
+      return DateTime.invalid(unsupportedZone(zoneToUse));
     }
 
     var tsNow = Settings.now(),
@@ -83839,10 +83980,10 @@ function () {
 
 
     var higherOrderInvalid = useWeekData ? hasInvalidWeekData(normalized) : containsOrdinal ? hasInvalidOrdinalData(normalized) : hasInvalidGregorianData(normalized),
-        invalidReason = higherOrderInvalid || hasInvalidTimeData(normalized);
+        invalid = higherOrderInvalid || hasInvalidTimeData(normalized);
 
-    if (invalidReason) {
-      return DateTime.invalid(invalidReason);
+    if (invalid) {
+      return DateTime.invalid(invalid);
     } // compute the actual time
 
 
@@ -83859,7 +84000,7 @@ function () {
 
 
     if (normalized.weekday && containsGregor && obj.weekday !== inst.weekday) {
-      return DateTime.invalid("mismatched weekday");
+      return DateTime.invalid("mismatched weekday", "you can't specify both a weekday of " + normalized.weekday + " and a date of " + inst.toISO());
     }
 
     return inst;
@@ -83891,7 +84032,7 @@ function () {
         vals = _parseISODate[0],
         parsedZone = _parseISODate[1];
 
-    return parseDataToDateTime(vals, parsedZone, opts);
+    return parseDataToDateTime(vals, parsedZone, opts, "ISO 8601", text);
   };
   /**
    * Create a DateTime from an RFC 2822 string
@@ -83918,18 +84059,18 @@ function () {
         vals = _parseRFC2822Date[0],
         parsedZone = _parseRFC2822Date[1];
 
-    return parseDataToDateTime(vals, parsedZone, opts);
+    return parseDataToDateTime(vals, parsedZone, opts, "RFC 2822", text);
   };
   /**
    * Create a DateTime from an HTTP header date
    * @see https://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.3.1
    * @param {string} text - the HTTP header date
-   * @param {Object} options - options to affect the creation
-   * @param {string|Zone} [options.zone='local'] - convert the time to this zone. Since HTTP dates are always in UTC, this has no effect on the interpretation of string, merely the zone the resulting DateTime is expressed in.
-   * @param {boolean} [options.setZone=false] - override the zone with the fixed-offset zone specified in the string. For HTTP dates, this is always UTC, so this option is equivalent to setting the `zone` option to 'utc', but this option is included for consistency with similar methods.
-   * @param {string} [options.locale='en-US'] - a locale to set on the resulting DateTime instance
-   * @param {string} options.outputCalendar - the output calendar to set on the resulting DateTime instance
-   * @param {string} options.numberingSystem - the numbering system to set on the resulting DateTime instance
+   * @param {Object} opts - options to affect the creation
+   * @param {string|Zone} [opts.zone='local'] - convert the time to this zone. Since HTTP dates are always in UTC, this has no effect on the interpretation of string, merely the zone the resulting DateTime is expressed in.
+   * @param {boolean} [opts.setZone=false] - override the zone with the fixed-offset zone specified in the string. For HTTP dates, this is always UTC, so this option is equivalent to setting the `zone` option to 'utc', but this option is included for consistency with similar methods.
+   * @param {string} [opts.locale='en-US'] - a locale to set on the resulting DateTime instance
+   * @param {string} opts.outputCalendar - the output calendar to set on the resulting DateTime instance
+   * @param {string} opts.numberingSystem - the numbering system to set on the resulting DateTime instance
    * @example DateTime.fromHTTP('Sun, 06 Nov 1994 08:49:37 GMT')
    * @example DateTime.fromHTTP('Sunday, 06-Nov-94 08:49:37 GMT')
    * @example DateTime.fromHTTP('Sun Nov  6 08:49:37 1994')
@@ -83937,46 +84078,46 @@ function () {
    */
 
 
-  DateTime.fromHTTP = function fromHTTP(text, options) {
-    if (options === void 0) {
-      options = {};
+  DateTime.fromHTTP = function fromHTTP(text, opts) {
+    if (opts === void 0) {
+      opts = {};
     }
 
     var _parseHTTPDate = parseHTTPDate(text),
         vals = _parseHTTPDate[0],
         parsedZone = _parseHTTPDate[1];
 
-    return parseDataToDateTime(vals, parsedZone, options);
+    return parseDataToDateTime(vals, parsedZone, opts, "HTTP", opts);
   };
   /**
    * Create a DateTime from an input string and format string
    * Defaults to en-US if no locale has been specified, regardless of the system's locale
    * @param {string} text - the string to parse
    * @param {string} fmt - the format the string is expected to be in (see description)
-   * @param {Object} options - options to affect the creation
-   * @param {string|Zone} [options.zone='local'] - use this zone if no offset is specified in the input string itself. Will also convert the DateTime to this zone
-   * @param {boolean} [options.setZone=false] - override the zone with a zone specified in the string itself, if it specifies one
-   * @param {string} [options.locale='en-US'] - a locale string to use when parsing. Will also set the DateTime to this locale
-   * @param {string} options.numberingSystem - the numbering system to use when parsing. Will also set the resulting DateTime to this numbering system
-   * @param {string} options.outputCalendar - the output calendar to set on the resulting DateTime instance
+   * @param {Object} opts - options to affect the creation
+   * @param {string|Zone} [opts.zone='local'] - use this zone if no offset is specified in the input string itself. Will also convert the DateTime to this zone
+   * @param {boolean} [opts.setZone=false] - override the zone with a zone specified in the string itself, if it specifies one
+   * @param {string} [opts.locale='en-US'] - a locale string to use when parsing. Will also set the DateTime to this locale
+   * @param {string} opts.numberingSystem - the numbering system to use when parsing. Will also set the resulting DateTime to this numbering system
+   * @param {string} opts.outputCalendar - the output calendar to set on the resulting DateTime instance
    * @return {DateTime}
    */
 
 
-  DateTime.fromFormat = function fromFormat(text, fmt, options) {
-    if (options === void 0) {
-      options = {};
+  DateTime.fromFormat = function fromFormat(text, fmt, opts) {
+    if (opts === void 0) {
+      opts = {};
     }
 
     if (isUndefined(text) || isUndefined(fmt)) {
       throw new InvalidArgumentError("fromFormat requires an input string and a format");
     }
 
-    var _options = options,
-        _options$locale = _options.locale,
-        locale = _options$locale === void 0 ? null : _options$locale,
-        _options$numberingSys = _options.numberingSystem,
-        numberingSystem = _options$numberingSys === void 0 ? null : _options$numberingSys,
+    var _opts = opts,
+        _opts$locale = _opts.locale,
+        locale = _opts$locale === void 0 ? null : _opts$locale,
+        _opts$numberingSystem = _opts.numberingSystem,
+        numberingSystem = _opts$numberingSystem === void 0 ? null : _opts$numberingSystem,
         localeToUse = Locale.fromOpts({
       locale: locale,
       numberingSystem: numberingSystem,
@@ -83985,12 +84126,12 @@ function () {
         _parseFromTokens = parseFromTokens(localeToUse, text, fmt),
         vals = _parseFromTokens[0],
         parsedZone = _parseFromTokens[1],
-        invalidReason = _parseFromTokens[2];
+        invalid = _parseFromTokens[2];
 
-    if (invalidReason) {
-      return DateTime.invalid(invalidReason);
+    if (invalid) {
+      return DateTime.invalid(invalid);
     } else {
-      return parseDataToDateTime(vals, parsedZone, options);
+      return parseDataToDateTime(vals, parsedZone, opts, "format " + fmt, text);
     }
   };
   /**
@@ -84009,12 +84150,12 @@ function () {
    * Create a DateTime from a SQL date, time, or datetime
    * Defaults to en-US if no locale has been specified, regardless of the system's locale
    * @param {string} text - the string to parse
-   * @param {Object} options - options to affect the creation
-   * @param {string|Zone} [options.zone='local'] - use this zone if no offset is specified in the input string itself. Will also convert the DateTime to this zone
-   * @param {boolean} [options.setZone=false] - override the zone with a zone specified in the string itself, if it specifies one
-   * @param {string} [options.locale='en-US'] - a locale string to use when parsing. Will also set the DateTime to this locale
-   * @param {string} options.numberingSystem - the numbering system to use when parsing. Will also set the resulting DateTime to this numbering system
-   * @param {string} options.outputCalendar - the output calendar to set on the resulting DateTime instance
+   * @param {Object} opts - options to affect the creation
+   * @param {string|Zone} [opts.zone='local'] - use this zone if no offset is specified in the input string itself. Will also convert the DateTime to this zone
+   * @param {boolean} [opts.setZone=false] - override the zone with a zone specified in the string itself, if it specifies one
+   * @param {string} [opts.locale='en-US'] - a locale string to use when parsing. Will also set the DateTime to this locale
+   * @param {string} opts.numberingSystem - the numbering system to use when parsing. Will also set the resulting DateTime to this numbering system
+   * @param {string} opts.outputCalendar - the output calendar to set on the resulting DateTime instance
    * @example DateTime.fromSQL('2017-05-15')
    * @example DateTime.fromSQL('2017-05-15 09:12:34')
    * @example DateTime.fromSQL('2017-05-15 09:12:34.342')
@@ -84027,35 +84168,53 @@ function () {
    */
 
 
-  DateTime.fromSQL = function fromSQL(text, options) {
-    if (options === void 0) {
-      options = {};
+  DateTime.fromSQL = function fromSQL(text, opts) {
+    if (opts === void 0) {
+      opts = {};
     }
 
     var _parseSQL = parseSQL(text),
         vals = _parseSQL[0],
         parsedZone = _parseSQL[1];
 
-    return parseDataToDateTime(vals, parsedZone, options);
+    return parseDataToDateTime(vals, parsedZone, opts, "SQL", text);
   };
   /**
    * Create an invalid DateTime.
+   * @param {string} reason - simple string of why this DateTime is invalid. Should not contain parameters or anything else data-dependent
+   * @param {string} [explanation=null] - longer explanation, may include parameters and other useful debugging information
    * @return {DateTime}
    */
 
 
-  DateTime.invalid = function invalid(reason) {
+  DateTime.invalid = function invalid(reason, explanation) {
+    if (explanation === void 0) {
+      explanation = null;
+    }
+
     if (!reason) {
       throw new InvalidArgumentError("need to specify a reason the DateTime is invalid");
     }
 
+    var invalid = reason instanceof Invalid ? reason : new Invalid(reason, explanation);
+
     if (Settings.throwOnInvalid) {
-      throw new InvalidDateTimeError(reason);
+      throw new InvalidDateTimeError(invalid);
     } else {
       return new DateTime({
-        invalidReason: reason
+        invalid: invalid
       });
     }
+  };
+  /**
+   * Check if an object is a DateTime. Works across context boundaries
+   * @param {object} o
+   * @return {boolean}
+   */
+
+
+  DateTime.isDateTime = function isDateTime(o) {
+    return o.isLuxonDateTime;
   }; // INFO
 
   /**
@@ -84158,7 +84317,7 @@ function () {
     if (zone.equals(this.zone)) {
       return this;
     } else if (!zone.isValid) {
-      return DateTime.invalid(UNSUPPORTED_ZONE);
+      return DateTime.invalid(unsupportedZone(zone));
     } else {
       var newTS = keepLocalTime || keepCalendarTime // keepCalendarTime is the deprecated name for keepLocalTime
       ? this.ts + (this.o - zone.offset(this.ts)) * 60 * 1000 : this.ts;
@@ -84361,10 +84520,10 @@ function () {
    * Defaults to en-US if no locale has been specified, regardless of the system's locale.
    * @see https://moment.github.io/luxon/docs/manual/formatting.html#table-of-tokens
    * @param {string} fmt - the format string
-   * @param {Object} opts - options
-   * @param {boolean} opts.round - round numerical values
+   * @param {Object} opts - opts to override the configuration options
    * @example DateTime.local().toFormat('yyyy LLL dd') //=> '2017 Apr 22'
    * @example DateTime.local().setLocale('fr').toFormat('yyyy LLL dd') //=> '2017 avr. 22'
+   * @example DateTime.local().toFormat('yyyy LLL dd', { locale: "fr" }) //=> '2017 avr. 22'
    * @example DateTime.local().toFormat("HH 'hours and' mm 'minutes'") //=> '20 hours and 55 minutes'
    * @return {string}
    */
@@ -84375,7 +84534,7 @@ function () {
       opts = {};
     }
 
-    return this.isValid ? Formatter.create(this.loc.redefaultToEN(), opts).formatDateTimeFromString(this, fmt) : INVALID$2;
+    return this.isValid ? Formatter.create(this.loc.redefaultToEN(opts)).formatDateTimeFromString(this, fmt) : INVALID$2;
   };
   /**
    * Returns a localized string representing this date. Accepts the same options as the Intl.DateTimeFormat constructor and any presets defined by Luxon, such as `DateTime.DATE_FULL` or `DateTime.TIME_SIMPLE`.
@@ -84383,9 +84542,10 @@ function () {
    * of the DateTime in the assigned locale.
    * Defaults to the system's locale if no locale has been specified
    * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DateTimeFormat
-   * @param opts {Object} - Intl.DateTimeFormat constructor options
+   * @param opts {Object} - Intl.DateTimeFormat constructor options and configuration options
    * @example DateTime.local().toLocaleString(); //=> 4/20/2017
    * @example DateTime.local().setLocale('en-gb').toLocaleString(); //=> '20/04/2017'
+   * @example DateTime.local().toLocaleString({ locale: "en-gb" }); //=> '20/04/2017'
    * @example DateTime.local().toLocaleString(DateTime.DATE_FULL); //=> 'April 20, 2017'
    * @example DateTime.local().toLocaleString(DateTime.TIME_SIMPLE); //=> '11:32 AM'
    * @example DateTime.local().toLocaleString(DateTime.DATETIME_SHORT); //=> '4/20/2017, 11:32 AM'
@@ -84608,6 +84768,15 @@ function () {
     return this.isValid ? this.ts : NaN;
   };
   /**
+   * Returns the epoch seconds of this DateTime.
+   * @return {number}
+   */
+
+
+  _proto.toSeconds = function toSeconds() {
+    return this.isValid ? this.ts / 1000 : NaN;
+  };
+  /**
    * Returns an ISO 8601 representation of this DateTime appropriate for use in JSON.
    * @return {string}
    */
@@ -84686,7 +84855,7 @@ function () {
       opts = {};
     }
 
-    if (!this.isValid || !otherDateTime.isValid) return Duration.invalid(this.invalidReason || otherDateTime.invalidReason);
+    if (!this.isValid || !otherDateTime.isValid) return Duration.invalid(this.invalid || otherDateTime.invalid);
 
     var units = maybeArray(unit).map(Duration.normalizeUnit),
         otherIsLater = otherDateTime.valueOf() > this.valueOf(),
@@ -84805,11 +84974,11 @@ function () {
       options = {};
     }
 
-    var _options2 = options,
-        _options2$locale = _options2.locale,
-        locale = _options2$locale === void 0 ? null : _options2$locale,
-        _options2$numberingSy = _options2.numberingSystem,
-        numberingSystem = _options2$numberingSy === void 0 ? null : _options2$numberingSy,
+    var _options = options,
+        _options$locale = _options.locale,
+        locale = _options$locale === void 0 ? null : _options$locale,
+        _options$numberingSys = _options.numberingSystem,
+        numberingSystem = _options$numberingSys === void 0 ? null : _options$numberingSys,
         localeToUse = Locale.fromOpts({
       locale: locale,
       numberingSystem: numberingSystem,
@@ -84839,7 +85008,17 @@ function () {
   _createClass(DateTime, [{
     key: "isValid",
     get: function get() {
-      return this.invalidReason === null;
+      return this.invalid === null;
+    }
+    /**
+     * Returns an error code if this DateTime is invalid, or null if the DateTime is valid
+     * @type {string}
+     */
+
+  }, {
+    key: "invalidReason",
+    get: function get() {
+      return this.invalid ? this.invalid.reason : null;
     }
     /**
      * Returns an explanation of why this DateTime became invalid, or null if the DateTime is valid
@@ -84847,9 +85026,9 @@ function () {
      */
 
   }, {
-    key: "invalidReason",
+    key: "invalidExplanation",
     get: function get() {
-      return this.invalid;
+      return this.invalid ? this.invalid.explanation : null;
     }
     /**
      * Get the locale of a DateTime, such 'en-GB'. The locale is used when formatting the DateTime
@@ -85411,14 +85590,14 @@ function () {
   return DateTime;
 }();
 function friendlyDateTime(dateTimeish) {
-  if (dateTimeish instanceof DateTime) {
+  if (DateTime.isDateTime(dateTimeish)) {
     return dateTimeish;
-  } else if (dateTimeish.valueOf && isNumber(dateTimeish.valueOf())) {
+  } else if (dateTimeish && dateTimeish.valueOf && isNumber(dateTimeish.valueOf())) {
     return DateTime.fromJSDate(dateTimeish);
-  } else if (typeof dateTimeish === "object") {
+  } else if (dateTimeish && typeof dateTimeish === "object") {
     return DateTime.fromObject(dateTimeish);
   } else {
-    throw new InvalidArgumentError("Unknown datetime argument");
+    throw new InvalidArgumentError("Unknown datetime argument: " + dateTimeish + ", of type " + typeof dateTimeish);
   }
 }
 
@@ -86064,7 +86243,7 @@ var regionDayMap = {
             install: function(Vue) {
                 var options = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : {};
                 this.installed || (this.installed = !0, this.event = new Vue(), this.rootInstance = null, 
-                this.componentName = options.componentName || "modal", Vue.prototype.$modal = {
+                this.componentName = options.componentName || "Modal", Vue.prototype.$modal = {
                     show: function(modal, paramsOrProps, params) {
                         var events = arguments.length > 3 && void 0 !== arguments[3] ? arguments[3] : {};
                         if ("string" == typeof modal) return void Plugin.event.$emit("toggle", modal, !0, paramsOrProps);
@@ -86078,8 +86257,8 @@ var regionDayMap = {
                     toggle: function(name, params) {
                         Plugin.event.$emit("toggle", name, void 0, params);
                     }
-                }, Vue.component(this.componentName, _Modal2.default), options.dialog && Vue.component("v-dialog", _Dialog2.default), 
-                options.dynamic && (Vue.component("modals-container", _ModalsContainer2.default), 
+                }, Vue.component(this.componentName, _Modal2.default), options.dialog && Vue.component("VDialog", _Dialog2.default), 
+                options.dynamic && (Vue.component("ModalsContainer", _ModalsContainer2.default), 
                 Vue.mixin({
                     beforeMount: function() {
                         null === Plugin.rootInstance && (Plugin.rootInstance = this.$root);
@@ -86091,22 +86270,20 @@ var regionDayMap = {
     }, function(module, exports, __webpack_require__) {
         __webpack_require__(21);
         var Component = __webpack_require__(0)(__webpack_require__(8), __webpack_require__(18), null, null);
-        Component.options.__file = "/Users/yev.vlasenko2/Projects/vue/vue-js-modal/src/Dialog.vue", 
-        Component.esModule && Object.keys(Component.esModule).some(function(key) {
+        Component.options.__file = "D:\\Projects\\vue\\vue-js-modal\\src\\Dialog.vue", Component.esModule && Object.keys(Component.esModule).some(function(key) {
             return "default" !== key && "__esModule" !== key;
         }) && console.error("named exports are not supported in *.vue files."), Component.options.functional && console.error("[vue-loader] Dialog.vue: functional components are not supported with templates, they should use render functions."), 
         module.exports = Component.exports;
     }, function(module, exports, __webpack_require__) {
         __webpack_require__(22);
         var Component = __webpack_require__(0)(__webpack_require__(9), __webpack_require__(19), null, null);
-        Component.options.__file = "/Users/yev.vlasenko2/Projects/vue/vue-js-modal/src/Modal.vue", 
-        Component.esModule && Object.keys(Component.esModule).some(function(key) {
+        Component.options.__file = "D:\\Projects\\vue\\vue-js-modal\\src\\Modal.vue", Component.esModule && Object.keys(Component.esModule).some(function(key) {
             return "default" !== key && "__esModule" !== key;
         }) && console.error("named exports are not supported in *.vue files."), Component.options.functional && console.error("[vue-loader] Modal.vue: functional components are not supported with templates, they should use render functions."), 
         module.exports = Component.exports;
     }, function(module, exports, __webpack_require__) {
         var Component = __webpack_require__(0)(__webpack_require__(10), __webpack_require__(17), null, null);
-        Component.options.__file = "/Users/yev.vlasenko2/Projects/vue/vue-js-modal/src/ModalsContainer.vue", 
+        Component.options.__file = "D:\\Projects\\vue\\vue-js-modal\\src\\ModalsContainer.vue", 
         Component.esModule && Object.keys(Component.esModule).some(function(key) {
             return "default" !== key && "__esModule" !== key;
         }) && console.error("named exports are not supported in *.vue files."), Component.options.functional && console.error("[vue-loader] ModalsContainer.vue: functional components are not supported with templates, they should use render functions."), 
@@ -86189,7 +86366,7 @@ var regionDayMap = {
                 for (var key in source) Object.prototype.hasOwnProperty.call(source, key) && (target[key] = source[key]);
             }
             return target;
-        }, _index = __webpack_require__(4), _index2 = _interopRequireDefault(_index), _Resizer = __webpack_require__(16), _Resizer2 = _interopRequireDefault(_Resizer), _util = __webpack_require__(1), _parser = __webpack_require__(12);
+        }, _index = __webpack_require__(4), _index2 = _interopRequireDefault(_index), _Resizer = __webpack_require__(16), _Resizer2 = _interopRequireDefault(_Resizer), _utils = __webpack_require__(1), _parser = __webpack_require__(12);
         exports.default = {
             name: "VueJsModal",
             props: {
@@ -86321,7 +86498,7 @@ var regionDayMap = {
                 if (_index2.default.event.$on("toggle", this.handleToggleEvent), window.addEventListener("resize", this.handleWindowResize), 
                 this.handleWindowResize(), this.scrollable && !this.isAutoHeight && console.warn('Modal "' + this.name + '" has scrollable flag set to true but height is not "auto" (' + this.height + ")"), 
                 this.isAutoHeight) {
-                    var MutationObserver = (0, _util.getMutationObserver)();
+                    var MutationObserver = (0, _utils.getMutationObserver)();
                     MutationObserver && (this.mutationObserver = new MutationObserver(function(mutations) {
                         _this.updateRenderedHeight();
                     }));
@@ -86340,19 +86517,19 @@ var regionDayMap = {
                 position: function() {
                     var window = this.window, shift = this.shift, pivotX = this.pivotX, pivotY = this.pivotY, trueModalWidth = this.trueModalWidth, trueModalHeight = this.trueModalHeight, maxLeft = window.width - trueModalWidth, maxTop = window.height - trueModalHeight, left = shift.left + pivotX * maxLeft, top = shift.top + pivotY * maxTop;
                     return {
-                        left: parseInt((0, _util.inRange)(0, maxLeft, left)),
-                        top: parseInt((0, _util.inRange)(0, maxTop, top))
+                        left: parseInt((0, _utils.inRange)(0, maxLeft, left)),
+                        top: parseInt((0, _utils.inRange)(0, maxTop, top))
                     };
                 },
                 trueModalWidth: function() {
                     var window = this.window, modal = this.modal, adaptive = this.adaptive, minWidth = this.minWidth, maxWidth = this.maxWidth, value = "%" === modal.widthType ? window.width / 100 * modal.width : modal.width, max = Math.min(window.width, maxWidth);
-                    return adaptive ? (0, _util.inRange)(minWidth, max, value) : value;
+                    return adaptive ? (0, _utils.inRange)(minWidth, max, value) : value;
                 },
                 trueModalHeight: function() {
                     var window = this.window, modal = this.modal, isAutoHeight = this.isAutoHeight, adaptive = this.adaptive, maxHeight = this.maxHeight, value = "%" === modal.heightType ? window.height / 100 * modal.height : modal.height;
                     if (isAutoHeight) return this.modal.renderedHeight;
                     var max = Math.min(window.height, maxHeight);
-                    return adaptive ? (0, _util.inRange)(this.minHeight, max, value) : value;
+                    return adaptive ? (0, _utils.inRange)(this.minHeight, max, value) : value;
                 },
                 overlayClass: function() {
                     return {
@@ -86370,6 +86547,20 @@ var regionDayMap = {
                         width: this.trueModalWidth + "px",
                         height: this.isAutoHeight ? "auto" : this.trueModalHeight + "px"
                     };
+                }
+            },
+            watch: {
+                visible: function(value) {
+                    var _this2 = this;
+                    value ? (this.visibility.overlay = !0, setTimeout(function() {
+                        _this2.visibility.modal = !0, _this2.$nextTick(function() {
+                            _this2.addDraggableListeners(), _this2.callAfterEvent(!0);
+                        });
+                    }, this.delay)) : (this.visibility.modal = !1, setTimeout(function() {
+                        _this2.visibility.overlay = !1, _this2.$nextTick(function() {
+                            _this2.removeDraggableListeners(), _this2.callAfterEvent(!1);
+                        });
+                    }, this.delay));
                 }
             },
             methods: {
@@ -86393,7 +86584,7 @@ var regionDayMap = {
                 },
                 createModalEvent: function() {
                     var args = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : {};
-                    return (0, _util.createModalEvent)(_extends({
+                    return (0, _utils.createModalEvent)(_extends({
                         name: this.name,
                         ref: this.$refs.modal
                     }, args));
@@ -86419,8 +86610,7 @@ var regionDayMap = {
                             state: nextState,
                             params: params
                         });
-                        this.$emit(beforeEventName, beforeEvent), stopEventExecution || (this.visible = nextState, 
-                        this.visible ? this.startOpeningModal() : this.startClosingModal());
+                        this.$emit(beforeEventName, beforeEvent), stopEventExecution || (this.visible = nextState);
                     }
                 },
                 getDraggableElement: function() {
@@ -86430,20 +86620,15 @@ var regionDayMap = {
                 handleBackgroundClick: function() {
                     this.clickToClose && this.toggle(!1);
                 },
-                startOpeningModal: function() {
-                    var _this2 = this;
-                    this.visibility.overlay = !0, setTimeout(function() {
-                        _this2.visibility.modal = !0;
-                    }, this.delay);
-                },
-                startClosingModal: function() {
-                    var _this3 = this;
-                    this.visibility.modal = !1, setTimeout(function() {
-                        _this3.visibility.overlay = !1;
-                    }, this.delay);
+                callAfterEvent: function(state) {
+                    state ? this.connectObserver() : this.disconnectObserver();
+                    var eventName = state ? "opened" : "closed", event = this.createModalEvent({
+                        state: state
+                    });
+                    this.$emit(eventName, event);
                 },
                 addDraggableListeners: function() {
-                    var _this4 = this;
+                    var _this3 = this;
                     if (this.draggable) {
                         var dragger = this.getDraggableElement();
                         if (dragger) {
@@ -86455,11 +86640,11 @@ var regionDayMap = {
                                     var _getPosition = getPosition(event), clientX = _getPosition.clientX, clientY = _getPosition.clientY;
                                     document.addEventListener("mousemove", _handleDraggableMousemove), document.addEventListener("touchmove", _handleDraggableMousemove), 
                                     document.addEventListener("mouseup", _handleDraggableMouseup), document.addEventListener("touchend", _handleDraggableMouseup), 
-                                    startX = clientX, startY = clientY, cachedShiftX = _this4.shift.left, cachedShiftY = _this4.shift.top;
+                                    startX = clientX, startY = clientY, cachedShiftX = _this3.shift.left, cachedShiftY = _this3.shift.top;
                                 }
                             }, _handleDraggableMousemove = function(event) {
                                 var _getPosition2 = getPosition(event), clientX = _getPosition2.clientX, clientY = _getPosition2.clientY;
-                                _this4.shift.left = cachedShiftX + clientX - startX, _this4.shift.top = cachedShiftY + clientY - startY, 
+                                _this3.shift.left = cachedShiftX + clientX - startX, _this3.shift.top = cachedShiftY + clientY - startY, 
                                 event.preventDefault();
                             }, _handleDraggableMouseup = function _handleDraggableMouseup(event) {
                                 document.removeEventListener("mousemove", _handleDraggableMousemove), document.removeEventListener("touchmove", _handleDraggableMousemove), 
@@ -86487,16 +86672,8 @@ var regionDayMap = {
                 beforeTransitionEnter: function() {
                     this.connectObserver();
                 },
-                afterTransitionEnter: function() {
-                    this.addDraggableListeners(), this.$emit("opened", this.createModalEvent({
-                        state: !0
-                    }));
-                },
-                afterTransitionLeave: function() {
-                    this.removeDraggableListeners(), this.disconnectObserver(), this.$emit("closed", this.createModalEvent({
-                        state: !1
-                    }));
-                }
+                afterTransitionEnter: function() {},
+                afterTransitionLeave: function() {}
             }
         };
     }, function(module, exports, __webpack_require__) {
@@ -86510,7 +86687,7 @@ var regionDayMap = {
                 for (var key in source) Object.prototype.hasOwnProperty.call(source, key) && (target[key] = source[key]);
             }
             return target;
-        }, _util = __webpack_require__(1);
+        }, _utils = __webpack_require__(1);
         exports.default = {
             data: function() {
                 return {
@@ -86523,7 +86700,7 @@ var regionDayMap = {
             methods: {
                 add: function(component) {
                     var componentAttrs = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : {}, _this = this, modalAttrs = arguments.length > 2 && void 0 !== arguments[2] ? arguments[2] : {}, modalListeners = arguments[3], id = (0, 
-                    _util.generateId)(), name = modalAttrs.name || "_dynamic_modal_" + id;
+                    _utils.generateId)(), name = modalAttrs.name || "_dynamic_modal_" + id;
                     this.modals.push({
                         id: id,
                         modalAttrs: _extends({}, modalAttrs, {
@@ -86546,7 +86723,7 @@ var regionDayMap = {
         Object.defineProperty(exports, "__esModule", {
             value: !0
         });
-        var _util = __webpack_require__(1);
+        var _utils = __webpack_require__(1);
         exports.default = {
             name: "VueJsModalResizer",
             props: {
@@ -86595,8 +86772,8 @@ var regionDayMap = {
                     var el = this.$el.parentElement;
                     if (el) {
                         var width = event.clientX - el.offsetLeft, height = event.clientY - el.offsetTop;
-                        width = (0, _util.inRange)(this.minWidth, window.innerWidth, width), height = (0, 
-                        _util.inRange)(this.minHeight, window.innerHeight, height), this.size = {
+                        width = (0, _utils.inRange)(this.minWidth, window.innerWidth, width), height = (0, 
+                        _utils.inRange)(this.minHeight, window.innerHeight, height), this.size = {
                             width: width,
                             height: height
                         }, el.style.width = width + "px", el.style.height = height + "px", this.$emit("resize", {
@@ -86667,15 +86844,15 @@ var regionDayMap = {
             return value >= 0;
         };
     }, function(module, exports, __webpack_require__) {
-        exports = module.exports = __webpack_require__(2)(), exports.push([ module.i, "\n.vue-dialog div {\n  box-sizing: border-box;\n}\n.vue-dialog .dialog-flex {\n  width: 100%;\n  height: 100%;\n}\n.vue-dialog .dialog-content {\n  flex: 1 0 auto;\n  width: 100%;\n  padding: 15px;\n  font-size: 14px;\n}\n.vue-dialog .dialog-c-title {\n  font-weight: 600;\n  padding-bottom: 15px;\n}\n.vue-dialog .dialog-c-text {\n}\n.vue-dialog .vue-dialog-buttons {\n  display: flex;\n  flex: 0 1 auto;\n  width: 100%;\n  border-top: 1px solid #eee;\n}\n.vue-dialog .vue-dialog-buttons-none {\n  width: 100%;\n  padding-bottom: 15px;\n}\n.vue-dialog-button {\n  font-size: 12px !important;\n  background: transparent;\n  padding: 0;\n  margin: 0;\n  border: 0;\n  cursor: pointer;\n  box-sizing: border-box;\n  line-height: 40px;\n  height: 40px;\n  color: inherit;\n  font: inherit;\n  outline: none;\n}\n.vue-dialog-button:hover {\n  background: rgba(0, 0, 0, 0.01);\n}\n.vue-dialog-button:active {\n  background: rgba(0, 0, 0, 0.025);\n}\n.vue-dialog-button:not(:first-of-type) {\n  border-left: 1px solid #eee;\n}\n", "" ]);
+        exports = module.exports = __webpack_require__(2)(), exports.push([ module.i, "\n.vue-dialog div {\r\n  box-sizing: border-box;\n}\n.vue-dialog .dialog-flex {\r\n  width: 100%;\r\n  height: 100%;\n}\n.vue-dialog .dialog-content {\r\n  flex: 1 0 auto;\r\n  width: 100%;\r\n  padding: 15px;\r\n  font-size: 14px;\n}\n.vue-dialog .dialog-c-title {\r\n  font-weight: 600;\r\n  padding-bottom: 15px;\n}\n.vue-dialog .dialog-c-text {\n}\n.vue-dialog .vue-dialog-buttons {\r\n  display: flex;\r\n  flex: 0 1 auto;\r\n  width: 100%;\r\n  border-top: 1px solid #eee;\n}\n.vue-dialog .vue-dialog-buttons-none {\r\n  width: 100%;\r\n  padding-bottom: 15px;\n}\n.vue-dialog-button {\r\n  font-size: 12px !important;\r\n  background: transparent;\r\n  padding: 0;\r\n  margin: 0;\r\n  border: 0;\r\n  cursor: pointer;\r\n  box-sizing: border-box;\r\n  line-height: 40px;\r\n  height: 40px;\r\n  color: inherit;\r\n  font: inherit;\r\n  outline: none;\n}\n.vue-dialog-button:hover {\r\n  background: rgba(0, 0, 0, 0.01);\n}\n.vue-dialog-button:active {\r\n  background: rgba(0, 0, 0, 0.025);\n}\n.vue-dialog-button:not(:first-of-type) {\r\n  border-left: 1px solid #eee;\n}\r\n", "" ]);
     }, function(module, exports, __webpack_require__) {
-        exports = module.exports = __webpack_require__(2)(), exports.push([ module.i, "\n.v--modal-block-scroll {\n  overflow: hidden;\n  width: 100vw;\n}\n.v--modal-overlay {\n  position: fixed;\n  box-sizing: border-box;\n  left: 0;\n  top: 0;\n  width: 100%;\n  height: 100vh;\n  background: rgba(0, 0, 0, 0.2);\n  z-index: 999;\n  opacity: 1;\n}\n.v--modal-overlay.scrollable {\n  height: 100%;\n  min-height: 100vh;\n  overflow-y: auto;\n  -webkit-overflow-scrolling: touch;\n}\n.v--modal-overlay .v--modal-background-click {\n  min-height: 100%;\n  width: 100%;\n}\n.v--modal-overlay .v--modal-box {\n  position: relative;\n  overflow: hidden;\n  box-sizing: border-box;\n}\n.v--modal-overlay.scrollable .v--modal-box {\n  margin-bottom: 2px;\n}\n.v--modal {\n  background-color: white;\n  text-align: left;\n  border-radius: 3px;\n  box-shadow: 0 20px 60px -2px rgba(27, 33, 58, 0.4);\n  padding: 0;\n}\n.v--modal.v--modal-fullscreen {\n  width: 100vw;\n  height: 100vh;\n  margin: 0;\n  left: 0;\n  top: 0;\n}\n.v--modal-top-right {\n  display: block;\n  position: absolute;\n  right: 0;\n  top: 0;\n}\n.overlay-fade-enter-active,\n.overlay-fade-leave-active {\n  transition: all 0.2s;\n}\n.overlay-fade-enter,\n.overlay-fade-leave-active {\n  opacity: 0;\n}\n.nice-modal-fade-enter-active,\n.nice-modal-fade-leave-active {\n  transition: all 0.4s;\n}\n.nice-modal-fade-enter,\n.nice-modal-fade-leave-active {\n  opacity: 0;\n  transform: translateY(-20px);\n}\n", "" ]);
+        exports = module.exports = __webpack_require__(2)(), exports.push([ module.i, "\n.v--modal-block-scroll {\r\n  overflow: hidden;\r\n  width: 100vw;\n}\n.v--modal-overlay {\r\n  position: fixed;\r\n  box-sizing: border-box;\r\n  left: 0;\r\n  top: 0;\r\n  width: 100%;\r\n  height: 100vh;\r\n  background: rgba(0, 0, 0, 0.2);\r\n  z-index: 999;\r\n  opacity: 1;\n}\n.v--modal-overlay.scrollable {\r\n  height: 100%;\r\n  min-height: 100vh;\r\n  overflow-y: auto;\r\n  -webkit-overflow-scrolling: touch;\n}\n.v--modal-overlay .v--modal-background-click {\r\n  min-height: 100%;\r\n  width: 100%;\n}\n.v--modal-overlay .v--modal-box {\r\n  position: relative;\r\n  overflow: hidden;\r\n  box-sizing: border-box;\n}\n.v--modal-overlay.scrollable .v--modal-box {\r\n  margin-bottom: 2px;\n}\n.v--modal {\r\n  background-color: white;\r\n  text-align: left;\r\n  border-radius: 3px;\r\n  box-shadow: 0 20px 60px -2px rgba(27, 33, 58, 0.4);\r\n  padding: 0;\n}\n.v--modal.v--modal-fullscreen {\r\n  width: 100vw;\r\n  height: 100vh;\r\n  margin: 0;\r\n  left: 0;\r\n  top: 0;\n}\n.v--modal-top-right {\r\n  display: block;\r\n  position: absolute;\r\n  right: 0;\r\n  top: 0;\n}\n.overlay-fade-enter-active,\r\n.overlay-fade-leave-active {\r\n  transition: all 0.2s;\n}\n.overlay-fade-enter,\r\n.overlay-fade-leave-active {\r\n  opacity: 0;\n}\n.nice-modal-fade-enter-active,\r\n.nice-modal-fade-leave-active {\r\n  transition: all 0.4s;\n}\n.nice-modal-fade-enter,\r\n.nice-modal-fade-leave-active {\r\n  opacity: 0;\r\n  transform: translateY(-20px);\n}\r\n", "" ]);
     }, function(module, exports, __webpack_require__) {
-        exports = module.exports = __webpack_require__(2)(), exports.push([ module.i, "\n.vue-modal-resizer {\n  display: block;\n  overflow: hidden;\n  position: absolute;\n  width: 12px;\n  height: 12px;\n  right: 0;\n  bottom: 0;\n  z-index: 9999999;\n  background: transparent;\n  cursor: se-resize;\n}\n.vue-modal-resizer::after {\n  display: block;\n  position: absolute;\n  content: '';\n  background: transparent;\n  left: 0;\n  top: 0;\n  width: 0;\n  height: 0;\n  border-bottom: 10px solid #ddd;\n  border-left: 10px solid transparent;\n}\n.vue-modal-resizer.clicked::after {\n  border-bottom: 10px solid #369be9;\n}\n", "" ]);
+        exports = module.exports = __webpack_require__(2)(), exports.push([ module.i, "\n.vue-modal-resizer {\r\n  display: block;\r\n  overflow: hidden;\r\n  position: absolute;\r\n  width: 12px;\r\n  height: 12px;\r\n  right: 0;\r\n  bottom: 0;\r\n  z-index: 9999999;\r\n  background: transparent;\r\n  cursor: se-resize;\n}\n.vue-modal-resizer::after {\r\n  display: block;\r\n  position: absolute;\r\n  content: '';\r\n  background: transparent;\r\n  left: 0;\r\n  top: 0;\r\n  width: 0;\r\n  height: 0;\r\n  border-bottom: 10px solid #ddd;\r\n  border-left: 10px solid transparent;\n}\n.vue-modal-resizer.clicked::after {\r\n  border-bottom: 10px solid #369be9;\n}\r\n", "" ]);
     }, function(module, exports, __webpack_require__) {
         __webpack_require__(23);
         var Component = __webpack_require__(0)(__webpack_require__(11), __webpack_require__(20), null, null);
-        Component.options.__file = "/Users/yev.vlasenko2/Projects/vue/vue-js-modal/src/Resizer.vue", 
+        Component.options.__file = "D:\\Projects\\vue\\vue-js-modal\\src\\Resizer.vue", 
         Component.esModule && Object.keys(Component.esModule).some(function(key) {
             return "default" !== key && "__esModule" !== key;
         }) && console.error("named exports are not supported in *.vue files."), Component.options.functional && console.error("[vue-loader] Resizer.vue: functional components are not supported with templates, they should use render functions."), 
@@ -86740,12 +86917,14 @@ var regionDayMap = {
                     domProps: {
                         innerHTML: _vm._s(_vm.params.title || "")
                     }
-                }) : _vm._e(), _vm._v(" "), _c("div", {
+                }) : _vm._e(), _vm._v(" "), _vm.params.component ? _c(_vm.params.component, _vm._b({
+                    tag: "component"
+                }, "component", _vm.params.props, !1)) : _c("div", {
                     staticClass: "dialog-c-text",
                     domProps: {
                         innerHTML: _vm._s(_vm.params.text || "")
                     }
-                }) ]), _vm._v(" "), _vm.buttons ? _c("div", {
+                }) ], 1), _vm._v(" "), _vm.buttons ? _c("div", {
                     staticClass: "vue-dialog-buttons"
                 }, _vm._l(_vm.buttons, function(button, i) {
                     return _c("button", {
