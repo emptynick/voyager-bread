@@ -1,5 +1,5 @@
-@extends($ajax ? 'bread::ajax' : 'voyager::master')
-@section('page_title', __('voyager::generic.'.($content->getKey() ? 'edit' : 'add')).' '.get_translated_value($bread->display_name_singular))
+@extends('voyager::master')
+@section('page_title', __('voyager::generic.'.($content ? 'edit' : 'add')).' '.get_translated_value($bread->display_name_singular))
 
 @section('content')
 <div id="bread-edit">
@@ -7,7 +7,7 @@
     <div class="container-fluid">
         <h1 class="page-title">
             <i class="{{ $bread->icon }}"></i>
-            {{ __('voyager::generic.'.($content->getKey() ? 'edit' : 'add')).' '.get_translated_value($bread->display_name_singular) }}
+            {{ __('voyager::generic.'.($content ? 'edit' : 'add')).' '.get_translated_value($bread->display_name_singular) }}
         </h1>
 
         <language-switcher :languages="{{ json_encode(config('voyager.multilingual.locales')) }}"></language-switcher>
@@ -16,10 +16,9 @@
     <div class="page-content edit-add container-fluid">
         <div class="row">
             <div class="col-md-12">
-                <form action="@if($content->getKey()){{ route('voyager.'.get_translated_value($bread->slug).'.update', $content->getKey()) }}@else{{ route('voyager.'.get_translated_value($bread->slug).'.store') }}@endif"
-                        method="POST" enctype="multipart/form-data">
+                <form action="@if($content){{ route('voyager.'.get_translated_value($bread->slug).'.update', $content['primary_key']) }}@else{{ route('voyager.'.get_translated_value($bread->slug).'.store') }}@endif" method="POST" enctype="multipart/form-data">
                     {{ csrf_field() }}
-                    @if($content->getKey())
+                    @if ($content)
                         {{ method_field("PUT") }}
                     @endif
                     <div class="panel panel-bordered">
@@ -29,23 +28,19 @@
                             <div v-for="(item, key) in elements" :class="'col-md-'+item.width">
                                 <div class="panel">
                                     <div class="panel-body">
-                                        <div :class="'form-group '+((hasError(item.field) && item.type != 'repeater') ? 'has-error' : '')">
+                                        <div :class="'form-group '+(hasError(item.field) ? 'has-error' : '')">
                                             <component
-                                                :is="'formfield-'+item.type"
+                                                :is="'formfield-'+item.codename"
                                                 :options="item.options"
                                                 :computed="item.computed"
                                                 :name="item.field"
-                                                :show="'{{ $content->getKey() ? 'edit' : 'add' }}'"
-                                                :input="item.type == 'tabcontrol' ? this.content : getContent(item)"
-                                                :locale="'{{ app()->getLocale() }}'"
-                                                :errors="item.type == 'tabcontrol' ? this.errors : getErrors(item.field)"
-                                                :strict-errors="getErrors(item.field, true)"
-                                                :ref="item.field"
-                                                :lists="item.lists"
-                                                :views="item.views"
+                                                :show="'{{ $content ? 'edit' : 'add' }}'"
+                                                :input="getContent(item)"
+                                                :errors="getErrors(item.field)"
+                                                :is-translatable="item.computed.isTranslatable"
                                             ></component>
 
-                                            <span class="help-block" style="color:#f96868" v-if="hasError(item.field) && item.type != 'repeater'">
+                                            <span class="help-block" style="color:#f96868" v-if="hasError(item.field)">
                                                 <ul>
                                                     <li v-for="msg in getErrors(item.field)">
                                                         @{{ msg }}
@@ -56,18 +51,9 @@
                                     </div>
                                 </div>
                             </div>
-                            <div>
+                            <div class="clearfix"></div>
+                            <div class="row">
                                 <button type="submit" name="submit_action" value="" class="btn btn-primary">Save</button>
-                                @can('edit', $model)
-                                @if (config('bread.bread_buttons.save_edit', true))
-                                    <button type="submit" name="submit_action" value="edit" class="btn btn-primary">Save and edit</button>
-                                @endif
-                                @endcan
-                                @can('add', $model)
-                                @if (config('bread.bread_buttons.save_new', true))
-                                    <button type="submit" name="submit_action" value="add" class="btn btn-primary">Save and create new</button>
-                                @endif
-                                @endcan
                             </div>
                         </div>
                     </div>
@@ -80,14 +66,13 @@
 
 @section('javascript')
 <script>
-
 </script>
 <script src="{{ route('voyager.bread.scripts') }}"></script>
 @foreach(\Bread\BreadFacade::formfields() as $formfield)
-@include($formfield->getComponent('view'))
+@include($formfield->getComponent())
 @endforeach
 @include('bread::components.language-switcher')
-@include('bread::components.relationship-create')
+@include('bread::components.language-input')
 <script>
 new Vue({
     el: "#bread-edit",
@@ -99,10 +84,7 @@ new Vue({
     methods: {
         getContent: function(item) {
             if (this.content) {
-                if (item.group == 'relationship') {
-                    return this.content[item.options.relationship];
-                }
-                return this.content[item.field];
+                return this.content[item.field] || (item.computed.isTranslatable ? [] : '');
             } else {
                 return '';
             }
@@ -110,21 +92,19 @@ new Vue({
         hasError: function(field) {
             return (this.getErrors(field).length > 0);
         },
-        getErrors: function(field, strict = false) {
+        getErrors: function(field) {
             let errors = this.errors[field];
-            if (!errors && !strict) {
+            if (!errors) {
                 errors = [];
                 for (var key in this.errors) {
                     if (key.startsWith(field+'.')) {
-                        errors.push({ [key]: this.errors[key] });
+                        errors.push(this.errors[key][0]);
                     }
                 }
-
                 if (errors.length == 0) {
                     return [];
                 }
             }
-
             return errors;
         },
     },

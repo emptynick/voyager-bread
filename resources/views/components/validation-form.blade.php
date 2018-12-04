@@ -6,7 +6,7 @@
     <div class="clearfix"></div>
     <div class="col-md-12">
         <table class="table">
-            <thead v-if="validation_rules.length > 0">
+            <thead v-if="rules.length > 0">
                 <tr>
                     <th width="45%" style="background:transparent; color:white">Rule</th>
                     <th width="45%" style="background:transparent; color:white">Message</th>
@@ -14,7 +14,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="(rule, key) in validation_rules" v-bind:item="rule">
+                <tr v-for="(rule, key) in rules" v-bind:item="rule">
                     <td><input type="text" v-model="rule.rule" class="form-control"></td>
                     <td>
                         <language-input type="text" v-model="rule.msg" :input="rule.msg" />
@@ -33,17 +33,17 @@
 <script>
 Vue.component('validation-form', {
     template: `@yield('validation-form')`,
-    props: ['validation_rules'],
+    props: ['rules'],
     methods: {
         deleteRule: function(key) {
-            this.validation_rules.splice(key, 1);
+            this.rules.splice(key, 1);
         },
         addRule: function() {
             let rule = {
                 rule: "",
                 msg: ""
             };
-            this.validation_rules.push(rule);
+            this.rules.push(rule);
         }
     }
 });

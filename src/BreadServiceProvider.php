@@ -4,6 +4,7 @@ namespace Bread;
 
 use Illuminate\Events\Dispatcher;
 use Illuminate\Support\ServiceProvider;
+use TCG\Voyager\Facades\Voyager;
 
 class BreadServiceProvider extends ServiceProvider
 {
@@ -14,6 +15,10 @@ class BreadServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(
             dirname(__DIR__).'/publishable/config/bread.php', 'bread'
         );
+
+        \View::share('locale', app()->getLocale());
+        \View::share('locales', config('voyager.multilingual.locales', []));
+        \View::share('breakpoints', collect(config('bread.breakpoints', []))->sort()->reverse());
     }
 
     public function register()
@@ -41,42 +46,31 @@ class BreadServiceProvider extends ServiceProvider
             'as'     => 'bread.',
             'prefix' => 'bread',
         ], function () use ($namespace, $router) {
-            $router->get('getTranslation/{key?}', function ($key = null) {
-                return __($key);
-            })->name('getTranslation');
+            //Index
             $router->get('/', [
                 'uses' => $namespace.'ManagerController@index',
                 'as'   => 'index',
             ]);
+            //Create
             $router->get('{table}/create', [
                 'uses' => $namespace.'ManagerController@create',
                 'as'   => 'create',
             ]);
+            //Store
             $router->post('/', [
                 'uses' => $namespace.'ManagerController@store',
                 'as'   => 'store',
             ]);
+            //Edit
             $router->get('{table}/edit', [
                 'uses' => $namespace.'ManagerController@edit',
                 'as'   => 'edit',
             ]);
+            //Delete
             $router->delete('{id}', [
                 'uses' => $namespace.'ManagerController@destroy',
                 'as'   => 'delete',
             ]);
-            $router->get('{table}/views/{name?}', [
-                'uses'  => $namespace.'ManagerController@views',
-                'as'    => 'views.edit',
-            ]);
-            $router->get('{table}/lists/{name?}', [
-                'uses'  => $namespace.'ManagerController@lists',
-                'as'    => 'lists.edit',
-            ]);
-            $router->post('{table}/storelayouts', [
-                'uses'  => $namespace.'ManagerController@storeLayouts',
-                'as'    => 'storelayouts',
-            ]);
-
             //Assets
             $router->get('/styles.css', [
                 'uses' => $namespace.'AssetController@styles',
@@ -86,18 +80,21 @@ class BreadServiceProvider extends ServiceProvider
                 'uses' => $namespace.'AssetController@scripts',
                 'as'   => 'scripts',
             ]);
+            $router->post('/clear-cache', function () {
+                //Add any other cache-keys here
+                \Cache::forget('breads');
+            })->name('clear-cache');
         });
 
         try {
-            foreach (BreadFacade::getBreads(true) as $bread) {
-                $slugs = collect(get_translated_values($bread->slug));
-                foreach ($slugs as $lang_slug) {
-                    if ($lang_slug == '') {
-                        continue;
-                    }
-                    $router->resource($lang_slug, $bread->controller ?: '\Bread\Http\Controllers\BreadController');
-                    $router->get($lang_slug.'/data/get', ($bread->controller ?: '\Bread\Http\Controllers\BreadController').'@data')->name($lang_slug.'.data');
-                    $router->post($lang_slug.'/restore/{id}', ($bread->controller ?: '\Bread\Http\Controllers\BreadController').'@restore')->name($lang_slug.'.restore');
+            //BREADs
+            foreach (BreadFacade::getBreads() as $bread) {
+                $controller = $bread->controller_name ?? $namespace.'BreadController';
+                $slugs = collect($bread->slug);
+                foreach ($slugs as $slug) {
+                    $router->resource($slug, $controller);
+                    $router->post($slug.'/data', $controller.'@data')->name($slug.'.data');
+                    $router->delete($slug.'/restore/{id}', $controller.'@restore')->name($slug.'.restore');
                 }
             }
         } catch (\Exception $e) {
@@ -107,32 +104,7 @@ class BreadServiceProvider extends ServiceProvider
     protected function registerFormfields()
     {
         $formfields = [
-            \Bread\Formfields\Checkboxes::class,
-            \Bread\Formfields\Color::class,
-            \Bread\Formfields\Coordinates::class,
-            \Bread\Formfields\DateTime::class,
-            \Bread\Formfields\Heading::class,
-            \Bread\Formfields\Markdown::class,
-            \Bread\Formfields\MaskedInput::class,
-            \Bread\Formfields\Number::class,
-            \Bread\Formfields\Paragraph::class,
-            \Bread\Formfields\Password::class,
-            \Bread\Formfields\RadioButtons::class,
-            \Bread\Formfields\Repeater::class,
-            \Bread\Formfields\Richtextbox::class,
-            \Bread\Formfields\Select::class,
-            \Bread\Formfields\DynamicSelect::class,
-            \Bread\Formfields\TabControl::class,
-            \Bread\Formfields\Tags::class,
             \Bread\Formfields\Text::class,
-            \Bread\Formfields\Textarea::class,
-            /*\Bread\Formfields\MaskedInput::class,
-            \Bread\Formfields\RichTextEditor::class,*/
-
-            \Bread\Formfields\Relationships\HasOne::class,
-            \Bread\Formfields\Relationships\HasMany::class,
-            \Bread\Formfields\Relationships\BelongsTo::class,
-            \Bread\Formfields\Relationships\BelongsToMany::class,
         ];
         foreach ($formfields as $formfield) {
             BreadFacade::addFormfield($formfield);

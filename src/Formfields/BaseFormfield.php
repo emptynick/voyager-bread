@@ -2,102 +2,43 @@
 
 namespace Bread\Formfields;
 
-class BaseFormfield
+abstract class BaseFormfield
 {
-    protected $name;
-    protected $codename;
-    protected $layout;
+    public $codename;
+    public $name;
     public $group = 'formfield';
     public $field;
+    public $width = 12;
     public $options = [];
-    public $validation_rules = [];
-    public $computed;
+    public $validation = [];
+    private $computed = [];
 
-    public function __construct()
+    public function __construct($element = null)
     {
-        $this->computed = collect([]);
-    }
-
-    public function update($input)
-    {
-        return $input;
-    }
-
-    public function store($input, $model = null)
-    {
-        return $input;
-    }
-
-    public function delete($input)
-    {
-        return $input;
-    }
-
-    public function setData($data)
-    {
-        foreach ($data as $key => $value) {
-            if ($key == 'options') {
-                $this->options = collect(json_decode($this->getOptions((array) $value)))->merge((array) $value);
-            } else {
-                $this->{$key} = $value;
+        if ($element) {
+            foreach ($element as $key => $value) {
+                if ($key == 'options') {
+                    $this->options = array_merge($this->options, (array) $value);
+                } else {
+                    $this->{$key} = $value;
+                }
             }
         }
     }
 
-    public function getComponent($action, $render = false)
+    public function getComponent()
     {
-        $path = 'bread::formfields.'.$this->codename.'.'.$action;
-        if (!\View::exists($path)) {
-            $path = 'bread::formfields.'.$this->codename;
-        }
-        if ($render) {
-            return view($path);
-        } else {
-            return $path;
-        }
+        return 'bread::formfields.'.$this->codename;
     }
 
-    public function getOptions()
+    public function prepare($bread, $model)
     {
-        return json_encode(collect($this->options));
-    }
-
-    public function getCodename()
-    {
-        return $this->codename;
-    }
-
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    public function prepare($bread, $model, $content = null)
-    {
-        if (is_array($this->computed)) {
-            $this->computed = collect();
-        }
-        if (str_contains($this->field, '|')) {
-            //Inject isTranslatable for a relationship
-            $parts = explode('|', $this->field);
-            if (method_exists($model, $parts[0])) {
-                $relationship = $model->{$parts[0]}();
-                $related = $relationship->getRelated();
-                $this->computed->put('isTranslatable',
-                    ($related->isTranslatable && $related->isFieldTranslatable($parts[1]))
-                );
-            }
-        } else {
-            $this->computed->put('isTranslatable',
-                ($model->isTranslatable && $model->isFieldTranslatable($this->field))
-            );
-        }
-
         return $this;
     }
 
-    public function setLayout($layout)
+    public function store($input)
     {
-        $this->layout = $layout;
+        //Translatable fields get a json_encoded string as input
+        return $input;
     }
 }

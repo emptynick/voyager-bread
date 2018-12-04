@@ -58,7 +58,6 @@
 
 .dropdown-menu {
     max-height: 500px;
-    overflow: auto;
 }
 
 .vue-swatches--inline {
@@ -66,9 +65,4 @@
 }
 .panel-body .vue-swatches--inline {
     text-align: center;
-}
-
-//Vue-select z-index
-.v-select .dropdown-menu {
-    position: relative !important;
 }

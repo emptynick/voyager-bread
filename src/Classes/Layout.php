@@ -8,54 +8,52 @@ class Layout
 {
     public $name;
     public $type;
-    public $elements = [];
+    public $elements;
     public $browse_roles = [];
     public $read_roles = [];
     public $edit_roles = [];
     public $add_roles = [];
 
-    public function __construct($data, $bread)
+    public function __construct($content)
     {
-        foreach ($data as $key => $value) {
-            if ($key == 'elements') {
-                $this->parseElements($value, $bread);
+        foreach ($content as $key => $value) {
+            if ($key == 'elements' && $value) {
+                $this->elements = collect();
+                foreach ($value as $element) {
+                    $class = BreadFacade::formfield($element->codename);
+                    if ($class) {
+                        $formfield = new $class($element);
+                        $this->elements->push($formfield);
+                    }
+                }
             } else {
                 $this->{$key} = $value;
             }
         }
     }
 
-    public function parseElements($elements, $bread)
+    public function prepare($bread, $model)
     {
-        foreach ($elements as $element) {
-            $formfield = BreadFacade::formfield($element->type);
-            if (isset($formfield)) {
-                $new_element = new $formfield();
-                $new_element->setData($element);
-                $new_element->setLayout($this);
-                $this->elements[] = $new_element;
+        $this->elements->transform(function ($element) use ($bread, $model) {
+            if ($this->type != 'view') {
+                if ($element->field->type == 'relationship') {
+                    $name = $element->field->type.'.'.$element->field->relationship.'.'.$element->field->name;
+                } else {
+                    $name = $element->field->type.'.'.$element->field->name;
+                }
+                $element->computed['field'] = $name;
             }
-        }
-        $this->elements = collect($this->elements);
-    }
+            //Translate all options if possible
+            foreach ($element->options as $key => $value) {
+                $element->computed[$key] = get_translated_value($value);
+            }
+            $translatable = false;
+            if ($model->translatable && $element->field != '' && in_array($element->field, $model->translatable)) {
+                $translatable = true;
+            }
+            $element->computed['isTranslatable'] = $translatable;
 
-    public function validate()
-    {
-        return isset($this->name) && isset($this->type);
-    }
-
-    //Returns a collection of all used Vue-components in this layouts
-    public function getComponents($action)
-    {
-        return $this->elements->unique(function ($item) use ($action) {
-            return $item->getComponent($action);
-        });
-    }
-
-    public function prepare($bread, $model, $content = null)
-    {
-        $this->elements->transform(function ($element) use ($bread, $model, $content) {
-            return $element->prepare($bread, $model, $content);
+            return $element->prepare($bread, $model);
         });
 
         return $this;

@@ -4,69 +4,49 @@ namespace Bread\Classes;
 
 class Bread
 {
-    public $table_name;
-    public $slug;
+    public $table;
     public $display_name_singular;
     public $display_name_plural;
-    public $model;
-    public $controller;
-    public $policy;
+    public $slug;
+    public $model_name;
+    public $controller_name;
+    public $policy_name;
     public $icon;
-    public $layouts;
-    public $browse_list;
-    public $read_view;
-    public $edit_view;
-    public $add_view;
+    public $layouts = [];
 
-    public function __construct($data)
+    public function __construct($content)
     {
-        $this->layouts = collect([]);
-        foreach ($data as $key => $value) {
-            if ($key == 'layouts') {
-                $this->parseLayouts($value);
+        foreach ($content as $key => $value) {
+            if ($key == 'layouts' && $value) {
+                $this->layouts = collect();
+                foreach ($value as $layout) {
+                    $this->layouts->push(new Layout($layout));
+                }
             } else {
                 $this->{$key} = $value;
             }
         }
     }
 
-    public function getLists()
+    public function getLayout($action)
     {
-        return $this->layouts->where('type', 'list');
-    }
+        $roles = collect(\Auth::user()->roles->pluck('id'));
+        $roles[] = \Auth::user()->role->id;
+        $roles = $roles->unique()->toArray();
 
-    public function getViews()
-    {
-        return $this->layouts->where('type', 'view');
-    }
-
-    public function getLayout($name)
-    {
-        return $this->layouts->where('name', $name)->first();
-    }
-
-    public function parseLayouts($layouts)
-    {
-        foreach ($layouts as $layout) {
-            $layout = new Layout($layout, $this);
-            if ($layout->validate()) {
-                $this->layouts[] = $layout;
+        $layout = $this->layouts->filter(function ($layout) use ($action, $roles) {
+            foreach ($roles as $role) {
+                if (in_array($role, $layout->{$action.'_roles'})) {
+                    return true;
+                }
             }
+
+            return false;
+        })->first();
+        if (!$layout) {
+            throw new \Exception('There\'s no layout for this action ('.$action.') and your roles!');
         }
-        $this->layouts = collect($this->layouts);
-    }
 
-    public function getModel()
-    {
-        return app($this->model);
-    }
-
-    public function validate()
-    {
-        return
-            isset($this->slug)
-            && isset($this->display_name_singular)
-            && isset($this->display_name_plural)
-            && isset($this->model);
+        return $layout;
     }
 }
