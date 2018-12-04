@@ -18,7 +18,7 @@
             <div class="col-md-12">
                 <form action="@if($content){{ route('voyager.'.get_translated_value($bread->slug).'.update', $content['primary_key']) }}@else{{ route('voyager.'.get_translated_value($bread->slug).'.store') }}@endif" method="POST" enctype="multipart/form-data">
                     {{ csrf_field() }}
-                    @if($content)
+                    @if ($content)
                         {{ method_field("PUT") }}
                     @endif
                     <div class="panel panel-bordered">

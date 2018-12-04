@@ -49,9 +49,11 @@ class Bread
     public function getBreads()
     {
         if (!$this->breads) {
+
             $this->breads = \Cache::remember('breads', now()->addHours(24), function () {
+
                 $breads = collect();
-                $files = scandir(config('bread.bread_path'));
+                $files = scandir(config('bread.bread_path', storage_path('bread')));
                 foreach ($files as $file) {
                     if (ends_with($file, '.json')) {
                         $bread = new BreadClass(
@@ -66,7 +68,6 @@ class Bread
                 return $breads;
             });
         }
-
         return $this->breads;
     }
 

@@ -81,13 +81,9 @@ class Controller extends BaseController
     {
         $result = [];
         foreach ($content->getAttributes() as $key => $value) {
-            if ($this->layout->elements->where('field', $key)->first()->computed['isTranslatable'] ?? false) {
-                $data = json_decode($value);
-                if (json_last_error() == JSON_ERROR_NONE) {
-                    $result[$key] = $data;
-                } else {
-                    $result[$key] = $value;
-                }
+            $data = json_decode($value);
+            if (json_last_error() == JSON_ERROR_NONE) {
+                $result[$key] = $data;
             } else {
                 $result[$key] = $value;
             }
