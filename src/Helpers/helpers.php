@@ -8,7 +8,7 @@ if (!function_exists('get_translated_value')) {
         $fallback = config('app.fallback_locale');
         if ($input->has($locale)) {
             return $input->get($locale);
-        } else if ($input->has($fallback)) {
+        } elseif ($input->has($fallback)) {
             return $input->get($fallback);
         }
 

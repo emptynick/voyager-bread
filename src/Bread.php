@@ -49,9 +49,7 @@ class Bread
     public function getBreads()
     {
         if (!$this->breads) {
-
             $this->breads = \Cache::remember('breads', now()->addHours(24), function () {
-
                 $breads = collect();
                 $files = scandir(config('bread.bread_path', storage_path('bread')));
                 foreach ($files as $file) {
@@ -68,6 +66,7 @@ class Bread
                 return $breads;
             });
         }
+
         return $this->breads;
     }
 
