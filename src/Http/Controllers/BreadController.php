@@ -57,6 +57,8 @@ class BreadController extends Controller
             }
         }
         $content->save();
+
+        //Todo: Go to desired destination
     }
 
     public function show($id)
@@ -107,6 +109,8 @@ class BreadController extends Controller
         }
 
         $content->save();
+
+        //Todo: Go to desired destination
     }
 
     //Delete
@@ -130,14 +134,14 @@ class BreadController extends Controller
         $slug = get_translated_value($this->bread->slug);
         $fields = $this->layout->elements->where('field.type', 'field')->pluck('computed.field');
         $accessors = $this->layout->elements->where('field.type', 'accessors')->pluck('computed.field');
-        $relationship = $this->layout->elements->where('field.type', 'relationship')->pluck('computed.field');
+        $relationships = $this->layout->elements->where('field.type', 'relationship')->pluck('computed.field');
 
         $data = $this->model->select('*');
         //Soft-Deletes
 
         //Search
         if (count($query) > 0) {
-            $data = $data->where(function ($q) use ($query) {
+            $data = $data->where(function ($q) use ($query, $fields, $relationships) {
                 foreach ($query as $field => $term) {
                     if (is_string($term)) {
                         if ($fields->contains($field)) {
