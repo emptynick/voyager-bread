@@ -20,12 +20,9 @@
 ## Formfields
 
 * [Introduction](formfields/introduction.md)
-* [Number](formfields/number.md)
 * [Text](formfields/text.md)
-* [Textarea](formfields/textarea.md)
 
 ## Translations
 
 * [Setup](translations/setup.md)
 * [Usage](translations/usage.md)
-
