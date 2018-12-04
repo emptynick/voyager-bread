@@ -68,6 +68,7 @@ class BreadController extends Controller
 
         return view('bread::bread.read', [
             'layout'    => $this->layout,
+            'bread'     => $this->bread,
             'content'   => $content,
         ]);
     }

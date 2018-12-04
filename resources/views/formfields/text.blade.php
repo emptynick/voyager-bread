@@ -47,6 +47,7 @@
         <small v-if="computed.help_text">@{{ computed.help_text }}</small>
     </div>
     <div v-else-if="show == 'browse'">@{{ translate(input) ? translate(input).substring(0, options.display_length) : '' }}</div>
+    <div v-else-if="show == 'read'">@{{ translate(input) }}</div>
 </div>
 @endsection
 

@@ -2,7 +2,7 @@
 @section('page_title', __('voyager::generic.'.($content ? 'edit' : 'add')).' '.get_translated_value($bread->display_name_singular))
 
 @section('content')
-<div id="bread-edit">
+<div id="bread-edit-add">
     <vue-snotify></vue-snotify>
     <div class="container-fluid">
         <h1 class="page-title">
@@ -75,7 +75,7 @@
 @include('bread::components.language-input')
 <script>
 new Vue({
-    el: "#bread-edit",
+    el: "#bread-edit-add",
     data: {
         elements: {!! $layout->elements->toJson() !!},
         content: {!! collect($content)->merge(old())->toJson() ?? 'null' !!},
