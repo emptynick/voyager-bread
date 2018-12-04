@@ -1,6 +1,6 @@
 @section('language-input')
 <div>
-    <input type="text" ref="ahjo" class="form-control" :name="name" v-bind:value="currentTranslated" v-on:input="input($event.target.value)" :placeholder="translate(placeholder)">
+    <input type="text" class="form-control" :name="name" v-bind:value="currentTranslated" v-on:input="input($event.target.value)" :placeholder="translate(placeholder)">
 </div>
 @endsection
 

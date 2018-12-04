@@ -29,16 +29,11 @@
                                 <div class="panel">
                                     <div class="panel-body">
                                         <div :class="'form-group '+(hasError(item.field) ? 'has-error' : '')">
-                                            <component
-                                                :is="'formfield-'+item.codename"
-                                                :options="item.options"
-                                                :computed="item.computed"
-                                                :name="item.field"
+                                            <base-formfield
                                                 :show="'{{ $content ? 'edit' : 'add' }}'"
                                                 :input="getContent(item)"
-                                                :errors="getErrors(item.field)"
-                                                :is-translatable="item.computed.isTranslatable"
-                                            ></component>
+                                                v-bind="item">
+                                            </base-formfield>
 
                                             <span class="help-block" style="color:#f96868" v-if="hasError(item.field)">
                                                 <ul>
@@ -68,6 +63,7 @@
 <script>
 </script>
 <script src="{{ route('voyager.bread.scripts') }}"></script>
+@include('bread::components.base-formfield')
 @foreach(\Bread\BreadFacade::formfields() as $formfield)
 @include($formfield->getComponent())
 @endforeach

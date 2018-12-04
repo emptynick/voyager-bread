@@ -58,13 +58,13 @@
                 <div :id="id+'_options'">
                     <component
                         :is="'base-'+element.group"
-                        :element="element"
                         :show="'options'"
                         :layout-type="'list'"
                         :parent="self"
                         :fields="fields"
                         :accessors="accessors"
                         :relationships="relationships"
+                        v-bind="element"
                         :ref="id">
                     </component>
                 </div>

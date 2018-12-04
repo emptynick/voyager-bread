@@ -231,9 +231,9 @@
 @include('bread::components.validation-form')
 @include('bread::components.view-builder')
 @include('bread::components.list-builder')
-@include('bread::formfields.base-formfield')
-@include('bread::formfields.base-layout-element')
-@include('bread::formfields.base-relationship')
+@include('bread::components.base-formfield')
+@include('bread::components.base-layout-element')
+@include('bread::components.base-relationship')
 
 @foreach(\Bread\BreadFacade::formfields() as $formfield)
     @include($formfield->getComponent())

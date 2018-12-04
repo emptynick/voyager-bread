@@ -51,7 +51,7 @@ class Layout
             if ($model->translatable && $element->field != '' && in_array($element->field, $model->translatable)) {
                 $translatable = true;
             }
-            $element->computed['isTranslatable'] = $translatable;
+            $element->computed['is_translatable'] = $translatable;
 
             return $element->prepare($bread, $model);
         });

@@ -3,12 +3,11 @@
     <div v-for="(element, id) in layout.elements" :key="id" :class="'col-md-'+element.width">
         <component
             :is="'base-'+element.group"
-            :element="element"
+            v-bind="element"
             :show="'mockup'"
             :layout-type="'view'"
             :parent="self"
-            :fields="fields"
-            :id="id">
+            :fields="fields">
         </component>
     </div>
 </draggable>
