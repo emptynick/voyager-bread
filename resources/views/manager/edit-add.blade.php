@@ -374,6 +374,7 @@ var builder = new Vue({
                 name: name,
                 width: 12,
                 field: '',
+                is_translatable: false,
                 validation: [],
                 options: JSON.parse(options),
             });

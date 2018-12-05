@@ -25,11 +25,11 @@
                         <v-server-table :columns="columns" :options="options" ref="browse_table" @loaded="tableLoaded">
                             <template v-for="col in this.columns" :slot="col" slot-scope="data">
                                 <component
-                                :is="'formfield-'+elements[col].codename"
+                                :is="'base-'+elements[col].group"
                                 v-for="(result, id) in getResultAsObject(data.row[col])"
                                 show="browse"
                                 :input="result"
-                                :options="elements[col].options"
+                                v-bind="elements[col]"
                                 :key="id">
                                 </component>
                             </template>
@@ -68,6 +68,9 @@
 @section('javascript')
 <script src="{{ route('voyager.bread.scripts') }}"></script>
 @include('bread::components.language-switcher')
+@include('bread::components.base-formfield')
+@include('bread::components.base-layout-element')
+@include('bread::components.base-relationship')
 @foreach(\Bread\BreadFacade::formfields() as $formfield)
     @include($formfield->getComponent())
 @endforeach

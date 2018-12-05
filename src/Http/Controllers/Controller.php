@@ -96,11 +96,7 @@ class Controller extends BaseController
     {
         $data = collect();
         foreach ($this->layout->elements as $element) {
-            if ($element->computed['isTranslatable']) {
-                $returned = $element->store(json_encode($request->{$element->field}) ?? false);
-            } else {
-                $returned = $element->store($request->{$element->field} ?? false);
-            }
+            $returned = $element->store($request->{$element->field} ?? false);
 
             if ($returned !== false) {
                 if (gettype($returned) == 'array') {
@@ -108,12 +104,7 @@ class Controller extends BaseController
                         $data->put($key, $value);
                     }
                 } else {
-                    //Attribute is translatable and casted
-                    if ($element->computed['isTranslatable'] && array_key_exists($element->field, $this->model->getCasts())) {
-                        $data->put($element->field, json_decode($returned));
-                    } else {
-                        $data->put($element->field, $returned);
-                    }
+                    $data->put($element->field, $returned);
                 }
             }
         }
@@ -129,14 +120,12 @@ class Controller extends BaseController
         foreach ($this->layout->elements as $element) {
             foreach ($element->validation as $rule) {
                 $rule_only = substr($rule->rule, 0, (strpos($rule->rule, ':') ?: strlen($rule->rule)));
-                if ($element->computed['isTranslatable']) {
-                    //Todo: this can be replaced with an asterisk for ALL locales
-                    $rules[$element->field.'.'.$separator][] = $rule->rule;
-                    $messages[$element->field.'.'.$separator.'.'.$rule_only] = get_translated_value($rule->msg);
-                } else {
-                    $rules[$element->field][] = $rule->rule;
-                    $messages[$element->field.'.'.$rule_only] = get_translated_value($rule->msg);
-                }
+                //If attribute is translatable
+                //$rules[$element->field.'.'.$separator][] = $rule->rule;
+                //$messages[$element->field.'.'.$separator.'.'.$rule_only] = get_translated_value($rule->msg);
+                //else
+                $rules[$element->field][] = $rule->rule;
+                $messages[$element->field.'.'.$rule_only] = get_translated_value($rule->msg);
             }
         }
 

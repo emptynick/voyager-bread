@@ -47,11 +47,6 @@ class Layout
             foreach ($element->options as $key => $value) {
                 $element->computed[$key] = get_translated_value($value);
             }
-            $translatable = false;
-            if ($model->translatable && $element->field != '' && in_array($element->field, $model->translatable)) {
-                $translatable = true;
-            }
-            $element->computed['is_translatable'] = $translatable;
 
             return $element->prepare($bread, $model);
         });

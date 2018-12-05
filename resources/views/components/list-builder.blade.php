@@ -9,6 +9,7 @@
             <th>Searchable</th>
             <th>Orderable</th>
             <th>First ordered</th>
+            <th>Translatable</th>
             <th>Actions</th>
         </tr>
     </thead>
@@ -41,13 +42,16 @@
                 <language-input v-model="element.options.title" />
             </td>
             <td>
-                <input type="checkbox" :disabled="element.field.type != 'field'" v-model="element.options.searchable" value="true" />
+                <input type="checkbox" :disabled="element.field.type != 'field'" v-model="element.options.searchable" />
             </td>
             <td>
-                <input type="checkbox" :disabled="element.field.type != 'field'" v-model="element.options.orderable" value="true" />
+                <input type="checkbox" :disabled="element.field.type != 'field'" v-model="element.options.orderable" />
             </td>
             <td>
                 <input type="radio" :disabled="element.field.type != 'field'" v-model="layout.first_ordered" :value="id" />
+            </td>
+            <td>
+                <input type="checkbox" v-model="element.options.is_translatable" />
             </td>
             <td>
                 <button v-tooltip.notrigger="{ html: id+'_options', visible: isOptionsOpen(id), class: 'options-tooltip', placement: 'bottom' }"

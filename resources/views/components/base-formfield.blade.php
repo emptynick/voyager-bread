@@ -21,7 +21,7 @@
                     :computed="computed">
                 </component>
                 <span v-if="options.help_text">@{{ translate(options.help_text) }}</span>
-                    <div :id="uid+'_options'" v-if="show == 'mockup'">
+                <div :id="uid+'_options'" v-if="show == 'mockup'">
                     <div class="pull-left">
                         <h4>Options</h4>
                     </div>
@@ -37,6 +37,11 @@
                                 @{{ field }}
                             </option>
                         </select>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" v-model="options.is_translatable">Is Translatable
+                        </label>
                     </div>
                     <div class="form-group">
                         <label>Title</label>
@@ -94,14 +99,14 @@ Vue.component('base-formfield', {
     computed: {
         content: {
             get: function () {
-                if (this.computed.is_translatable) {
+                if (this.options.is_translatable && this.value) {
                     return this.value[this.locale];
                 }
 
                 return this.value;
             },
             set: function (newValue) {
-                if (this.computed.is_translatable) {
+                if (this.options.is_translatable) {
                     Vue.set(this.value, this.locale, newValue);
                 } else {
                     this.value = newValue;
@@ -113,13 +118,17 @@ Vue.component('base-formfield', {
         this.$bus.$on('setLocale', (locale) => {
             this.locale = locale;
         });
-        if (this.show != 'mockup' && this.show != 'options' && this.computed && this.computed.is_translatable) {
-            if (this.value === null) {
+        if (this.show != 'mockup' && this.show != 'options' && this.options.is_translatable) {
+            if (this.value === null || this.value == '') {
                 this.value = {};
             } else if (typeof this.value !== 'object') {
                 let pivot = this.value;
-                this.value = {};
-                Vue.set(this.value, this.locale, pivot);
+                try {
+                    this.value = JSON.parse(pivot);
+                } catch {
+                    this.value = {};
+                    Vue.set(this.value, this.locale, pivot);
+                }
             }
         }
     }

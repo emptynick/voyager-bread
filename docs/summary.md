@@ -21,8 +21,3 @@
 
 * [Introduction](formfields/introduction.md)
 * [Text](formfields/text.md)
-
-## Translations
-
-* [Setup](translations/setup.md)
-* [Usage](translations/usage.md)
