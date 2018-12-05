@@ -26,7 +26,7 @@
         <input class="form-control" type="text" :placeholder="translate(options.placeholder)" disabled>
     </div>
     <div v-else-if="show == 'edit' || show == 'add'">
-        <input class="form-control" type="text" v-model="inputLocal">
+        <input class="form-control" type="text" v-model="inputLocal" :placeholder="computed.placeholder" :disabled="options.disabled">
     </div>
     <div v-else-if="show == 'read'">
         @{{ inputLocal }}
@@ -40,7 +40,7 @@
 <script>
 Vue.component('formfield-text', {
     template: `@yield('formfield-text')`,
-    props: ['show', 'options', 'input', 'layout-type', 'fields'],
+    props: ['show', 'options', 'input', 'computed', 'layout-type', 'fields'],
     computed: {
         inputLocal: {
             get: function() {
@@ -50,6 +50,14 @@ Vue.component('formfield-text', {
                 this.$emit('update:input', value);
             }
         }
-    }
+    },
+    mounted: function() {
+        if (this.options.slug_from != '') {
+            this.$bus.$on('change_'+this.options.slug_from, (value) => {
+                //Todo: slugify
+                this.inputLocal = value.toLowerCase();
+            });
+        }
+    },
 });
 </script>

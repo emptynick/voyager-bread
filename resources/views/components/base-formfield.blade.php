@@ -58,6 +58,11 @@
                         :fields="fields"
                         :options="options">
                     </component>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" v-model="options.disabled">Disabled
+                        </label>
+                    </div>
                     <validation-form :rules="validation"></validation-form>
                 </div>
             </div>
@@ -73,14 +78,16 @@
         </component>
     </div>
     <div v-else>
+        <label v-if="options.title">@{{ computed.title }}</label>
         <component
             :is="'formfield-'+codename"
             :input.sync="content"
             :show="show"
             :options="options"
+            :field="field"
             :computed="computed">
         </component>
-
+        <span v-if="options.help_text">@{{ computed.help_text }}</span>
         <input type="hidden" :name="field" :value="JSON.stringify(value)">
     </div>
 </div>
@@ -111,6 +118,8 @@ Vue.component('base-formfield', {
                 } else {
                     this.value = newValue;
                 }
+
+                this.$bus.$emit('change_'+this.field, newValue);
             }
         },
     },

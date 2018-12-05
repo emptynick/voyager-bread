@@ -50,43 +50,6 @@ Vue.component('datetime', Datetime);
 import Swatches from 'vue-swatches';
 Vue.component('swatches', Swatches);
 
-//Vue-JS-Modal
-import VModal from 'vue-js-modal';
-Vue.use(VModal);
-
-//Vue TipTap
-import { Editor } from 'tiptap';
-Vue.component('tiptap', Editor);
-import {
-  // Nodes
-  BlockquoteNode,
-  BulletListNode,
-  CodeBlockNode,
-  CodeBlockHighlightNode,
-  HardBreakNode,
-  HeadingNode,
-  ImageNode,
-  ListItemNode,
-  OrderedListNode,
-  TodoItemNode,
-  TodoListNode,
-
-  // Marks
-  BoldMark,
-  CodeMark,
-  ItalicMark,
-  LinkMark,
-  StrikeMark,
-  UnderlineMark,
-
-  // General Extensions
-  HistoryExtension,
-  PlaceholderExtension,
-} from 'tiptap-extensions';
-
-import VueSimplemde from 'vue-simplemde';
-Vue.use(VueSimplemde);
-
 import MaskedInput from 'vue-masked-input';
 Vue.component('masked-input', MaskedInput);
 
@@ -118,10 +81,6 @@ const helper = {
             }
             return '';
         },
-        slugify: function(input) {
-            //Todo: implement slugify
-            return input;
-        }
     },
     created: function() {
         this.$bus.$on('setLocale', (locale) => {
