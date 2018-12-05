@@ -13,14 +13,14 @@
                  </div>
              </div>
              <div class="panel-body">
-                <label v-if="options.title">@{{ translate(options.title) }}</label>
+                <language-output v-if="options.title" :input="options.title" type="label" :once="false"></language-output>
                 <component
                     :is="'formfield-'+codename"
                     :show="show"
                     :options="options"
                     :computed="computed">
                 </component>
-                <span v-if="options.help_text">@{{ translate(options.help_text) }}</span>
+                <language-output v-if="options.help_text" :input="options.help_text" type="span" :once="false"></language-output>
                 <div :id="uid+'_options'" v-if="show == 'mockup'">
                     <div class="pull-left">
                         <h4>Options</h4>
@@ -32,7 +32,7 @@
                     <div class="clearfix"></div>
                     <div class="form-group">
                         <label>Field</label>
-                        <select class="form-control" v-model="field">
+                        <select class="form-control" :value="field" @change="$emit('update:field', $event.target.value)">
                             <option v-for="field in fields">
                                 @{{ field }}
                             </option>
@@ -78,7 +78,7 @@
         </component>
     </div>
     <div v-else>
-        <label v-if="options.title">@{{ computed.title }}</label>
+        <label v-if="options.title && show != 'browse'">@{{ computed.title }}</label>
         <component
             :is="'formfield-'+codename"
             :input.sync="content"
@@ -87,8 +87,8 @@
             :field="field"
             :computed="computed">
         </component>
-        <span v-if="options.help_text">@{{ computed.help_text }}</span>
-        <input type="hidden" :name="field" :value="JSON.stringify(value)">
+        <span v-if="options.help_text && show != 'browse'">@{{ computed.help_text }}</span>
+        <input type="hidden" :name="field" :value="JSON.stringify(value)" v-if="show != 'browse'">
     </div>
 </div>
 @endsection
@@ -140,6 +140,6 @@ Vue.component('base-formfield', {
                 }
             }
         }
-    }
+    },
 });
 </script>

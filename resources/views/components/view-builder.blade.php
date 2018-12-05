@@ -3,7 +3,7 @@
     <div v-for="(element, id) in layout.elements" :key="id" :class="'col-md-'+element.width">
         <component
             :is="'base-'+element.group"
-            v-bind="element"
+            v-bind.sync="element"
             :show="'mockup'"
             :layout-type="'view'"
             :parent="self"

@@ -89,7 +89,7 @@
                             </ul>
                         </div>
                         <!-- Add Element -->
-                        <div class="dropdown" style="display:inline">
+                        <div class="dropdown" style="display:inline" v-if="currentLayout">
                             <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
                                 Add Element
                                 <span class="caret"></span>
@@ -228,6 +228,7 @@
 <script src="{{ route('voyager.bread.scripts') }}"></script>
 @include('bread::components.language-switcher')
 @include('bread::components.language-input')
+@include('bread::components.language-output')
 @include('bread::components.validation-form')
 @include('bread::components.view-builder')
 @include('bread::components.list-builder')
@@ -332,7 +333,11 @@ var builder = new Vue({
                             this.bread.layouts.push({
                                 'name': toast.value,
                                 'type': type,
-                                'elements': []
+                                'elements': [],
+                                'browse_roles': [],
+                                'read_roles': [],
+                                'edit_roles': [],
+                                'add_roles': [],
                             });
                             this.current_layout = this.bread.layouts.length - 1;
                             toast.valid = true;
