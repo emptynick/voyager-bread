@@ -81,7 +81,7 @@
             :computed="computed">
         </component>
 
-        <input type="hidden" :name="field" v-model="value">
+        <input type="hidden" :name="field" :value="JSON.stringify(value)">
     </div>
 </div>
 @endsection

@@ -120,12 +120,13 @@ class Controller extends BaseController
         foreach ($this->layout->elements as $element) {
             foreach ($element->validation as $rule) {
                 $rule_only = substr($rule->rule, 0, (strpos($rule->rule, ':') ?: strlen($rule->rule)));
-                //If attribute is translatable
-                //$rules[$element->field.'.'.$separator][] = $rule->rule;
-                //$messages[$element->field.'.'.$separator.'.'.$rule_only] = get_translated_value($rule->msg);
-                //else
-                $rules[$element->field][] = $rule->rule;
-                $messages[$element->field.'.'.$rule_only] = get_translated_value($rule->msg);
+                if ($element->options['is_translatable']) {
+                    $rules[$element->field.'.'.$separator][] = $rule->rule;
+                    $messages[$element->field.'.'.$separator.'.'.$rule_only] = get_translated_value($rule->msg);
+                } else {
+                    $rules[$element->field][] = $rule->rule;
+                    $messages[$element->field.'.'.$rule_only] = get_translated_value($rule->msg);
+                }
             }
         }
 
