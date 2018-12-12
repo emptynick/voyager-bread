@@ -12,22 +12,6 @@
     "dependencies": {
         "cross-env": "^5.1.6",
         "laravel-mix": "^3.0.0",
-        "lodash": "^4.17.11",
-        "luxon": "^1.8.2",
-        "merge": ">=1.2.1",
-        "tiptap": "^0.19.0",
-        "tiptap-extensions": "^0.21.1",
-        "vue": "^2.5.17",
-        "vue-datetime": "^1.0.0-beta.8",
-        "vue-directive-tooltip": "^1.5.0",
-        "vue-masked-input": "^0.5.2",
-        "vue-resource": "^1.5.1",
-        "vue-select": "^2.5.1",
-        "vue-snotify": "^3.1.0",
-        "vue-swatches": "^1.0.2",
-        "vue-tables-2": "^1.4.70",
-        "vue2-collapse": "^1.0.15",
-        "vuedraggable": "^2.17.0",
-        "weekstart": "^1.0.0"
+        "vue": "^2.5.21"
     }
 }

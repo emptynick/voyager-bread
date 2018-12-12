@@ -15,10 +15,6 @@ class BreadServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(
             dirname(__DIR__).'/publishable/config/bread.php', 'bread'
         );
-
-        \View::share('locale', app()->getLocale());
-        \View::share('locales', config('voyager.multilingual.locales', []));
-        \View::share('breakpoints', collect(config('bread.breakpoints', []))->sort()->reverse());
     }
 
     public function register()
@@ -28,7 +24,6 @@ class BreadServiceProvider extends ServiceProvider
         });
 
         $this->loadHelpers();
-        $this->registerFormfields();
     }
 
     protected function loadHelpers()
@@ -86,28 +81,6 @@ class BreadServiceProvider extends ServiceProvider
             })->name('clear-cache');
         });
 
-        try {
-            //BREADs
-            foreach (BreadFacade::getBreads() as $bread) {
-                $controller = $bread->controller_name ?? $namespace.'BreadController';
-                $slugs = collect($bread->slug);
-                foreach ($slugs as $slug) {
-                    $router->resource($slug, $controller);
-                    $router->post($slug.'/data', $controller.'@data')->name($slug.'.data');
-                    $router->delete($slug.'/restore/{id}', $controller.'@restore')->name($slug.'.restore');
-                }
-            }
-        } catch (\Exception $e) {
-        }
-    }
-
-    protected function registerFormfields()
-    {
-        $formfields = [
-            \Bread\Formfields\Text::class,
-        ];
-        foreach ($formfields as $formfield) {
-            BreadFacade::addFormfield($formfield);
-        }
+        //BREADs
     }
 }
