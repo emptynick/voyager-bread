@@ -6,6 +6,5 @@ abstract class BaseFormfield
 {
     public function __construct()
     {
-
     }
 }

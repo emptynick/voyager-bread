@@ -6,6 +6,5 @@ class Bread
 {
     public function __construct()
     {
-
     }
 }
