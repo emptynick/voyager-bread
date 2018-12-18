@@ -8,6 +8,7 @@ class ManagerController extends Controller
 {
     public function index()
     {
+        return view('bread::manager.browse');
     }
 
     public function create($table)
