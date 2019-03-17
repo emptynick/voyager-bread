@@ -1,5 +1,5 @@
 @extends('bread::master')
-@section('page_title', 'BREAD Manager')
+@section('page_title', __('bread::manager.manager'))
 
 @section('content')
 <div id="manager-browse">
