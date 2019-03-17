@@ -22,15 +22,6 @@ class BreadServiceProvider extends ServiceProvider
         app(Dispatcher::class)->listen('voyager.admin.routing.after', function ($router) {
             $this->addRoutes($router);
         });
-
-        $this->loadHelpers();
-    }
-
-    protected function loadHelpers()
-    {
-        foreach (glob(__DIR__.'/Helpers/*.php') as $filename) {
-            require_once $filename;
-        }
     }
 
     protected function addRoutes($router)
