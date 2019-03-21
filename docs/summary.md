@@ -5,7 +5,6 @@
 ## Getting started
 
 * [Installation](getting-started/installation.md)
-* [Configurations](getting-started/configurations.md)
 
 ## Core concepts
 
@@ -13,8 +12,7 @@
 * [Views](core-concepts/views.md)
 * [Lists](core-concepts/lists.md)
 * [Accessors](core-concepts/accessors.md)
-* [Relationships](core-concepts/untitled.md)
-* [Soft Deletes](core-concepts/soft-deletes.md)
+* [Relationships](core-concepts/relationships.md)
 * [Validation](core-concepts/validation.md)
 
 ## Formfields
