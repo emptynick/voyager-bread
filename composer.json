@@ -1,8 +1,21 @@
 {
-    "name": "voyager-bread",
+    "name": "emptynick/voyager-bread",
     "description": "Extended BREAD functionality for Laravel Voyager",
+    "license": "MIT",
+    "homepage": "https://github.com/emptynick/voyager-bread",
+    "support": {
+        "issues": "https://github.com/emptynick/voyager-bread/issues",
+        "source": "https://github.com/emptynick/voyager-bread"
+    },
+    "authors": [
+        {
+            "name": "Christoph Schweppe",
+            "email": "info@cschweppe.de"
+        }
+    ],
     "require": {
-        "larapack/hooks": "^1.0.5"
+        "larapack/voyager-hooks": "~1.2.1",
+        "tcg/voyager": "^1.2"
     },
     "autoload": {
         "psr-4": {
@@ -16,9 +29,6 @@
             ],
             "aliases": {
                 "Bread": "Bread\\BreadFacade"
-            },
-            "assets": {
-                "resources/assets": "public/vendor/bread"
             }
         }
     }

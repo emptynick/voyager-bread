@@ -11,8 +11,18 @@
     },
     "dependencies": {
         "cross-env": "^5.1.6",
-        "laravel-mix": "^3.0.0",
-        "vue": "^2.5.21",
-        "vue-template-compiler": "^2.5.21"
+        "laravel-mix": "^4.0.15",
+        "slugly": "^1.0.3",
+        "vue": "^2.6.9",
+        "vue-popperjs": "^2.0.3",
+        "vue-resource": "^1.5.1",
+        "vue-select": "^2.6.0",
+        "vue-template-compiler": "^2.6.9",
+        "vuedraggable": "^2.19.2"
+    },
+    "devDependencies": {
+        "resolve-url-loader": "^2.3.1",
+        "sass": "^1.17.3",
+        "sass-loader": "^7.1.0"
     }
 }
