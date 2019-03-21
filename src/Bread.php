@@ -3,15 +3,15 @@
 namespace Bread;
 
 use Bread\Classes\Bread as BreadClass;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Str;
 use TCG\Voyager\Facades\Voyager;
 
 class Bread
 {
-    protected $breads, $breadPath, $formfields;
+    protected $breads;
+    protected $breadPath;
+    protected $formfields;
 
     public function getTables()
     {
@@ -71,24 +71,23 @@ class Bread
     {
         if ($bread = $this->getBread($table)) {
             return [
-                1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11
+                1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
             ];
         }
 
         return [];
     }
 
-    
     public function getBreadRelationships($table)
     {
         if ($bread = $this->getBread($table)) {
             return [
                 [
                     'name' => 'irgendwas',
-                'fields' => [
-                    'feld_1', 'feld_2'
+                'fields'   => [
+                    'feld_1', 'feld_2',
                 ],
-                ]
+                ],
             ];
         }
 

@@ -6,8 +6,13 @@ use Bread\BreadFacade;
 
 class Layout implements \JsonSerializable
 {
-    public $name, $type, $order_by;
-    public $browse_roles, $read_roles, $edit_roles, $add_roles;
+    public $name;
+    public $type;
+    public $order_by;
+    public $browse_roles;
+    public $read_roles;
+    public $edit_roles;
+    public $add_roles;
     public $formfields;
 
     public function __construct($layout)
@@ -39,7 +44,8 @@ class Layout implements \JsonSerializable
         return isset($this->name);
     }
 
-    public function jsonSerialize() {
+    public function jsonSerialize()
+    {
         if ($this->type == 'view') {
             unset($this->order_by);
             unset($this->browse_roles);
