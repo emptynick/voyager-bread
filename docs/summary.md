@@ -14,6 +14,7 @@
 * [Accessors](core-concepts/accessors.md)
 * [Relationships](core-concepts/relationships.md)
 * [Validation](core-concepts/validation.md)
+* [Multi language](core-concepts/multi-language.md)
 
 ## Formfields
 
