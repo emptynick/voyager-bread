@@ -106,6 +106,7 @@
                     <language-picker></language-picker>
                     <div class="clearfix"></div>
                     <component :is="'formfield-'+type" :view="'options'" :options="options" :layout-type="layoutType" />
+                    <!-- Todo: add static translatable AND search_in_locale checkboxes -->
                     <validation-input v-model="validation" />
                 </div>
                 <div slot="reference"></div>
@@ -219,7 +220,6 @@ module.exports = {
     },
     mounted: function () {
         var vm = this;
-        this.translatedValue = this.value;
         window.addEventListener('mousemove', this.resize);
         window.addEventListener('mouseup', this.endResize);
 
@@ -237,5 +237,8 @@ module.exports = {
             }
         });
     },
+    created: function () {
+        this.translatedValue = this.value;
+    }
 };
 </script>

@@ -112,6 +112,7 @@ var builder = new Vue({
         },
         loadItems: function () {
             this.isLoading = true;
+            this.serverParams.locale = this.$eventHub.locale;
             this.$http.post('{{ route('voyager.'.$bread->getTranslation('slug').'.data') }}', this.serverParams).then(response => {
                 this.totalRecords = response.body.records;
                 this.rows = response.body.rows;

@@ -2,6 +2,7 @@
 
 namespace Bread\Http\Controllers;
 
+use Bread\BreadFacade;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -84,7 +85,9 @@ class BreadController extends Controller
             $page = $request->page ?? 1;
             $perPage = $request->perPage ?? 10;
 
-            $columns = $request->columns ?? [];
+            $columns = collect($request->columns ?? []);
+
+            $locale = $request->locale ?? BreadFacade::getLocale();
 
             // Load relationships
             foreach ($columns as $column) {
@@ -97,16 +100,25 @@ class BreadController extends Controller
             // Searching
             $filters = $request->columnFilters ?? [];
             foreach ($filters as $field => $filter) {
-                if (Str::contains($field, '.')) {
-                    // Query relationship
-                    list($relationship, $field) = explode('.', $field);
-                    $query = $query->whereHas($relationship, function ($rquery) use ($field, $filter) {
-                        $rquery->where($field, 'like', '%'.$filter.'%');
-                    });
-                } else {
-                    // Normal field search
-                    $query = $query->where($field, 'like', '%'.$filter.'%');
-                    // Todo: what if field is an accessor?
+                if ($filter) {
+                    if (Str::contains($field, '.')) {
+                        // Query relationship
+                        list($relationship, $field) = explode('.', $field);
+                        $query = $query->whereHas($relationship, function ($rquery) use ($field, $filter) {
+                            $rquery->where($field, 'like', '%'.$filter.'%');
+                        });
+                    } else {
+                        // Translatable field
+                        if (
+                            ($columns->where('field', $field)->first()['options']['translatable'] ?? false) &&
+                            ($columns->where('field', $field)->first()['options']['search_in_locale'] ?? false)
+                        ) {
+                            $query = $query->whereRaw('lower('.$field.'->"$.'.$locale.'") like lower(?)', ["%{$filter}%"]);
+                        } else {
+                            // Normal field search
+                            $query = $query->where($field, 'like', '%'.$filter.'%');
+                        }
+                    }
                 }
             }
 
@@ -115,9 +127,21 @@ class BreadController extends Controller
 
             // Sorting
             if ($orderDirection == 'desc') {
-                $query = $query->sortByDesc($orderBy);
+                $query = $query->sortByDesc(function ($item) use ($columns, $orderBy, $locale) {
+                    if ($columns->where('field', $orderBy)->first()['options']['translatable'] ?? false) {
+                        return $item->getTranslation($orderBy, $locale);
+                    } else {
+                        return $item;
+                    }
+                });
             } else {
-                $query = $query->sortBy($orderBy);
+                $query = $query->sortBy(function ($item) use ($columns, $orderBy, $locale) {
+                    if ($columns->where('field', $orderBy)->first()['options']['translatable'] ?? false) {
+                        return $item->getTranslation($orderBy, $locale);
+                    } else {
+                        return $item;
+                    }
+                });
             }
 
             $rows = $query->values()->toArray();
