@@ -112,13 +112,14 @@
                             <strong>Warning</strong> Your list width is greater than 100%
                         </div>
                         <div class="row fake-table-hd" v-if="currentLayout.type == 'list'">
-                            <div class="col-xs-1">Type</div>
-                            <div class="col-xs-3">Field</div>
+                            <div class="col-xs-2">Type</div>
+                            <div class="col-xs-2">Field</div>
+                            <div class="col-xs-2">Title</div>
                             <div class="col-xs-1">Size (in %)</div>
                             <div class="col-xs-1">Searchable</div>
                             <div class="col-xs-1">Orderable</div>
                             <div class="col-xs-1">Default order</div>
-                            <div class="col-xs-4">Actions</div>
+                            <div class="col-xs-2">Actions</div>
                         </div>
                         <draggable v-model="currentLayout.formfields" handle=".drag_handle">
                             <formfield-base v-for="(formfield, key) in currentLayout.formfields"

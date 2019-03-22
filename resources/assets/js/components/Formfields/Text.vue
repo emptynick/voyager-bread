@@ -1,5 +1,5 @@
 <template>
-    <div v-if="view == 'browse'">{{ $parent.getValue().substring(0, options.length || 200) || getTranslation(options.value || '') }}</div>
+    <div v-if="view == 'browse'">{{ $parent.getValue().substring(0, options.length || 50) || getTranslation(options.value || '') }}</div>
     <div v-else-if="view == 'read'">
         <p>{{ $parent.getValue() }}</p>
     </div>

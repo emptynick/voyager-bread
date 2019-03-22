@@ -15,6 +15,8 @@ class Controller extends BaseController
 
     public function __construct(Request $request)
     {
-        $this->bread = BreadFacade::getBreadBySlug(explode('.', $request->route()->getName())[1]);
+        if ($request->route()) {
+            $this->bread = BreadFacade::getBreadBySlug(explode('.', $request->route()->getName())[1]);
+        }
     }
 }

@@ -70,8 +70,8 @@
         </div>
     </div>
     <div v-else-if="view == 'mockup' && layoutType == 'list'" class="row drag_handle row-dd">
-        <div class="col-xs-1">{{ type.charAt(0).toUpperCase() + type.slice(1) }}</div>
-        <div class="col-xs-3">
+        <div class="col-xs-2">{{ type.charAt(0).toUpperCase() + type.slice(1) }}</div>
+        <div class="col-xs-2">
             <select class="form-control" v-model="options.field">
                 <optgroup label="Fields">
                     <option v-for="(column, key) in columns" :key="key" :value="column">
@@ -85,13 +85,16 @@
                 </optgroup>
             </select>
         </div>
+        <div class="col-xs-2">
+            <language-input classes="form-control" placeholder="Title" v-model="options.title" />
+        </div>
         <div class="col-xs-1">
             <input v-model="options.width" type="number" min="1" max="100" class="form-control" />
         </div>
         <div class="col-xs-1"><input type="checkbox" v-model="options.searchable" value="true"></div>
         <div class="col-xs-1"><input type="checkbox" v-model="options.orderable" value="true"></div>
         <div class="col-xs-1"><input type="radio" v-model="layout.order_by" :value="options.field"></div>
-        <div class="col-xs-4">
+        <div class="col-xs-2">
             <popper trigger="click" :force-show="optionsOpen" :options="{ placement: 'top' }">
                 <div class="popper">
                     <div class="pull-left">
@@ -209,7 +212,10 @@ module.exports = {
             if (open) {
                 this.$eventHub.$emit('close-options', this._uid);
             }
-        }
+        },
+        value: function (value) {
+            this.translatedValue = value;
+        },
     },
     mounted: function () {
         var vm = this;

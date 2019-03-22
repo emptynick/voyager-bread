@@ -126,10 +126,11 @@ class BreadServiceProvider extends ServiceProvider
 
         //BREADs
         BreadFacade::getBreads()->each(function ($bread) use ($router, $namespace) {
-            $slug = $bread->getTranslation('slug');
-            if ($slug) {
-                $router->resource($slug, $bread->controller ?? $namespace.'BreadController');
-                // Additional routes
+            foreach ((array)$bread->slug as $slug) {
+                if ($slug) {
+                    $router->resource($slug, $bread->controller ?? $namespace.'BreadController');
+                    $router->post($slug.'/data', $bread->controller ?? $namespace.'BreadController@data')->name($slug.'.data');
+                }
             }
         });
     }

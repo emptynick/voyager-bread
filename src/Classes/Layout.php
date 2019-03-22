@@ -3,9 +3,12 @@
 namespace Bread\Classes;
 
 use Bread\BreadFacade;
+use Bread\Traits\Translatable;
 
 class Layout implements \JsonSerializable
 {
+    use Translatable;
+
     public $name;
     public $type;
     public $order_by;
@@ -39,6 +42,29 @@ class Layout implements \JsonSerializable
         }
     }
 
+    public function getColumnDefinitions()
+    {
+        $columns = [];
+        $this->formfields->each(function ($formfield) use (&$columns) {
+            $columns[] = (object)[
+                'label'         => $this->getTranslation($formfield->options->title),
+                'field'         => $formfield->options->field,
+                'type'          => $formfield->getType(),
+                'sortable'      => $formfield->options->orderable,
+                'width'         => $formfield->options->width.'%',
+                'options'       => $formfield->options,
+                'validation'    => $formfield->validation,
+                'filterOptions' => (object)[
+                    'enabled'             => $formfield->options->searchable,
+                    'placeholder'         => __('bread::bread.filter_by_column', ['column' => $this->getTranslation($formfield->options->title)]),
+                    'filterDropdownItems' => [],
+                ]
+            ];
+        });
+
+        return $columns;
+    }
+
     public function isValid()
     {
         return isset($this->name);
@@ -50,7 +76,6 @@ class Layout implements \JsonSerializable
             unset($this->order_by);
             unset($this->browse_roles);
         } else {
-            unset($this->order_by);
             unset($this->read_roles);
             unset($this->edit_roles);
             unset($this->add_roles);

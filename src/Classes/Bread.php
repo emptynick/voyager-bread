@@ -3,14 +3,18 @@
 namespace Bread\Classes;
 
 use Bread\BreadFacade;
+use Bread\Traits\Translatable;
 use Illuminate\Support\Facades\File;
 
 class Bread
 {
+    use Translatable;
+
     public $table;
     public $slug;
     public $name_singular;
     public $name_plural;
+    public $model_name;
     public $layouts;
 
     public function __construct($path)
@@ -27,6 +31,7 @@ class Bread
         $this->slug = $json->slug ?? null;
         $this->name_singular = $json->name_singular ?? null;
         $this->name_plural = $json->name_plural ?? null;
+        $this->model_name = $json->model_name ?? '';
         $this->layouts = collect();
 
         foreach ($json->layouts ?? [] as $layout) {
@@ -37,13 +42,13 @@ class Bread
         }
     }
 
-    public function getTranslation($field)
+    public function getModel()
     {
-        if (is_object($this->{$field})) {
-            return $this->{$field}->{BreadFacade::getLocale()};
+        if ($this->model_name) {
+            return app($this->model_name);
         }
 
-        return $this->{$field};
+        return null;
     }
 
     public function getLayout($action)
