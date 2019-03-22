@@ -26,6 +26,7 @@ class ManagerController extends Controller
         if (json_last_error() == JSON_ERROR_NONE) {
             $path = BreadFacade::breadPath().$json->table.'.json';
             File::put($path, json_encode($json, JSON_PRETTY_PRINT));
+
             return response()->json(['path' => $json->table.'.json']);
         }
 

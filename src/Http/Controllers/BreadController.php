@@ -13,6 +13,7 @@ class BreadController extends Controller
         if ($this->bread && $layout = $this->bread->getLayout('browse')) {
             $bread = $this->bread;
             unset($bread->layouts);
+
             return view('bread::bread.browse')->with([
                 'bread'  => $bread,
                 'layout' => $layout,
@@ -124,7 +125,7 @@ class BreadController extends Controller
 
         return response()->json([
             'records' => $records,
-            'rows'    => $rows
+            'rows'    => $rows,
         ]);
     }
 }

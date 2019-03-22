@@ -47,8 +47,6 @@ class Bread
         if ($this->model_name) {
             return app($this->model_name);
         }
-
-        return null;
     }
 
     public function getLayout($action)
