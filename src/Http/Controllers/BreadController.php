@@ -119,7 +119,7 @@ class BreadController extends Controller
                 $query = $query->sortBy($orderBy);
             }
 
-            $rows = $query->toArray();
+            $rows = $query->values()->toArray();
         }
 
         return response()->json([
