@@ -46,7 +46,7 @@ class Layout implements \JsonSerializable
     {
         $columns = [];
         $this->formfields->each(function ($formfield) use (&$columns) {
-            $columns[] = (object)[
+            $columns[] = (object) [
                 'label'         => $this->getTranslation($formfield->options->title),
                 'field'         => $formfield->options->field,
                 'type'          => $formfield->getType(),
@@ -54,11 +54,11 @@ class Layout implements \JsonSerializable
                 'width'         => $formfield->options->width.'%',
                 'options'       => $formfield->options,
                 'validation'    => $formfield->validation,
-                'filterOptions' => (object)[
+                'filterOptions' => (object) [
                     'enabled'             => $formfield->options->searchable,
                     'placeholder'         => __('bread::bread.filter_by_column', ['column' => $this->getTranslation($formfield->options->title)]),
                     'filterDropdownItems' => [],
-                ]
+                ],
             ];
         });
 
