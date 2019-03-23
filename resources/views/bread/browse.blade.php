@@ -33,16 +33,26 @@
                                     @on-per-page-change="onPerPageChange"
                                     @on-selected-rows-change="selectionChanged">
                         <template slot="table-row" slot-scope="props">
-                            <span>
-                                <formfield-base :view="'browse'"
-                                                :type="slugify(props.column.type)"
-                                                :layout-type="'list'"
-                                                :layout="layout"
-                                                :options="props.column.options"
-                                                :validation="props.column.validation"
-                                                :value="props.formattedRow[props.column.field]">
-                                </formfield-base>
-                            </span>
+                            <div class="text-center" v-if="props.column.field == 'computed_actions'">
+                                    <a class="btn btn-primary" :href="props.formattedRow.computed_actions.read">
+                                        <i class="voyager-eye"></i> Read
+                                    </a>
+                                    <a class="btn btn-success" :href="props.formattedRow.computed_actions.edit">
+                                        <i class="voyager-edit"></i> Edit
+                                    </a>
+                                    <a class="btn btn-danger" :href="props.formattedRow.computed_actions.delete">
+                                        <i class="voyager-trash"></i> Delete
+                                    </a>
+                            </div>
+                            <formfield-base v-else
+                                            :view="'browse'"
+                                            :type="slugify(props.column.type)"
+                                            :layout-type="'list'"
+                                            :layout="layout"
+                                            :options="props.column.options"
+                                            :validation="props.column.validation"
+                                            :value="props.formattedRow[props.column.field]">
+                            </formfield-base>
                         </template>
                         <div slot="emptystate">
                             <div v-if="rows.length == 0" class="vgt-center-align vgt-text-disabled">
@@ -130,16 +140,13 @@ var builder = new Vue({
                 this.isLoading = false;
             });
         },
-        getValue: function (row, field) {
-            return row[field];
-        },
         selectionChanged: function () {
             if (this.$refs['browse-table'].selectedRowCount == 1) {
                 this.selectedText = '{{ __("bread::bread.name_selected", ["name" => $bread->getTranslation("name_singular")]) }}';
             } else {
                 this.selectedText = '{{ __("bread::bread.names_selected", ["name" => $bread->getTranslation("name_plural")]) }}';
             }
-        }
+        },
     },
     computed: {
         sortOptions: function () {
@@ -156,6 +163,7 @@ var builder = new Vue({
                 enabled: true,
                 selectionText: this.selectedText,
                 clearSelectionText: '{{ __("bread::generic.clear") }}',
+                selectOnCheckboxOnly: true
             };
         },
         paginationOptions: function () {

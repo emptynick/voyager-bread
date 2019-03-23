@@ -51,7 +51,7 @@ class Layout implements \JsonSerializable
                 'field'         => $formfield->options->field,
                 'type'          => $formfield->getType(),
                 'sortable'      => $formfield->options->orderable,
-                'width'         => $formfield->options->width.'%',
+                'width'         => (($formfield->options->width ?? 25) * 0.80).'%',
                 'options'       => $formfield->options,
                 'validation'    => $formfield->validation,
                 'filterOptions' => (object) [
@@ -61,6 +61,14 @@ class Layout implements \JsonSerializable
                 ],
             ];
         });
+        $columns[] = (object) [
+            'label' => 'Actions',
+            'field' => 'computed_actions',
+            'sortable' => false,
+            'globalSearchDisabled' => true,
+            'width' => 'auto',
+            'thClass' => 'text-center'
+        ];
 
         return $columns;
     }

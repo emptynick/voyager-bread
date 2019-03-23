@@ -3,12 +3,15 @@
 namespace Bread;
 
 use Bread\Classes\Bread as BreadClass;
+use Bread\Traits\Translatable;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use TCG\Voyager\Facades\Voyager;
 
 class Bread
 {
+    use Translatable;
+
     protected $breads;
     protected $breadPath;
     protected $formfields;

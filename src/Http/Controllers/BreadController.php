@@ -41,9 +41,14 @@ class BreadController extends Controller
     public function show($id)
     {
         if ($this->bread && $layout = $this->bread->getLayout('read')) {
+            $bread = $this->bread;
+            unset($bread->layouts);
+            $data = $bread->getModel()->findOrFail($id);
+
             return view('bread::bread.read')->with([
-                'bread'   => $this->bread,
-                'layouts' => $layout,
+                'bread'  => $bread,
+                'layout' => $layout,
+                'data'   => $data,
             ]);
         }
     }
@@ -52,15 +57,30 @@ class BreadController extends Controller
     public function edit($id)
     {
         if ($this->bread && $layout = $this->bread->getLayout('edit')) {
+            $bread = $this->bread;
+            unset($bread->layouts);
+            $data = $bread->getModel()->findOrFail($id);
+            $url = route('voyager.'.$bread->getTranslation('slug').'.update', $id);
+
             return view('bread::bread.edit-add')->with([
-                'bread'   => $this->bread,
-                'layouts' => $layout,
+                'bread'  => $bread,
+                'layout' => $layout,
+                'data'   => $data,
+                'url'    => $url,
             ]);
         }
     }
 
     public function update(Request $request, $id)
     {
+        if ($this->bread && $layout = $this->bread->getLayout('edit')) {
+            $bread = $this->bread;
+            $validator = $this->getValidator($request, $layout->formfields);
+            
+            //dd($validator);
+            $validator->validate();
+
+        }
     }
 
     // Delete
@@ -143,6 +163,17 @@ class BreadController extends Controller
 
             // Pagination
             $query = $query->slice(($page - 1) * $perPage)->take($perPage);
+            
+            // Add read/edit/delete links
+            $query->transform(function ($item) {
+                // Todo: what if keyName() is translatable?
+                $item->computed_actions = [
+                    'read'   => route('voyager.'.$this->bread->getTranslation('slug').'.show', $item->getKey()),
+                    'edit'   => route('voyager.'.$this->bread->getTranslation('slug').'.edit', $item->getKey()),
+                    'delete' => route('voyager.'.$this->bread->getTranslation('slug').'.destroy', $item->getKey())
+                ];
+                return $item;
+            });
 
             $rows = $query->values()->toArray();
         }

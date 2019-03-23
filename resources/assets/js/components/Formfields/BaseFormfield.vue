@@ -61,10 +61,10 @@
             </div>
             <div class="panel-body">
                 <div class="form-group">
-                    <label v-if="options.title && view != 'read'">{{ getTranslation(options.title) }}</label>
+                    <label v-if="options.title">{{ getTranslation(options.title, view != 'mockup') }}</label>
                     <component :is="'formfield-'+type" :view="view" :options="options" :layout-type="layoutType" />
                     <input type="hidden" :name="options.field" :value="getTranslatedValue()">
-                    <span v-if="options.help_text && view != 'read'">{{ getTranslation(options.help_text) }}</span>
+                    <span v-if="options.help_text && view != 'read'">{{ getTranslation(options.help_text, view != 'mockup') }}</span>
                 </div>
             </div>
         </div>

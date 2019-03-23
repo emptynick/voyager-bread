@@ -19,10 +19,11 @@ Vue.prototype.$eventHub = new Vue({
     data: function () {
         return {
             locale: '',
+            initialLocale: null,
             locales: [],
             translatable: false,
         };
-    }
+    },
 });
 
 import LanguageInput from './components/LanguageInput';
@@ -60,10 +61,14 @@ Vue.prototype.getUrl = function (url)
     return url;
 }
 
-Vue.prototype.getTranslation = function (input)
+Vue.prototype.getTranslation = function (input, initial = false)
 {
     if (typeof input === 'object') {
-        return input[Vue.prototype.$eventHub.locale];
+        if (initial) {
+            return input[Vue.prototype.$eventHub.initialLocale];
+        } else {
+            return input[Vue.prototype.$eventHub.locale];
+        }
     }
 
     return input;

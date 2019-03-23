@@ -4,6 +4,7 @@
             <thead style="color: white">
                 <th>Rule</th>
                 <th>Message</th>
+                <th>Deep</th>
                 <th></th>
             </thead>
             <tbody>
@@ -13,6 +14,9 @@
                     </td>
                     <td>
                         <language-input classes="form-control" v-model="value[key].message" placeholder="Message" />
+                    </td>
+                    <td>
+                        <input type="checkbox" v-model="value[key].deep" value="true">
                     </td>
                     <td><button class="btn btn-danger" @click="deleteRule(key)">Delete</button></td>
                 </tr>

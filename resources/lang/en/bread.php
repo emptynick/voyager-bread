@@ -12,4 +12,5 @@ return [
     'pagination_name_per_page'  => ':name per Page',
     'pagination_of'             => 'of',
     'pagination_previous'       => 'Prev',
+    'read_name_singular'        => 'View :name',
 ];

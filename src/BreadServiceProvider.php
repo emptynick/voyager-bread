@@ -21,6 +21,7 @@ class BreadServiceProvider extends ServiceProvider
 
         Blade::directive('localization', function () {
             return 'this.$eventHub.locale = "'.BreadFacade::getLocale().'";
+                this.$eventHub.initialLocale = "'.BreadFacade::getLocale().'";
                 this.$eventHub.locales = '.json_encode(BreadFacade::getLocales()).';
                 this.$eventHub.translatable = '.var_export(BreadFacade::translatable(), true).';
                 this.$eventHub.translations = '.$this->getTranslations().';';
