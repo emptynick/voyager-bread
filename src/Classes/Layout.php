@@ -62,12 +62,12 @@ class Layout implements \JsonSerializable
             ];
         });
         $columns[] = (object) [
-            'label' => 'Actions',
-            'field' => 'computed_actions',
-            'sortable' => false,
+            'label'                => 'Actions',
+            'field'                => 'computed_actions',
+            'sortable'             => false,
             'globalSearchDisabled' => true,
-            'width' => 'auto',
-            'thClass' => 'text-center'
+            'width'                => 'auto',
+            'thClass'              => 'text-center',
         ];
 
         return $columns;
