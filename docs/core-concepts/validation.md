@@ -5,8 +5,10 @@ First, open the options for the formfield you want to add rules to:
 
 ![](../.gitbook/assets/validation-input.jpg)
 
-And enter the rule, for example `min:50` and a message to it.  
-Messages are translatable. Just click the locale and enter the message in that language.
+Click `Add Rule` and enter the rule, for example `min:10` and a message to it.  
+Messages are translatable. Just click the locale and enter the message in that language.  
+
+You can find a full list of available validation rules in the [https://laravel.com/docs/validation#available-validation-rules](Laravel documentation)!
 
 ## Validating translatable fields
 
