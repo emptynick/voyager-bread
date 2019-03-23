@@ -35,7 +35,8 @@ module.exports = {
         addRule: function () {
             this.value.push({
                 'rule': '',
-                'message': {}
+                'message': {},
+                'deep': false,
             });
         },
         deleteRule: function (key) {

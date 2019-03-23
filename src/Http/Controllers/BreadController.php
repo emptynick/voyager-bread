@@ -74,11 +74,12 @@ class BreadController extends Controller
     public function update(Request $request, $id)
     {
         if ($this->bread && $layout = $this->bread->getLayout('edit')) {
-            $bread = $this->bread;
-            $validator = $this->getValidator($request, $layout->formfields);
+            $data = $this->bread->getModel()->findOrFail($id);
+            $validator = $this->getValidator($request, $layout->formfields)->validate();
 
-            //dd($validator);
-            $validator->validate();
+            $layout->formfields->each(function ($formfield) use ($data) {
+                dd($formfield);
+            });
         }
     }
 

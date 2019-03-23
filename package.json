@@ -13,16 +13,16 @@
         "cross-env": "^5.1.6",
         "laravel-mix": "^4.0.15",
         "slugly": "^1.0.3",
-        "vue": "^2.6.9",
+        "vue": "^2.6.10",
         "vue-good-table": "^2.16.3",
         "vue-popperjs": "^2.0.3",
         "vue-resource": "^1.5.1",
-        "vue-select": "^2.6.0",
-        "vue-template-compiler": "^2.6.9",
-        "vuedraggable": "^2.19.2"
+        "vue-select": "^2.6.2",
+        "vue-template-compiler": "^2.6.10",
+        "vuedraggable": "^2.19.3"
     },
     "devDependencies": {
-        "resolve-url-loader": "^2.3.1",
+        "resolve-url-loader": "^2.3.2",
         "sass": "^1.17.3",
         "sass-loader": "^7.1.0"
     }

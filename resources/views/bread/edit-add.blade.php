@@ -1,5 +1,5 @@
 @extends('voyager::master')
-@section('page_title', __('bread::bread.read_name_singular', ['name' => $bread->getTranslation('name_singular')]))
+@section('page_title', __('bread::bread.edit_name_singular', ['name' => $bread->getTranslation('name_singular')]))
 
 @section('content')
 <div class="page-content container-fluid" id="bread-edit-add">
@@ -9,7 +9,7 @@
         <div class="col-md-12">
             <div class="panel panel-primary panel-bordered">                
                 <div class="panel-heading">
-                    <h3 class="panel-title panel-icon"><i class="voyager-info-circled"></i> {{ __('bread::bread.read_name_singular', ['name' => $bread->getTranslation('name_singular')]) }}</h3>
+                    <h3 class="panel-title panel-icon"><i class="voyager-info-circled"></i> {{ __('bread::bread.edit_name_singular', ['name' => $bread->getTranslation('name_singular')]) }}</h3>
                     <div class="panel-actions">
                         <a class="panel-action voyager-angle-up" data-toggle="panel-collapse" aria-hidden="true"></a>
                     </div>
@@ -26,9 +26,10 @@
                                         :layout-type="'view'"
                                         :layout="layout"
                                         :options="formfield.options"
-                                        :value="data[formfield.options.field]">
+                                        :value="getValue(formfield.options.field)"
+                                        :errors="getErrors(formfield.options.field)">
                         </formfield-base>
-
+                        <div class="clearfix"></div>
                         <button class="btn btn-primary">Save</button>
                     </form>
                 </div>
@@ -37,7 +38,7 @@
     </div>
 </div>
 @endsection
-@php debug(old()); @endphp
+
 @section('javascript')
 <script src="{{ route('voyager.bread.scripts') }}"></script>
 <script>
@@ -47,11 +48,24 @@ var builder = new Vue({
         bread: {!! json_encode($bread) !!},
         layout: {!! json_encode($layout) !!},
         data: {!! json_encode($data) !!},
-        errors: {!! json_encode($errors->getMessages()) !!},
+        old: {!! json_encode(old()) !!},
+        errors: {!! json_encode($errors->getMessages(), JSON_FORCE_OBJECT) !!},
         url: '{{ $url }}'
     },
     methods: {
-        
+        getValue: function (field) {
+            return this.old[field] || this.data[field];
+        },
+        getErrors: function (field) {
+            var errors = [];
+            for (var error in this.errors) {
+                if (error == field || error.startsWith(field+'.')) {
+                    errors.push(this.errors[error][0]);
+                }
+            }
+
+            return errors;
+        }
     },
     computed: {
         

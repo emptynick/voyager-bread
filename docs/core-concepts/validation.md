@@ -15,3 +15,5 @@ You can find a full list of available validation rules in the [Laravel documenta
 By default, only the current locale is validated. If you want to validate each locale, just tick `Deep`:
 
 ![](../.gitbook/assets/validation-input-deep.jpg)
+
+You can use the placeholder `:locale` in your messages to give your users informations on which locale failed validation.

@@ -61,6 +61,11 @@
             </div>
             <div class="panel-body">
                 <div class="form-group">
+                    <div class="alert alert-danger" v-if="errors.length > 0">
+                        <ul>
+                            <li v-for="(error, key) in errors" :key="'error-'+key">{{ error }}</li>
+                        </ul>
+                    </div>
                     <label v-if="options.title">{{ getTranslation(options.title, view != 'mockup') }}</label>
                     <component :is="'formfield-'+type" :view="view" :options="options" :layout-type="layoutType" />
                     <input type="hidden" :name="options.field" :value="getTranslatedValue()">
@@ -78,7 +83,7 @@
                         {{ column }}
                     </option>
                 </optgroup>
-                <optgroup v-if="relationships" v-for="(relationship, key) in relationships" :label="relationship.name" :key="key">
+                <optgroup v-for="(relationship, key) in relationships" :label="relationship.name" :key="key">
                     <option v-for="(field, key) in relationship.fields" :key="key" :value="relationship.name+'.'+field">
                         {{ field }}
                     </option>
@@ -143,7 +148,13 @@ module.exports = {
         layoutType: {},
         layout: {},
         accessors: {},
-        relationships: {}
+        relationships: {},
+        errors: {
+            type: Array,
+            default: function() {
+                return [];
+            }
+        }
     },
     data: function () {
         return {

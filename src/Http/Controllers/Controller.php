@@ -40,6 +40,9 @@ class Controller extends BaseController
                             $computed_messages[$field.'.'.$locale.'.'.Str::before($rule->rule, ':')] = $message;
                         }
                     });
+                    if ($computed_rules[$field.'.'.$locale]) {
+                        $computed_rules[$field.'.'.$locale] = substr($computed_rules[$field.'.'.$locale], 0, -1);
+                    }
                 }
             } else {
                 $computed_rules[$field] = '';
@@ -51,6 +54,21 @@ class Controller extends BaseController
             }
         });
 
-        return Validator::make($request->all(), array_filter($computed_rules), $computed_messages);
+        return Validator::make($this->processRequest($request, $formfields), array_filter($computed_rules), $computed_messages);
+    }
+
+    public function processRequest(Request $request, $formfields)
+    {
+        $newRequest = collect();
+        $formfields->each(function ($formfield) use ($request, $newRequest) {
+            $field = $formfield->options->field;
+            if (($formfield->options->translatable ?? false)) {
+                $newRequest->put($field, json_decode($request->get($field), true));
+            } else {
+                $newRequest->put($field, $request->get($field));
+            }
+        });
+
+        return $newRequest->toArray();
     }
 }
