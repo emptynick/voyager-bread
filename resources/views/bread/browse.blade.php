@@ -19,6 +19,7 @@
                     <vue-good-table :columns="columns"
                                     :rows="rows"
                                     mode="remote"
+                                    :ref="'browse-table'"
                                     :total-rows="totalRecords"
                                     :rows="rows"
                                     :columns="columns"
@@ -29,7 +30,8 @@
                                     @on-page-change="onPageChange"
                                     @on-sort-change="onSortChange"
                                     @on-column-filter="onColumnFilter"
-                                    @on-per-page-change="onPerPageChange">
+                                    @on-per-page-change="onPerPageChange"
+                                    @on-selected-rows-change="selectionChanged">
                         <template slot="table-row" slot-scope="props">
                             <span>
                                 <formfield-base :view="'browse'"
@@ -77,13 +79,14 @@ var builder = new Vue({
             columnFilters: {},
             sort: {
                 field: '',
-                type: '',
+                type: 'asc',
             },
             page: 1, 
             perPage: 10,
             _token: '{{ csrf_token() }}',
             columns: this.columns,
-        }
+        },
+        selectedText: ''
     },
     methods: {
         updateParams: function (newProps) {
@@ -113,6 +116,11 @@ var builder = new Vue({
         loadItems: function () {
             this.isLoading = true;
             this.serverParams.locale = this.$eventHub.locale;
+
+            if (this.serverParams.order_by == '') {
+                this.serverParams.order_by = this.layout.order_by || this.columns[0].field;
+            }
+
             this.$http.post('{{ route('voyager.'.$bread->getTranslation('slug').'.data') }}', this.serverParams).then(response => {
                 this.totalRecords = response.body.records;
                 this.rows = response.body.rows;
@@ -125,6 +133,13 @@ var builder = new Vue({
         getValue: function (row, field) {
             return row[field];
         },
+        selectionChanged: function () {
+            if (this.$refs['browse-table'].selectedRowCount == 1) {
+                this.selectedText = '{{ __("bread::bread.name_selected", ["name" => $bread->getTranslation("name_singular")]) }}';
+            } else {
+                this.selectedText = '{{ __("bread::bread.names_selected", ["name" => $bread->getTranslation("name_plural")]) }}';
+            }
+        }
     },
     computed: {
         sortOptions: function () {
@@ -139,7 +154,7 @@ var builder = new Vue({
         selectOptions: function () {
             return {
                 enabled: true,
-                selectionText: '{{ __("bread::bread.names_selected", ["name" => $bread->getTranslation("name_plural")]) }}',
+                selectionText: this.selectedText,
                 clearSelectionText: '{{ __("bread::generic.clear") }}',
             };
         },

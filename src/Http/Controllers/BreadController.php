@@ -122,12 +122,9 @@ class BreadController extends Controller
                 }
             }
 
-            // Pagination
-            $query = $query->get()->slice(($page - 1) * $perPage)->take($perPage);
-
             // Sorting
             if ($orderDirection == 'desc') {
-                $query = $query->sortByDesc(function ($item) use ($columns, $orderBy, $locale) {
+                $query = $query->get()->sortByDesc(function ($item) use ($columns, $orderBy, $locale) {
                     if ($columns->where('field', $orderBy)->first()['options']['translatable'] ?? false) {
                         return $item->getTranslation($orderBy, $locale);
                     } else {
@@ -135,7 +132,7 @@ class BreadController extends Controller
                     }
                 });
             } else {
-                $query = $query->sortBy(function ($item) use ($columns, $orderBy, $locale) {
+                $query = $query->get()->sortBy(function ($item) use ($columns, $orderBy, $locale) {
                     if ($columns->where('field', $orderBy)->first()['options']['translatable'] ?? false) {
                         return $item->getTranslation($orderBy, $locale);
                     } else {
@@ -143,6 +140,9 @@ class BreadController extends Controller
                     }
                 });
             }
+
+            // Pagination
+            $query = $query->slice(($page - 1) * $perPage)->take($perPage);
 
             $rows = $query->values()->toArray();
         }
