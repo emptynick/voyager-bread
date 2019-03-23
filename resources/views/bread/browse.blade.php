@@ -78,7 +78,7 @@ var builder = new Vue({
         serverParams: {
             columnFilters: {},
             sort: {
-                field: '',
+                field: null,
                 type: 'asc',
             },
             page: 1, 
@@ -117,7 +117,7 @@ var builder = new Vue({
             this.isLoading = true;
             this.serverParams.locale = this.$eventHub.locale;
 
-            if (this.serverParams.order_by == '') {
+            if (this.serverParams.order_by || this.serverParams.order_by == '') {
                 this.serverParams.order_by = this.layout.order_by || this.columns[0].field;
             }
 
