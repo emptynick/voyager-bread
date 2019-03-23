@@ -26,9 +26,16 @@ class BreadController extends Controller
     public function create()
     {
         if ($this->bread && $layout = $this->bread->getLayout('add')) {
+            $bread = $this->bread;
+            unset($bread->layouts);
+
+            $url = route('voyager.'.$bread->getTranslation('slug').'.store');
+
             return view('bread::bread.edit-add')->with([
-                'bread'   => $this->bread,
-                'layouts' => $layout,
+                'bread'  => $bread,
+                'layout' => $layout,
+                'data'   => null,
+                'url'    => $url,
             ]);
         }
     }

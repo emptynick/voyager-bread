@@ -1,5 +1,13 @@
 @extends('voyager::master')
-@section('page_title', __('bread::bread.edit_name_singular', ['name' => $bread->getTranslation('name_singular')]))
+@section('page_title', __('bread::bread.'.($data ? 'edit' : 'add').'_name_singular', ['name' => $bread->getTranslation('name_singular')]))
+
+@section('breadcrumbs')
+<ol class="breadcrumb hidden-xs">
+    <li><a href="{{ route('voyager.dashboard')}}"><i class="voyager-boat"></i> {{ __('voyager::generic.dashboard') }}</a></li>
+    <li><a href="{{ route('voyager.'.$bread->getTranslation('slug').'.index')}}">{{ $bread->getTranslation('name_plural') }}</a></li>
+    <li class="active">{{ __('bread::bread.'.($data ? 'edit' : 'add').'_name_singular', ['name' => $bread->getTranslation('name_singular')]) }}</li>
+</ol>
+@endsection
 
 @section('content')
 <div class="page-content container-fluid" id="bread-edit-add">
@@ -9,7 +17,7 @@
         <div class="col-md-12">
             <div class="panel panel-primary panel-bordered">                
                 <div class="panel-heading">
-                    <h3 class="panel-title panel-icon"><i class="voyager-info-circled"></i> {{ __('bread::bread.edit_name_singular', ['name' => $bread->getTranslation('name_singular')]) }}</h3>
+                    <h3 class="panel-title panel-icon"><i class="voyager-info-circled"></i> {{ __('bread::bread.'.($data ? 'edit' : 'add').'_name_singular', ['name' => $bread->getTranslation('name_singular')]) }}</h3>
                     <div class="panel-actions">
                         <a class="panel-action voyager-angle-up" data-toggle="panel-collapse" aria-hidden="true"></a>
                     </div>
@@ -54,7 +62,7 @@ var builder = new Vue({
     },
     methods: {
         getValue: function (field) {
-            return this.old[field] || this.data[field];
+            return this.old[field] || (this.data ? this.data[field] : '');
         },
         getErrors: function (field) {
             var errors = [];

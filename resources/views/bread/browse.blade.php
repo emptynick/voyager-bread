@@ -1,6 +1,13 @@
 @extends('voyager::master')
 @section('page_title', __('bread::bread.browse_name_plural', ['name' => $bread->getTranslation('name_plural')]))
 
+@section('breadcrumbs')
+<ol class="breadcrumb hidden-xs">
+    <li><a href="{{ route('voyager.dashboard')}}"><i class="voyager-boat"></i> {{ __('voyager::generic.dashboard') }}</a></li>
+    <li class="active">{{ $bread->getTranslation('name_plural') }}</li>
+</ol>
+@endsection
+
 @section('content')
 <div class="page-content container-fluid" id="bread-browse">
     <language-picker></language-picker>

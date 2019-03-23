@@ -1,6 +1,14 @@
 @extends('voyager::master')
 @section('page_title', __('bread::bread.read_name_singular', ['name' => $bread->getTranslation('name_singular')]))
 
+@section('breadcrumbs')
+<ol class="breadcrumb hidden-xs">
+    <li><a href="{{ route('voyager.dashboard')}}"><i class="voyager-boat"></i> {{ __('voyager::generic.dashboard') }}</a></li>
+    <li><a href="{{ route('voyager.'.$bread->getTranslation('slug').'.index')}}">{{ $bread->getTranslation('name_plural') }}</a></li>
+    <li class="active">{{ $bread->getTranslation($data->getKey()) }}</li>
+</ol>
+@endsection
+
 @section('content')
 <div class="page-content container-fluid" id="bread-read">
     <language-picker></language-picker>
