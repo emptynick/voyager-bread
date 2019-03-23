@@ -29,7 +29,6 @@ class Controller extends BaseController
 
         $formfields->each(function ($formfield) use (&$computed_rules, &$computed_messages) {
             $field = $formfield->options->field;
-            
 
             if (($formfield->options->translatable ?? false)) {
                 foreach (BreadFacade::getLocales() as $locale) {
