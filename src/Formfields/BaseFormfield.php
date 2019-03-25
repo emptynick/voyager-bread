@@ -39,6 +39,5 @@ abstract class BaseFormfield
     // Callback after deleting a BREAD entry
     public function delete($value)
     {
-        
     }
 }
