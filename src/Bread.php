@@ -42,6 +42,9 @@ class Bread
     {
         if (!$this->breads) {
             // Cache BREADs
+            if (!File::isDirectory($this->breadPath)) {
+                File::makeDirectory($this->breadPath);
+            }
             $this->breads = collect(File::files($this->breadPath))->transform(function ($bread) {
                 return new BreadClass($bread->getPathName());
             })->filter(function ($bread) {
