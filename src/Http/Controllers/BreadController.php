@@ -153,6 +153,7 @@ class BreadController extends Controller
             if ($orderDirection == 'desc') {
                 $query = $query->get()->sortByDesc(function ($item) use ($columns, $orderBy, $locale) {
                     if ($columns->where('field', $orderBy)->first()['options']['translatable'] ?? false) {
+                        //debug($item->getTranslation($orderBy, $locale));
                         return $item->getTranslation($orderBy, $locale);
                     } else {
                         return $item;
@@ -161,6 +162,7 @@ class BreadController extends Controller
             } else {
                 $query = $query->get()->sortBy(function ($item) use ($columns, $orderBy, $locale) {
                     if ($columns->where('field', $orderBy)->first()['options']['translatable'] ?? false) {
+                        //debug($item->getTranslation($orderBy, $locale));
                         return $item->getTranslation($orderBy, $locale);
                     } else {
                         return $item;

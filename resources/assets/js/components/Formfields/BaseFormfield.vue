@@ -110,6 +110,9 @@
                     </div>
                     <language-picker></language-picker>
                     <div class="clearfix"></div>
+                    <div class="checkbox">
+                        <label><input type="checkbox" :value="true" v-model="options.translatable"> Translatable</label>
+                    </div>
                     <component :is="'formfield-'+type" :view="'options'" :options="options" :layout-type="layoutType" />
                     <!-- Todo: add static translatable AND search_in_locale checkboxes -->
                     <validation-input v-model="validation" />
