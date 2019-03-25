@@ -114,7 +114,7 @@ class BreadController extends Controller
             $records = $query->count();
 
             $orderBy = $request->sort['field'];
-            $orderDirection = $request->sort['type'] ?? 'asc';
+            $orderMethod = 'sortBy'.($request->sort['type'] == 'asc' ? '' : 'Desc');
 
             $page = $request->page ?? 1;
             $perPage = $request->perPage ?? 10;
@@ -157,23 +157,13 @@ class BreadController extends Controller
             }
 
             // Sorting
-            if ($orderDirection == 'desc') {
-                $query = $query->get()->sortByDesc(function ($item) use ($columns, $orderBy, $locale) {
-                    if ($columns->where('field', $orderBy)->first()['options']['translatable'] ?? false) {
-                        return $item->getTranslation($orderBy, $locale);
-                    } else {
-                        return $item->{$orderBy};
-                    }
-                });
-            } else {
-                $query = $query->get()->sortBy(function ($item) use ($columns, $orderBy, $locale) {
-                    if ($columns->where('field', $orderBy)->first()['options']['translatable'] ?? false) {
-                        return $item->getTranslation($orderBy, $locale);
-                    } else {
-                        return $item->{$orderBy};
-                    }
-                });
-            }
+            $query = $query->get()->$orderMethod(function ($item) use ($columns, $orderBy, $locale) {
+                if ($columns->where('field', $orderBy)->first()['options']['translatable'] ?? false) {
+                    return $item->getTranslation($orderBy, $locale);
+                } else {
+                    return $item->{$orderBy};
+                }
+            });
 
             // Pagination
             $query = $query->slice(($page - 1) * $perPage)->take($perPage);

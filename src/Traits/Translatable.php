@@ -12,6 +12,8 @@ trait Translatable
 
         if (is_object($field)) {
             return $field->{$locale} ?? '';
+        } elseif (is_array($field)) {
+            return $field[$locale] ?? '';
         } elseif (is_int($field)) {
             return $field;
         } elseif ($this->{$field} && is_object($this->{$field})) {
