@@ -10,7 +10,6 @@ trait Translatable
     {
         $locale = $locale ?? BreadFacade::getLocale();
 
-        
         if (is_object($field)) {
             return $field->{$locale} ?? '';
         } elseif ($this->{$field} && is_object($this->{$field})) {
