@@ -24,32 +24,8 @@ abstract class BaseFormfield
         $this->validation = $rules;
     }
 
-    // Returns the value for browsing
-    public function browse($value)
-    {
-        return $value;
-    }
-
-    // Returns the value for reading
-    public function read($value)
-    {
-        return $value;
-    }
-
-    // Returns the value for editing
-    public function edit($value)
-    {
-        return $value;
-    }
-
     // Returns the value to be stored in the database after editing
     public function update($value)
-    {
-        return $value;
-    }
-
-    // Returns the value for adding
-    public function add($value)
     {
         return $value;
     }
@@ -63,5 +39,6 @@ abstract class BaseFormfield
     // Callback after deleting a BREAD entry
     public function delete($value)
     {
+        
     }
 }

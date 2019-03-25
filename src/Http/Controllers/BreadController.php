@@ -42,6 +42,13 @@ class BreadController extends Controller
 
     public function store(Request $request, $redirect = true)
     {
+        if ($this->bread && $layout = $this->bread->getLayout('add')) {
+            $validator = $this->getValidator($request, $layout->formfields)->validate();
+            $model = $this->bread->getModel();
+            $data = $this->processData($request, $layout, 'update', new $model())->save();
+        }
+
+        return redirect()->route('voyager.'.$this->bread->getTranslation('slug').'.index');
     }
 
     // Read
@@ -84,10 +91,10 @@ class BreadController extends Controller
             $data = $this->bread->getModel()->findOrFail($id);
             $validator = $this->getValidator($request, $layout->formfields)->validate();
 
-            $layout->formfields->each(function ($formfield) use ($data) {
-                dd($formfield);
-            });
+            $data = $this->processData($request, $layout, 'update', $data)->save();
         }
+
+        return redirect()->route('voyager.'.$this->bread->getTranslation('slug').'.index');
     }
 
     // Delete
@@ -153,7 +160,6 @@ class BreadController extends Controller
             if ($orderDirection == 'desc') {
                 $query = $query->get()->sortByDesc(function ($item) use ($columns, $orderBy, $locale) {
                     if ($columns->where('field', $orderBy)->first()['options']['translatable'] ?? false) {
-                        //debug($item->getTranslation($orderBy, $locale));
                         return $item->getTranslation($orderBy, $locale);
                     } else {
                         return $item;
@@ -162,7 +168,6 @@ class BreadController extends Controller
             } else {
                 $query = $query->get()->sortBy(function ($item) use ($columns, $orderBy, $locale) {
                     if ($columns->where('field', $orderBy)->first()['options']['translatable'] ?? false) {
-                        //debug($item->getTranslation($orderBy, $locale));
                         return $item->getTranslation($orderBy, $locale);
                     } else {
                         return $item;

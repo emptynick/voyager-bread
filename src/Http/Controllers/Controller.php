@@ -71,4 +71,14 @@ class Controller extends BaseController
 
         return $newRequest->toArray();
     }
+
+    public function processData(Request $request, $layout, $action = 'update', $data)
+    {
+        $layout->formfields->each(function ($formfield) use ($request, $action, &$data) {
+            $field = $formfield->options->field;
+            $data->{$field} = $formfield->$action($request->get($field) ?? '');
+        });
+
+        return $data;
+    }
 }
