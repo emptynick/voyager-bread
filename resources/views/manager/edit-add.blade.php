@@ -320,6 +320,11 @@ var builder = new Vue({
             });
         }
     },
+    watch: {
+        currentLayout: function () {
+            this.$eventHub.$emit('close-options', -1);
+        }
+    },
     mounted: function () {
         if (this.bread.layouts && this.bread.layouts.length > 0) {
             this.currentLayout = this.bread.layouts[0];
