@@ -186,7 +186,7 @@ module.exports = {
                 return this.translatedValue[this.$eventHub.locale];
             }
 
-            return this.translatedValue;
+            return this.translatedValue || '';
        },
        setValue: function (value) {
            if (this.options.translatable) {

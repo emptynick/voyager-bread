@@ -162,7 +162,7 @@ class BreadController extends Controller
                     if ($columns->where('field', $orderBy)->first()['options']['translatable'] ?? false) {
                         return $item->getTranslation($orderBy, $locale);
                     } else {
-                        return $item;
+                        return $item->{$orderBy};
                     }
                 });
             } else {
@@ -170,7 +170,7 @@ class BreadController extends Controller
                     if ($columns->where('field', $orderBy)->first()['options']['translatable'] ?? false) {
                         return $item->getTranslation($orderBy, $locale);
                     } else {
-                        return $item;
+                        return $item->{$orderBy};
                     }
                 });
             }
