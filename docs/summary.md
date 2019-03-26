@@ -20,3 +20,4 @@
 
 * [Introduction](formfields/introduction.md)
 * [Text](formfields/text.md)
+* [Number](formfields/number.md)

@@ -2,7 +2,7 @@
 
 namespace Bread\Formfields;
 
-abstract class BaseFormfield implements \JsonSerializable
+abstract class BaseFormfield
 {
     public $options;
     public $validation;
@@ -39,13 +39,5 @@ abstract class BaseFormfield implements \JsonSerializable
     // Callback after deleting a BREAD entry
     public function delete($value)
     {
-    }
-
-    public function jsonSerialize()
-    {
-        unset($this->lists);
-        unset($this->views);
-
-        return $this;
     }
 }

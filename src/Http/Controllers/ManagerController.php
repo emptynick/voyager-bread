@@ -21,6 +21,7 @@ class ManagerController extends Controller
 
     public function store(Request $request)
     {
+        // TODO: remove views and lists from formfields
         $json = @json_decode($request->bread);
         if (json_last_error() == JSON_ERROR_NONE) {
             $path = BreadFacade::breadPath().$json->table.'.json';
