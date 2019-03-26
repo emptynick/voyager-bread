@@ -18,6 +18,9 @@ Vue.use(VueResource);
 var Swatches = require('vue-swatches');
 Vue.component('swatches', Swatches.default);
 
+var VueTheMask = require('vue-the-mask');
+Vue.use(VueTheMask);
+
 Vue.prototype.$eventHub = new Vue({
     data: function () {
         return {
@@ -48,6 +51,8 @@ import Number from './components/Formfields/Number';
 Vue.component('formfield-number', Number);
 import Color from './components/Formfields/Color';
 Vue.component('formfield-color', Color);
+import MaskedInput from './components/Formfields/MaskedInput';
+Vue.component('formfield-masked-input', MaskedInput);
 
 Vue.prototype.getUrl = function (url)
 {

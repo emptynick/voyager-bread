@@ -14,7 +14,9 @@ Navigate to your adminpanel and go to `Tools > BREAD`
 
 ## Todo:
 
-There is too much to do to write it all down at the moment.
+There is too much to do to write it all down at the moment.  
+This is just for myself:
+- Masked input: format read and browse appropriately
 
 ## Bugs:
 

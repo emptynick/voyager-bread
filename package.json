@@ -20,6 +20,7 @@
         "vue-select": "^2.6.2",
         "vue-swatches": "^1.0.3",
         "vue-template-compiler": "^2.6.10",
+        "vue-the-mask": "^0.11.1",
         "vuedraggable": "^2.19.3"
     },
     "devDependencies": {

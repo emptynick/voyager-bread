@@ -64,6 +64,7 @@ class BreadServiceProvider extends ServiceProvider
         BreadFacade::addFormfield(\Bread\Formfields\Text::class);
         BreadFacade::addFormfield(\Bread\Formfields\Number::class);
         BreadFacade::addFormfield(\Bread\Formfields\Color::class);
+        BreadFacade::addFormfield(\Bread\Formfields\MaskedInput::class);
     }
 
     public function loadBreadsFrom($path)
