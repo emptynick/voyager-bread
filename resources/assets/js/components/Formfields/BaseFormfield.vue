@@ -37,19 +37,19 @@
                         <div class="checkbox">
                             <label><input type="checkbox" :value="true" v-model="options.translatable"> Translatable</label>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" v-if="title">
                             <label>Title</label>
                             <language-input classes="form-control" placeholder="Title" v-model="options.title" />
                         </div>
-                        <div class="form-group" v-if="true">
+                        <div class="form-group" v-if="help_text">
                             <label>Help Text</label>
                             <language-input classes="form-control" placeholder="Help Text" v-model="options.help_text" />
                         </div>
-                        <div class="form-group" v-if="true">
+                        <div class="form-group" v-if="placeholder">
                             <label>Placeholder</label>
                             <language-input classes="form-control" placeholder="Placeholder" v-model="options.placeholder" />
                         </div>
-                        <div class="form-group" v-if="true">
+                        <div class="form-group" v-if="default_value">
                             <label>Default value</label>
                             <language-input classes="form-control" placeholder="Default Value" v-model="options.value" />
                         </div>
@@ -166,6 +166,10 @@ module.exports = {
             fields: 1, // Can be set to 0 for field-less formfields, 2 for date-ranges, ...
             optionsOpen: false,
             resizing: false,
+            title: true,
+            placeholder: true,
+            help_text: true,
+            default_value: true,
         };
     },
     computed: {

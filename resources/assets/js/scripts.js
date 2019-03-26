@@ -15,6 +15,9 @@ Vue.use(VueGoodTablePlugin);
 var VueResource = require('vue-resource');
 Vue.use(VueResource);
 
+var Swatches = require('vue-swatches');
+Vue.component('swatches', Swatches.default);
+
 Vue.prototype.$eventHub = new Vue({
     data: function () {
         return {
@@ -43,6 +46,8 @@ import Text from './components/Formfields/Text';
 Vue.component('formfield-text', Text);
 import Number from './components/Formfields/Number';
 Vue.component('formfield-number', Number);
+import Color from './components/Formfields/Color';
+Vue.component('formfield-color', Color);
 
 Vue.prototype.getUrl = function (url)
 {
