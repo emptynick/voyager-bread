@@ -18,7 +18,7 @@
         <div class="form-group">
             <label>List</label>
             <select class="form-control" v-model="options.list">
-                <option v-for="layout in base.getRelationshipLayouts(options.relationship)">
+                <option v-for="layout in base.getRelationshipLayouts(options.relationship)" :key="layout.name">
                     
                 </option>
             </select>
