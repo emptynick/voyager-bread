@@ -5,7 +5,7 @@ workflow "Build and publish assets" {
 
 action "Build assets" {
   uses = "elstudio/actions-js-build/build@master"
-  args = "run production"
+  args = "run dev"
 }
 
 action "Commit and push assets" {
