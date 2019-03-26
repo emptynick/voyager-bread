@@ -2,12 +2,12 @@
 
 namespace Bread\Formfields;
 
-abstract class BaseFormfield
+abstract class BaseFormfield implements \JsonSerializable
 {
     public $options;
     public $validation;
-    public $lists = true;
-    public $views = true;
+    public $lists = true; // Can be used in Lists
+    public $views = true; // Can be used in views
 
     public function getType()
     {
@@ -39,5 +39,13 @@ abstract class BaseFormfield
     // Callback after deleting a BREAD entry
     public function delete($value)
     {
+    }
+
+    public function jsonSerialize()
+    {
+        unset($this->lists);
+        unset($this->views);
+
+        return $this;
     }
 }

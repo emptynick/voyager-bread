@@ -233,7 +233,7 @@ var builder = new Vue({
     },
     methods: {
         deleteFormfield: function (key) {
-            // Todo: confirm
+            // TODO: confirm
             this.currentLayout.formfields.splice(key, 1);
         },
         saveBread: function () {
@@ -249,7 +249,7 @@ var builder = new Vue({
             });
         },
         deleteLayout: function () {
-            // Todo: confirm
+            // TODO: confirm
             var vm = this;
             this.bread.layouts.forEach(function (layout, key) {
                 if (vm.currentLayout == layout) {

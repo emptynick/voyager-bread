@@ -160,7 +160,7 @@ class BreadController extends Controller
             if ($columns->where('field', $orderBy)->first()['options']['translatable'] ?? false) {
                 $query = $query->get()->$orderMethod(function ($item) use ($orderBy) {
                     if (Str::contains($orderBy, '.')) {
-                        // Todo: sort by translatable relationship
+                        // TODO: sort by translatable relationship
                         list($relationship, $field) = explode('.', $column['field']);
                     } else {
                         return $item->{$orderBy};
@@ -175,7 +175,7 @@ class BreadController extends Controller
 
             // Add read/edit/delete links
             $query->transform(function ($item) {
-                // Todo: what if getKey() is translatable?
+                // TODO: what if getKey() is translatable?
                 $item->computed_actions = [
                     'read'   => route('voyager.'.$this->bread->getTranslation('slug').'.show', $item->getKey()),
                     'edit'   => route('voyager.'.$this->bread->getTranslation('slug').'.edit', $item->getKey()),

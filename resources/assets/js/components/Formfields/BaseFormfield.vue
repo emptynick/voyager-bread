@@ -114,7 +114,7 @@
                         <label><input type="checkbox" :value="true" v-model="options.translatable"> Translatable</label>
                     </div>
                     <component :is="'formfield-'+type" :view="'options'" :options="options" :layout-type="layoutType" :base="this" />
-                    <!-- Todo: add static translatable AND search_in_locale checkboxes -->
+                    <!-- TODO: add static translatable AND search_in_locale checkboxes -->
                     <validation-input v-model="validation" />
                 </div>
                 <div slot="reference"></div>
