@@ -157,20 +157,25 @@ class BreadController extends Controller
             }
 
             // Sorting
-            $query = $query->get()->$orderMethod(function ($item) use ($columns, $orderBy, $locale) {
-                if ($columns->where('field', $orderBy)->first()['options']['translatable'] ?? false) {
-                    return $item->getTranslation($orderBy, $locale);
-                } else {
-                    return $item->{$orderBy};
-                }
-            });
+            if ($columns->where('field', $orderBy)->first()['options']['translatable'] ?? false) {
+                $query = $query->get()->$orderMethod(function ($item) use ($orderBy) {
+                    if (Str::contains($orderBy, '.')) {
+                        // Todo: sort by translatable relationship
+                        list($relationship, $field) = explode('.', $column['field']);
+                    } else {
+                        return $item->{$orderBy};
+                    }
+                });
+            } else {
+                $query = $query->get()->$orderMethod($orderBy);
+            }
 
             // Pagination
             $query = $query->slice(($page - 1) * $perPage)->take($perPage);
 
             // Add read/edit/delete links
             $query->transform(function ($item) {
-                // Todo: what if keyName() is translatable?
+                // Todo: what if getKey() is translatable?
                 $item->computed_actions = [
                     'read'   => route('voyager.'.$this->bread->getTranslation('slug').'.show', $item->getKey()),
                     'edit'   => route('voyager.'.$this->bread->getTranslation('slug').'.edit', $item->getKey()),

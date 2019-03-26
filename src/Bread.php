@@ -87,14 +87,17 @@ class Bread
     public function getBreadRelationships($table)
     {
         if ($bread = $this->getBread($table)) {
-            return [
-                [
-                    'name' => 'irgendwas',
-                'fields'   => [
-                    'feld_1', 'feld_2',
-                ],
-                ],
-            ];
+            $relationships = collect();
+            foreach (($bread->getModel()->relationships ?? []) as $name => $table) {
+                $relationships->push([
+                    'name'    => $name,
+                    'fields'  => $this->getTableColumns($table),
+                    'layouts' => $this->getBread($table)->layouts ?? [],
+                    'type'    => (new \ReflectionClass($bread->getModel()->{$name}()))->getShortName(),
+                ]);
+            }
+
+            return $relationships;
         }
 
         return [];

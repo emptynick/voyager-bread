@@ -53,7 +53,7 @@
                             <label>Default value</label>
                             <language-input classes="form-control" placeholder="Default Value" v-model="options.value" />
                         </div>
-                        <component :is="'formfield-'+type" view="options" :options="options" />
+                        <component :is="'formfield-'+type" view="options" :options="options" :relationships="relationships" />
                         <validation-input v-model="validation" />
                     </div>
                     <div slot="reference"></div>
@@ -174,7 +174,7 @@ module.exports = {
             }
 
             return 12;
-        }
+        },
     },
     methods: {
        getValue: function () {
@@ -220,7 +220,28 @@ module.exports = {
 
                 Vue.set(this.options, 'width', size);
            }
-       }
+       },
+       getRelationships: function (type) {
+           var relationships = [];
+           this.relationships.forEach(function (relationship) {
+                if (relationship.type == type) {
+                    relationships.push(relationship);
+                }
+           });
+
+            return relationships;
+       },
+       getRelationshipLayouts: function (relationship) {
+            if (relationship && relationship !== '') {
+                this.relationships.forEach(function (relationship) {
+                    if (relationship.name == relationship) {
+                        return relationship.layouts;
+                    }
+                });
+            }
+
+            return [];
+        }
     },
     watch: {
         optionsOpen: function (open) {
