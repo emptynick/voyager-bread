@@ -138,7 +138,7 @@ class Bread
 
     public function formfields()
     {
-        return $this->formfields;
+        return $this->formfields->unique();
     }
 
     public function formfield($type)
