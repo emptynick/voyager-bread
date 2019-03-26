@@ -53,7 +53,7 @@
                             <label>Default value</label>
                             <language-input classes="form-control" placeholder="Default Value" v-model="options.value" />
                         </div>
-                        <component :is="'formfield-'+type" view="options" :options="options" :relationships="relationships" />
+                        <component :is="'formfield-'+type" view="options" :options="options" :relationships="relationships" :base="this" />
                         <validation-input v-model="validation" />
                     </div>
                     <div slot="reference"></div>
@@ -67,7 +67,7 @@
                         </ul>
                     </div>
                     <label v-if="options.title">{{ getTranslation(options.title, view != 'mockup') }}</label>
-                    <component :is="'formfield-'+type" :view="view" :options="options" :layout-type="layoutType" />
+                    <component :is="'formfield-'+type" :view="view" :options="options" :layout-type="layoutType" :base="this" />
                     <input type="hidden" :name="options.field" :value="getTranslatedValue()">
                     <span v-if="options.help_text && view != 'read'">{{ getTranslation(options.help_text, view != 'mockup') }}</span>
                 </div>
@@ -113,7 +113,7 @@
                     <div class="checkbox">
                         <label><input type="checkbox" :value="true" v-model="options.translatable"> Translatable</label>
                     </div>
-                    <component :is="'formfield-'+type" :view="'options'" :options="options" :layout-type="layoutType" />
+                    <component :is="'formfield-'+type" :view="'options'" :options="options" :layout-type="layoutType" :base="this" />
                     <!-- Todo: add static translatable AND search_in_locale checkboxes -->
                     <validation-input v-model="validation" />
                 </div>
@@ -123,7 +123,7 @@
             <button class="btn btn-danger" @click="$parent.$parent.deleteFormfield($vnode.key)">Delete</button>
         </div>
     </div>
-    <component v-else :is="'formfield-'+type" :view="view" :options="options" />
+    <component v-else :is="'formfield-'+type" :view="view" :options="options" :base="this" />
 </template>
 
 <script>
@@ -157,7 +157,8 @@ module.exports = {
             default: function() {
                 return [];
             }
-        }
+        },
+        token: {}
     },
     data: function () {
         return {
@@ -231,16 +232,37 @@ module.exports = {
 
             return relationships;
        },
-       getRelationshipLayouts: function (relationship) {
-            if (relationship && relationship !== '') {
+       getRelationship: function (ident) {
+           var relationship = null;
+           this.relationships.forEach(function (r) {
+                if (r.ident == ident) {
+                    relationship = r;
+                }
+           });
+
+            return relationship;
+       },
+       getRelationshipLayouts: function (name) {
+           var layouts = [];
+            if (name && name !== '') {
                 this.relationships.forEach(function (relationship) {
-                    if (relationship.name == relationship) {
-                        return relationship.layouts;
+                    if (relationship.ident == name) {
+                        layouts = relationship.layouts;
                     }
                 });
             }
 
-            return [];
+            return layouts;
+        },
+        getRelationshipLayout: function (ident, layoutname) {
+            layout = null;
+            this.getRelationshipLayouts(ident).forEach(function (l) {
+                if (l.name == layoutname) {
+                    layout = l;
+                }
+            });
+
+            return layout;
         }
     },
     watch: {

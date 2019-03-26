@@ -63,10 +63,6 @@ class BreadServiceProvider extends ServiceProvider
 
         BreadFacade::addFormfield(\Bread\Formfields\Text::class);
         BreadFacade::addFormfield(\Bread\Formfields\Number::class);
-        BreadFacade::addFormfield(\Bread\Formfields\Relationships\BelongsTo::class);
-        BreadFacade::addFormfield(\Bread\Formfields\Relationships\BelongsToMany::class);
-        BreadFacade::addFormfield(\Bread\Formfields\Relationships\HasOne::class);
-        BreadFacade::addFormfield(\Bread\Formfields\Relationships\HasMany::class);
     }
 
     public function loadBreadsFrom($path)

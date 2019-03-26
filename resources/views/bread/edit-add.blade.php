@@ -35,7 +35,9 @@
                                         :layout="layout"
                                         :options="formfield.options"
                                         :value="getValue(formfield.options.field)"
-                                        :errors="getErrors(formfield.options.field)">
+                                        :errors="getErrors(formfield.options.field)"
+                                        :relationships="relationships"
+                                        token="{{ csrf_token() }}">
                         </formfield-base>
                         <div class="clearfix"></div>
                         <button class="btn btn-primary">Save</button>
@@ -58,7 +60,8 @@ var builder = new Vue({
         data: {!! json_encode($data) !!},
         old: {!! json_encode(old()) !!},
         errors: {!! json_encode($errors->getMessages(), JSON_FORCE_OBJECT) !!},
-        url: '{{ $url }}'
+        url: '{{ $url }}',
+        relationships: {!! json_encode(Bread::getBreadRelationships($bread->table)) !!},
     },
     methods: {
         getValue: function (field) {

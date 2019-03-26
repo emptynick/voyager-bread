@@ -43,14 +43,6 @@ import Text from './components/Formfields/Text';
 Vue.component('formfield-text', Text);
 import Number from './components/Formfields/Number';
 Vue.component('formfield-number', Number);
-import BelongsTo from './components/Formfields/Relationships/BelongsTo';
-Vue.component('formfield-belongsto', BelongsTo);
-import BelongsToMany from './components/Formfields/Relationships/BelongsToMany';
-Vue.component('formfield-belongstomany', BelongsToMany);
-import HasOne from './components/Formfields/Relationships/HasOne';
-Vue.component('formfield-hasone', HasOne);
-import HasMany from './components/Formfields/Relationships/HasMany';
-Vue.component('formfield-hasmany', HasMany);
 
 Vue.prototype.getUrl = function (url)
 {
@@ -76,7 +68,8 @@ Vue.prototype.getTranslation = function (input, initial = false)
 
 Vue.prototype.trans = function (key, replace = {})
 {
-    let translation = key.split('.').reduce((t, i) => t[i] || null, Vue.prototype.$eventHub.translations);
+    var translations = Vue.prototype.$eventHub.translations;
+    let translation = key.split('.').reduce((t, i) => t[i] || null, translations);
 
     for (var placeholder in replace) {
         translation = translation.replace(`:${placeholder}`, replace[placeholder]);

@@ -91,6 +91,7 @@ class Bread
             foreach (($bread->getModel()->relationships ?? []) as $name => $table) {
                 $relationships->push([
                     'name'    => $name,
+                    'table'   => $table,
                     'fields'  => $this->getTableColumns($table),
                     'layouts' => $this->getBread($table)->layouts ?? [],
                     'type'    => (new \ReflectionClass($bread->getModel()->{$name}()))->getShortName(),

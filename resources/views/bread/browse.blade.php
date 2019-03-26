@@ -28,8 +28,6 @@
                                     mode="remote"
                                     :ref="'browse-table'"
                                     :total-rows="totalRecords"
-                                    :rows="rows"
-                                    :columns="columns"
                                     :sort-options="sortOptions"
                                     :select-options="selectOptions"
                                     :pagination-options="paginationOptions"
