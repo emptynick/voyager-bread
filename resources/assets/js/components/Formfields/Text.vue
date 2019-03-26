@@ -4,11 +4,16 @@
         <p>{{ $parent.getValue() }}</p>
     </div>
     <div v-else-if="view == 'edit' || view == 'add' || view == 'mockup'">
-        <input type="text" class="form-control"
+        <input type="text" class="form-control" v-if="!options.rows || options.rows == 1"
                 v-bind:value="$parent.getValue() || getTranslation(options.value || '')"
                 v-on:input="$parent.setValue($event.target.value)"
                 :placeholder="getTranslation(options.placeholder || '')"
                 :disabled="view == 'mockup'">
+        <textarea class="form-control" :rows="options.rows" v-else
+                v-bind:value="$parent.getValue() || getTranslation(options.value || '')"
+                v-on:input="$parent.setValue($event.target.value)"
+                :placeholder="getTranslation(options.placeholder || '')"
+                :disabled="view == 'mockup'"></textarea>
     </div>
     <div v-else-if="view == 'options'">
         <div v-if="layoutType == 'list'">
@@ -22,7 +27,10 @@
             </div>
         </div>
         <div v-else>
-
+            <div class="form-group">
+                <label>Rows</label>
+                <input type="number" class="form-control" placeholder="Rows" v-model="options.rows" min="1" max="100" />
+            </div>
         </div>
     </div>
 </template>
