@@ -101,7 +101,7 @@ var builder = new Vue({
             _token: '{{ csrf_token() }}',
             columns: this.columns,
         },
-        selectedText: ''
+        selectedText: '',
     },
     methods: {
         updateParams: function (newProps) {

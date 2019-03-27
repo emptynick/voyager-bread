@@ -32,3 +32,20 @@ Vue.prototype.number_format = function (number, decimals, dec_point, thousands_s
 Vue.filter('uppercase', function (value) {
     return value.toUpperCase();
 });
+
+Vue.directive('default-value', function (el, binding, vnode) {
+    vnode.context.$nextTick(function () {
+        if (!binding.value) return;
+        if (el.getAttribute('data-touched')) return;
+        if (el.value || el.value === binding.value) {
+            el.setAttribute('data-touched', true)
+            return;
+        }
+
+        el.value = binding.value;
+
+        var model = vnode.data.directives.find(dir => dir.rawName === 'v-model');
+        if (!model || !model.expression) return;
+        vnode.context.$watch(model.expression, () => el.setAttribute('data-touched', true));
+    });
+});
