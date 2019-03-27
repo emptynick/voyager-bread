@@ -124,7 +124,7 @@
                         <draggable v-model="currentLayout.formfields" handle=".drag_handle">
                             <formfield-base v-for="(formfield, key) in currentLayout.formfields"
                                             :view="'mockup'"
-                                            :type="slugify(formfield.type)"
+                                            :type="kebab_case(formfield.type)"
                                             :layout-type="currentLayout.type"
                                             :layout="currentLayout"
                                             :options="formfield.options"

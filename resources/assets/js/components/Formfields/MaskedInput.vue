@@ -38,7 +38,9 @@
 </template>
 
 <script>
+import { TheMask } from 'vue-the-mask'
 export default {
+    components: { TheMask },
     props: ['view', 'layoutType', 'options', 'base']
 };
 </script>
