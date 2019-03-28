@@ -188,7 +188,7 @@ module.exports = {
                     this.translatedValue = JSON.parse(this.value || '{}');
                 }
 
-                return this.translatedValue[this.$eventHub.locale];
+                return this.translatedValue[this.$eventHub.locale] || '';
             }
 
             return this.translatedValue || '';

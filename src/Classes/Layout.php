@@ -51,24 +51,13 @@ class Layout implements \JsonSerializable
                 'field'         => $formfield->options->field,
                 'type'          => $formfield->getType(),
                 'sortable'      => $formfield->options->orderable,
+                'searchable'    => $formfield->options->searchable,
+                'search_text'   => __('bread::bread.filter_by_column', ['column' => $this->getTranslation($formfield->options->title)]),
                 'width'         => (($formfield->options->width ?? 25) * 0.80).'%',
                 'options'       => $formfield->options,
                 'validation'    => $formfield->validation,
-                'filterOptions' => (object) [
-                    'enabled'             => $formfield->options->searchable,
-                    'placeholder'         => __('bread::bread.filter_by_column', ['column' => $this->getTranslation($formfield->options->title)]),
-                    'filterDropdownItems' => [],
-                ],
             ];
         });
-        $columns[] = (object) [
-            'label'                => 'Actions',
-            'field'                => 'computed_actions',
-            'sortable'             => false,
-            'globalSearchDisabled' => true,
-            'width'                => 'auto',
-            'thClass'              => 'text-center',
-        ];
 
         return $columns;
     }

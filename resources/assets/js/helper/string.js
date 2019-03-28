@@ -33,7 +33,7 @@ Vue.filter('uppercase', function (value) {
     return value.toUpperCase();
 });
 
-Vue.directive('default-value', function (el, binding, vnode) {
+Vue.directive('default', function (el, binding, vnode) {
     vnode.context.$nextTick(function () {
         if (!binding.value) return;
         if (el.getAttribute('data-touched')) return;

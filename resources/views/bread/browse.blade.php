@@ -23,54 +23,33 @@
                 </div>
 
                 <div class="panel-body" style="overflow: visible">
-                    <vue-good-table :columns="columns"
-                                    :rows="rows"
-                                    mode="remote"
-                                    :ref="'browse-table'"
-                                    :total-rows="totalRecords"
-                                    :sort-options="sortOptions"
-                                    :select-options="selectOptions"
-                                    :pagination-options="paginationOptions"
-                                    :is-loading="isLoading"
-                                    @on-page-change="onPageChange"
-                                    @on-sort-change="onSortChange"
-                                    @on-column-filter="onColumnFilter"
-                                    @on-per-page-change="onPerPageChange"
-                                    @on-selected-rows-change="selectionChanged">
-                        <template slot="table-row" slot-scope="props">
-                            <div class="text-center" v-if="props.column.field == 'computed_actions'">
-                                    <a class="btn btn-primary" :href="props.formattedRow.computed_actions.read">
-                                        <i class="voyager-eye"></i> Read
-                                    </a>
-                                    <a class="btn btn-success" :href="props.formattedRow.computed_actions.edit">
-                                        <i class="voyager-edit"></i> Edit
-                                    </a>
-                                    <a class="btn btn-danger" :href="props.formattedRow.computed_actions.delete">
-                                        <i class="voyager-trash"></i> Delete
-                                    </a>
-                            </div>
-                            <formfield-base v-else
-                                            :view="'browse'"
-                                            :type="slugify(props.column.type)"
-                                            :layout-type="'list'"
-                                            :layout="layout"
-                                            :options="props.column.options"
-                                            :validation="props.column.validation"
-                                            :value="props.formattedRow[props.column.field]">
-                            </formfield-base>
-                        </template>
-                        <div slot="emptystate">
-                            <div v-if="rows.length == 0" class="vgt-center-align vgt-text-disabled">
-                                {{ __('bread::bread.no_matching_name_plural', ['name' => $bread->getTranslation('name_plural')]) }}
-                            </div>
-                        </div>
-                        <span class="vgt-loading__content" slot="loadingContent">
-                            {{ __('bread::generic.loading') }}...
-                        </span>
-                        <div slot="selected-row-actions">
-                            <button class="btn btn-danger">Delete</button>
-                        </div>
-                    </vue-good-table>
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" @click="selectAll($event.target.checked)"></th>
+                                <th v-for="(column, key) in parameter.columns" :key="'th_'+key" @click="orderBy(column.field)">
+                                    @{{ column.label }}
+                                </th>
+                                <th>Actions</th>
+                            </tr>
+                            <tr>
+                                <th></th>
+                                <th v-for="(column, key) in parameter.columns" :key="'th_search_'+key">
+                                    <input type="text" class="form-control" v-debounce:300="'filterBy(column.field)'" v-if="column.searchable" :placeholder="column.search_text">
+                                </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(row, key) in rows" :key="'tr'+key">
+                                <td><input type="checkbox" @click="selectItem($event.target.checked, row.computed_actions.pk)"></td>
+                                <td v-for="(column, key) in parameter.columns" :key="'tr_'+key+column.field">
+                                    Hallo
+                                </td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -86,108 +65,67 @@ var builder = new Vue({
     data: {
         bread: {!! json_encode($bread) !!},
         layout: {!! json_encode($layout) !!},
-        columns: {!! json_encode($layout->getColumnDefinitions()) !!},
         rows: [],
         totalRecords: 0,
-        isLoading: true,
-        serverParams: {
-            columnFilters: {},
-            sort: {
-                field: null,
-                type: 'asc',
-            },
-            page: 1, 
+        parameter: {
+            columns: {!! json_encode($layout->getColumnDefinitions()) !!},
+            page: 1,
             perPage: 10,
+            filters: [],
+            orderField: '',
+            orderDir: 'asc',
+            locale: null,
             _token: '{{ csrf_token() }}',
-            columns: this.columns,
-        },
-        selectedText: '',
+        }
     },
     methods: {
-        updateParams: function (newProps) {
-            this.serverParams = Object.assign({}, this.serverParams, newProps);
-        },
-        onPageChange: function (params) {
-            this.updateParams({page: params.currentPage});
+        orderBy: function (field) {
+            if (this.parameter.orderField == field && this.parameter.orderDir == 'asc') {
+                this.parameter.orderDir = 'desc';
+            } else {
+                this.parameter.orderDir = 'asc';
+            }
+            this.parameter.orderField = field;
             this.loadItems();
         },
-        onPerPageChange: function (params) {
-            this.updateParams({perPage: params.currentPerPage});
+        filterBy: function (field) {
+            return value => {
+                
+            }
+        },
+        openPage: function (page) {
+            this.parameter.page = page;
             this.loadItems();
         },
-        onSortChange: function (params) {
-            this.updateParams({
-                sort: {
-                    type: params[0].type,
-                    field: params[0].field,
-                },
-            });
-            this.loadItems();
-        },
-        onColumnFilter: function (params) {
-            this.updateParams(params);
+        selectPerPage: function (number) {
+            this.parameter.perPage = number;
             this.loadItems();
         },
         loadItems: function () {
-            this.isLoading = true;
-            this.serverParams.locale = this.$eventHub.locale;
+            this.locale = this.$eventHub.locale;
 
-            if (this.serverParams.order_by || this.serverParams.order_by == '') {
-                this.serverParams.order_by = this.layout.order_by || this.columns[0].field;
-            }
-
-            this.$http.post('{{ route('voyager.'.$bread->getTranslation('slug').'.data') }}', this.serverParams).then(response => {
+            this.$http.post('{{ route('voyager.'.$bread->getTranslation('slug').'.data') }}', this.parameter).then(response => {
                 this.totalRecords = response.body.records;
                 this.rows = response.body.rows;
-                this.isLoading = false;
             }, response => {
                 toastr.error('Loading data failed: '+response.body.message);
-                this.isLoading = false;
             });
         },
-        selectionChanged: function () {
-            if (this.$refs['browse-table'].selectedRowCount == 1) {
-                this.selectedText = '{{ __("bread::bread.name_selected", ["name" => $bread->getTranslation("name_singular")]) }}';
-            } else {
-                this.selectedText = '{{ __("bread::bread.names_selected", ["name" => $bread->getTranslation("name_plural")]) }}';
-            }
+        selectAll: function (select) {
+            
         },
+        selectItem: function (select, pk) {
+
+        }
     },
     computed: {
-        sortOptions: function () {
-            return {
-                enabled: true,
-                initialSortBy: {
-                    field: this.layout.order_by || this.layout.formfields[0].options.field,
-                    type: 'asc',
-                }
-            };
-        },
-        selectOptions: function () {
-            return {
-                enabled: true,
-                selectionText: this.selectedText,
-                clearSelectionText: '{{ __("bread::generic.clear") }}',
-                selectOnCheckboxOnly: true
-            };
-        },
-        paginationOptions: function () {
-            return {
-                enabled: true,
-                rowsPerPageLabel: '{{ __("bread::bread.pagination_name_per_page", ["name" => $bread->getTranslation("name_plural")]) }}',
-                ofLabel: '{{ __("bread::bread.pagination_of") }}',
-                nextLabel: '{{ __("bread::bread.pagination_next") }}',
-                prevLabel: '{{ __("bread::bread.pagination_previous") }}',
-                allLabel: '{{ __("bread::generic.all") }}',
-            };
-        },
+        
     },
     mounted: function () {
         @localization
+        this.loadItems();
+        
     },
-    created: function () {
-        this.serverParams.columns = this.columns;
-    }
 });
 </script>
 @endsection

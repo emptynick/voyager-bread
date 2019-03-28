@@ -23,7 +23,7 @@
         </div>
         <div class="form-group">
             <label>Palette</label>
-            <select class="form-control" v-model="options.palette">
+            <select class="form-control" v-model="options.palette" v-default="'basic'">
                 <option value="basic">Basic Colors</option>
                 <option value="text-basic">Basic Colors for Text</option>
                 <option value="text-advanced">Advanced Colors for Text</option>
@@ -34,7 +34,7 @@
         </div>
         <div class="form-group">
             <label>Shape</label>
-            <select class="form-control" v-model="options.shape">
+            <select class="form-control" v-model="options.shape" v-default="'circles'">
                 <option value="circles">Circles</option>
                 <option value="squares">Squares</option>
             </select>

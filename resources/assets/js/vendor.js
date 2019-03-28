@@ -9,8 +9,8 @@ Vue.component('v-select', vSelect);
 import Popper from 'vue-popperjs';
 Vue.component('popper', Popper);
 
-import VueGoodTablePlugin from 'vue-good-table';
-Vue.use(VueGoodTablePlugin);
-
 var VueResource = require('vue-resource');
 Vue.use(VueResource);
+
+var vueDebounce = require('vue-debounce');
+Vue.use(vueDebounce);

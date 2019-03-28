@@ -177,6 +177,7 @@ class BreadController extends Controller
             $query->transform(function ($item) {
                 // TODO: what if getKey() is translatable?
                 $item->computed_actions = [
+                    'pk'     => $item->getKey(),
                     'read'   => route('voyager.'.$this->bread->getTranslation('slug').'.show', $item->getKey()),
                     'edit'   => route('voyager.'.$this->bread->getTranslation('slug').'.edit', $item->getKey()),
                     'delete' => route('voyager.'.$this->bread->getTranslation('slug').'.destroy', $item->getKey()),
