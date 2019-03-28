@@ -11,9 +11,9 @@ let helper = [
     'url'
 ];
 
-require('./vendor.js');
+require('./vendor');
 
-import LanguageInput from './components/LanguageInput';
+var LanguageInput = require('./components/LanguageInput').default;
 Vue.component('language-input', LanguageInput);
 
 import LanguagePicker from './components/LanguagePicker';
