@@ -35,7 +35,10 @@
                             <tr>
                                 <th></th>
                                 <th v-for="(column, key) in parameter.columns" :key="'th_search_'+key">
-                                    <input type="text" class="form-control" v-debounce:300="'filterBy(column.field)'" v-if="column.searchable" :placeholder="column.search_text">
+                                    <input type="text" class="form-control"
+                                           v-if="column.searchable"
+                                           :placeholder="column.search_text"
+                                           @input="filterBy(column.field, $event.target.value)">
                                 </th>
                                 <th></th>
                             </tr>
@@ -44,11 +47,37 @@
                             <tr v-for="(row, key) in rows" :key="'tr'+key">
                                 <td><input type="checkbox" @click="selectItem($event.target.checked, row.computed_actions.pk)"></td>
                                 <td v-for="(column, key) in parameter.columns" :key="'tr_'+key+column.field">
-                                    Hallo
+                                        <formfield-base
+                                                        :view="'browse'"
+                                                        :type="slugify(column.type)"
+                                                        :layout-type="'list'"
+                                                        :layout="layout"
+                                                        :options="column.options"
+                                                        :validation="column.validation"
+                                                        :value="row[column.field]">
+                                        </formfield-base>
                                 </td>
                                 <td></td>
                             </tr>
+                            <tr v-if="rows.length == 0">
+                                <td :colspan="parameter.columns.length">No results :(</td>
+                            </tr>
                         </tbody>
+                        <tfoot>
+                            <tr>
+                                <td :colspan="parameter.columns.length">
+                                    <ul class="pagination">
+                                        <li><a href="#" @click.prevent="openPage(1)">&laquo;</a></li>
+                                        <li><a href="#" @click.prevent="openPage(previousPage)">&lt;</a></li>
+                                        <li v-for="page in pages" v-bind:class="[page == parameter.page ? 'active' : '']">
+                                            <a href="#" @click.prevent="openPage(page)">@{{ page }}</a>
+                                        </li>
+                                        <li><a href="#" @click.prevent="openPage(nextPage)">&gt;</a></li>
+                                        <li><a href="#" @click.prevent="openPage(pages)">&raquo;</a></li>
+                                    </ul>
+                                </td>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
             </div>
@@ -71,7 +100,7 @@ var builder = new Vue({
             columns: {!! json_encode($layout->getColumnDefinitions()) !!},
             page: 1,
             perPage: 10,
-            filters: [],
+            filters: {},
             orderField: '',
             orderDir: 'asc',
             locale: null,
@@ -88,10 +117,9 @@ var builder = new Vue({
             this.parameter.orderField = field;
             this.loadItems();
         },
-        filterBy: function (field) {
-            return value => {
-                
-            }
+        filterBy: function (field, query) {
+            this.parameter.filters[field] = query;
+            this.loadItems();
         },
         openPage: function (page) {
             this.parameter.page = page;
@@ -101,16 +129,15 @@ var builder = new Vue({
             this.parameter.perPage = number;
             this.loadItems();
         },
-        loadItems: function () {
+        loadItems: Vue.prototype.debounce(function () {
             this.locale = this.$eventHub.locale;
-
             this.$http.post('{{ route('voyager.'.$bread->getTranslation('slug').'.data') }}', this.parameter).then(response => {
                 this.totalRecords = response.body.records;
                 this.rows = response.body.rows;
             }, response => {
                 toastr.error('Loading data failed: '+response.body.message);
             });
-        },
+        }, 300),
         selectAll: function (select) {
             
         },
@@ -119,7 +146,26 @@ var builder = new Vue({
         }
     },
     computed: {
-        
+        pages: function () {
+            var pages = this.rows.length / this.parameter.perPage;
+            return Math.ceil(pages);
+        },
+        previousPage: function () {
+            var page = this.parameter.page--;
+            if (page < 1) {
+                return 1;
+            }
+
+            return page;
+        },
+        nextPage: function () {
+            var page = this.parameter.page++;
+            if (page > this.pages) {
+                return this.pages;
+            }
+
+            return page;
+        }
     },
     mounted: function () {
         @localization

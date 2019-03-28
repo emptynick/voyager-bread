@@ -113,8 +113,8 @@ class BreadController extends Controller
             // Total records
             $records = $query->count();
 
-            $orderBy = $request->sort['field'];
-            $orderMethod = 'sortBy'.($request->sort['type'] == 'asc' ? '' : 'Desc');
+            $orderBy = $request->orderField;
+            $orderMethod = 'sortBy'.($request->orderDir == 'asc' ? '' : 'Desc');
 
             $page = $request->page ?? 1;
             $perPage = $request->perPage ?? 10;
@@ -132,7 +132,7 @@ class BreadController extends Controller
             }
 
             // Searching
-            $filters = $request->columnFilters ?? [];
+            $filters = $request->filters ?? [];
             foreach ($filters as $field => $filter) {
                 if ($filter) {
                     if (Str::contains($field, '.')) {

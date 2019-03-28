@@ -12,5 +12,4 @@ Vue.component('popper', Popper);
 var VueResource = require('vue-resource');
 Vue.use(VueResource);
 
-var vueDebounce = require('vue-debounce');
-Vue.use(vueDebounce);
+Vue.prototype.debounce = require('debounce');

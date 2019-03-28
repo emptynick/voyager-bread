@@ -10,11 +10,11 @@
         "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
     },
     "dependencies": {
-        "cross-env": "^5.1.6",	
+        "cross-env": "^5.1.6",
+        "debounce": "^1.2.0",
         "laravel-mix": "^4.0.15",
         "slugly": "^1.0.3",
         "vue": "^2.6.10",
-        "vue-debounce": "^1.1.0",
         "vue-popperjs": "^2.0.3",
         "vue-resource": "^1.5.1",
         "vue-select": "^2.6.3",
