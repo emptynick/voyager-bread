@@ -60,21 +60,13 @@
                                 <td></td>
                             </tr>
                             <tr v-if="rows.length == 0">
-                                <td :colspan="parameter.columns.length">No results :(</td>
+                                <td :colspan="parameter.columns.length + 2" style="text-align:center">No results :(</td>
                             </tr>
                         </tbody>
                         <tfoot>
                             <tr>
-                                <td :colspan="parameter.columns.length">
-                                    <ul class="pagination">
-                                        <li><a href="#" @click.prevent="openPage(1)">&laquo;</a></li>
-                                        <li><a href="#" @click.prevent="openPage(previousPage)">&lt;</a></li>
-                                        <li v-for="page in pages" v-bind:class="[page == parameter.page ? 'active' : '']">
-                                            <a href="#" @click.prevent="openPage(page)">@{{ page }}</a>
-                                        </li>
-                                        <li><a href="#" @click.prevent="openPage(nextPage)">&gt;</a></li>
-                                        <li><a href="#" @click.prevent="openPage(pages)">&raquo;</a></li>
-                                    </ul>
+                                <td :colspan="parameter.columns.length + 2">
+                                    <pagination :pages="pages" :page="parameter.page" :callback="openPage" class="pagination-sm" />
                                 </td>
                             </tr>
                         </tfoot>
@@ -147,25 +139,8 @@ var builder = new Vue({
     },
     computed: {
         pages: function () {
-            var pages = this.rows.length / this.parameter.perPage;
-            return Math.ceil(pages);
+            return Math.ceil(this.totalRecords / this.parameter.perPage);
         },
-        previousPage: function () {
-            var page = this.parameter.page--;
-            if (page < 1) {
-                return 1;
-            }
-
-            return page;
-        },
-        nextPage: function () {
-            var page = this.parameter.page++;
-            if (page > this.pages) {
-                return this.pages;
-            }
-
-            return page;
-        }
     },
     mounted: function () {
         @localization

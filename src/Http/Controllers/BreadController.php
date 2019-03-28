@@ -110,9 +110,6 @@ class BreadController extends Controller
         if ($this->bread) {
             $query = $this->bread->getModel()->select('*');
 
-            // Total records
-            $records = $query->count();
-
             $orderBy = $request->orderField;
             $orderMethod = 'sortBy'.($request->orderDir == 'asc' ? '' : 'Desc');
 
@@ -169,6 +166,9 @@ class BreadController extends Controller
             } else {
                 $query = $query->get()->$orderMethod($orderBy);
             }
+
+            // Total records
+            $records = $query->count();
 
             // Pagination
             $query = $query->slice(($page - 1) * $perPage)->take($perPage);

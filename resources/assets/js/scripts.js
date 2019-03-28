@@ -22,6 +22,9 @@ Vue.component('language-picker', LanguagePicker);
 import ValidationInput from './components/ValidationInput';
 Vue.component('validation-input', ValidationInput);
 
+import Pagination from './components/Pagination';
+Vue.component('pagination', Pagination);
+
 // Helper
 helper.forEach(function (helper) {
     require('./helper/'+helper);
