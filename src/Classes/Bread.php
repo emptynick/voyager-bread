@@ -61,19 +61,7 @@ class Bread
 
     public function isValid()
     {
-        if (!$this->table) {
-            return false;
-        } elseif (!$this->slug) {
-            BreadFacade::debug('BREAD "'.$this->table.'" is not valid because the slug is missing');
-
-            return false;
-        } elseif (!$this->name_singular) {
-            BreadFacade::debug('BREAD "'.$this->table.'" is not valid because the singular name is missing');
-
-            return false;
-        } elseif (!$this->name_plural) {
-            BreadFacade::debug('BREAD "'.$this->table.'" is not valid because the plural name is missing');
-
+        if (!$this->table || !$this->slug || !$this->name_singular || !$this->name_plural) {
             return false;
         }
 
