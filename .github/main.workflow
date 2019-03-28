@@ -4,12 +4,12 @@ workflow "Build and publish assets" {
 }
 
 action "Build assets" {
-  uses = "elstudio/actions-js-build/build@master"
+  uses = "emptynick/actions-js-build/build@master"
   args = "run dev"
 }
 
 action "Commit and push assets" {
-  uses = "elstudio/actions-js-build/commit@master"
+  uses = "emptynick/actions-js-build/commit@master"
   needs = ["Build assets"]
   secrets = ["GITHUB_TOKEN"]
 }
