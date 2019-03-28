@@ -156,7 +156,6 @@ class BreadController extends Controller
         ]);
     }
 
-
     protected function searchQuery($query, $filters, $columns)
     {
         foreach ($filters as $field => $filter) {
