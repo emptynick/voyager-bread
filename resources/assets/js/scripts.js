@@ -13,7 +13,7 @@ let helper = [
 
 require('./vendor');
 
-import LanguageInput from './components/LanguageInput';
+import LanguageInput from './components/LanguageInput.vue';
 Vue.component('language-input', LanguageInput);
 
 import LanguagePicker from './components/LanguagePicker';
