@@ -102,16 +102,13 @@ class BreadController extends Controller
     {
     }
 
-    public function data(Request $request)
+    public function getData(Request $request)
     {
         $records = 0;
         $rows = [];
 
         if ($this->bread) {
             $query = $this->bread->getModel()->select('*');
-
-            $orderBy = $request->orderField;
-            $orderMethod = 'sortBy'.($request->orderDir == 'asc' ? '' : 'Desc');
 
             $page = $request->page ?? 1;
             $perPage = $request->perPage ?? 10;
@@ -128,44 +125,8 @@ class BreadController extends Controller
                 }
             }
 
-            // Searching
-            $filters = $request->filters ?? [];
-            foreach ($filters as $field => $filter) {
-                if ($filter) {
-                    if (Str::contains($field, '.')) {
-                        // Query relationship
-                        list($relationship, $field) = explode('.', $field);
-                        $query = $query->whereHas($relationship, function ($rquery) use ($field, $filter) {
-                            $rquery->where($field, 'like', '%'.$filter.'%');
-                        });
-                    } else {
-                        // Translatable field
-                        if (
-                            ($columns->where('field', $field)->first()['options']['translatable'] ?? false) &&
-                            ($columns->where('field', $field)->first()['options']['search_in_locale'] ?? false)
-                        ) {
-                            $query = $query->whereRaw('lower('.$field.'->"$.'.$locale.'") like lower(?)', ["%{$filter}%"]);
-                        } else {
-                            // Normal field search
-                            $query = $query->where($field, 'like', '%'.$filter.'%');
-                        }
-                    }
-                }
-            }
-
-            // Sorting
-            if ($columns->where('field', $orderBy)->first()['options']['translatable'] ?? false) {
-                $query = $query->get()->$orderMethod(function ($item) use ($orderBy) {
-                    if (Str::contains($orderBy, '.')) {
-                        // TODO: sort by translatable relationship
-                        list($relationship, $field) = explode('.', $column['field']);
-                    } else {
-                        return $item->{$orderBy};
-                    }
-                });
-            } else {
-                $query = $query->get()->$orderMethod($orderBy);
-            }
+            $query = $this->searchQuery($query, ($request->filter ?? []), $columns);
+            $query = $this->orderQuery($query, $request->orderField, ($request->orderDir ?? 'asc'), $columns);
 
             // Total records
             $records = $query->count();
@@ -193,5 +154,54 @@ class BreadController extends Controller
             'records' => $records,
             'rows'    => $rows,
         ]);
+    }
+
+
+    protected function searchQuery($query, $filters, $columns)
+    {
+        foreach ($filters as $field => $filter) {
+            debug($filter);
+            if ($filter) {
+                if (Str::contains($field, '.')) {
+                    // Query relationship
+                    list($relationship, $field) = explode('.', $field);
+                    $query = $query->whereHas($relationship, function ($rquery) use ($field, $filter) {
+                        $rquery->where($field, 'like', '%'.$filter.'%');
+                    });
+                } else {
+                    // Translatable field
+                    if (
+                        ($columns->where('field', $field)->first()['options']['translatable'] ?? false) &&
+                        ($columns->where('field', $field)->first()['options']['search_in_locale'] ?? false)
+                    ) {
+                        $query = $query->whereRaw('lower('.$field.'->"$.'.$locale.'") like lower(?)', ["%{$filter}%"]);
+                    } else {
+                        // Normal field search
+                        $query = $query->where($field, 'like', '%'.$filter.'%');
+                    }
+                }
+            }
+        }
+
+        return $query;
+    }
+
+    protected function orderQuery($query, $field, $direction, $columns)
+    {
+        $orderMethod = 'sortBy'.($direction == 'asc' ? '' : 'Desc');
+        if ($columns->where('field', $field)->first()['options']['translatable'] ?? false) {
+            $query = $query->get()->$orderMethod(function ($item) use ($field) {
+                if (Str::contains($field, '.')) {
+                    // TODO: sort by translatable relationship
+                    list($relationship, $field) = explode('.', $column['field']);
+                } else {
+                    return $item->{$field};
+                }
+            });
+        } else {
+            $query = $query->get()->$orderMethod($field);
+        }
+
+        return $query;
     }
 }

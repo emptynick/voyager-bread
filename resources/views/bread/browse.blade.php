@@ -92,7 +92,7 @@ var builder = new Vue({
             columns: {!! json_encode($layout->getColumnDefinitions()) !!},
             page: 1,
             perPage: 10,
-            filters: {},
+            filter: {},
             orderField: '',
             orderDir: 'asc',
             locale: null,
@@ -109,10 +109,10 @@ var builder = new Vue({
             this.parameter.orderField = field;
             this.loadItems();
         },
-        filterBy: function (field, query) {
-            this.parameter.filters[field] = query;
+        filterBy: Vue.prototype.debounce(function (field, query) {
+            this.parameter.filter[field] = query;
             this.loadItems();
-        },
+        }, 300),
         openPage: function (page) {
             this.parameter.page = page;
             this.loadItems();
@@ -121,7 +121,7 @@ var builder = new Vue({
             this.parameter.perPage = number;
             this.loadItems();
         },
-        loadItems: Vue.prototype.debounce(function () {
+        loadItems: function () {
             this.locale = this.$eventHub.locale;
             this.$http.post('{{ route('voyager.'.$bread->getTranslation('slug').'.data') }}', this.parameter).then(response => {
                 this.totalRecords = response.body.records;
@@ -129,7 +129,7 @@ var builder = new Vue({
             }, response => {
                 toastr.error('Loading data failed: '+response.body.message);
             });
-        }, 300),
+        },
         selectAll: function (select) {
             
         },
