@@ -9,26 +9,26 @@ trait Translatable
     public function getTranslation($field, $locale = null)
     {
         $locale = $locale ?? BreadFacade::getLocale();
-
+        $translation = $field;
         if (is_object($field)) {
-            return $field->{$locale} ?? '';
+            $translation = $field->{$locale} ?? '';
         } elseif (is_array($field)) {
-            return $field[$locale] ?? '';
+            $translation = $field[$locale] ?? '';
         } elseif (is_int($field)) {
-            return $field;
+            $translation = $field;
         } elseif ($this->{$field} && is_object($this->{$field})) {
-            return $this->{$field}->{$locale} ?? '';
+            $translation = $this->{$field}->{$locale} ?? '';
         } elseif ($this->{$field} && is_array($this->{$field})) {
-            return $this->{$field}[$locale] ?? '';
+            $translation = $this->{$field}[$locale] ?? '';
         } elseif ($this->{$field}) {
             $json = @json_decode($this->{$field});
             if (json_last_error() == JSON_ERROR_NONE) {
-                return $json->{$locale} ?? '';
+                $translation = $json->{$locale} ?? '';
             } else {
-                return $this->{$field};
+                $translation = $this->{$field};
             }
         }
 
-        return $field;
+        return $translation;
     }
 }
