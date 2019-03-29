@@ -34,10 +34,10 @@ class Controller extends BaseController
                 foreach (BreadFacade::getLocales() as $locale) {
                     $computed_rules[$field.'.'.$locale] = '';
                     collect($formfield->validation)->each(function ($rule) use (
-                            $locale,
-                            $field,
-                            &$computed_rules,
-                            &$computed_messages
+                        $locale,
+                        $field,
+                        &$computed_rules,
+                        &$computed_messages
                     ) {
                         if (($rule->deep ?? false) || $locale == BreadFacade::getLocale()) {
                             $computed_rules[$field.'.'.$locale] .= $rule->rule.'|';
@@ -52,16 +52,18 @@ class Controller extends BaseController
                     });
                     if ($computed_rules[$field.'.'.$locale]) {
                         $computed_rules[$field.'.'.$locale] = substr(
-                            $computed_rules[$field.'.'.$locale], 0, -1
+                            $computed_rules[$field.'.'.$locale],
+                            0,
+                            -1
                         );
                     }
                 }
             } else {
                 $computed_rules[$field] = '';
                 collect($formfield->validation)->each(function ($rule) use (
-                        $field,
-                        &$computed_rules,
-                        &$computed_messages
+                    $field,
+                    &$computed_rules,
+                    &$computed_messages
                 ) {
                     $computed_rules[$field] .= $rule->rule.'|';
                     $message = BreadFacade::getTranslation($rule->message);
