@@ -113,15 +113,15 @@ class BreadController extends Controller
             $columns = collect($request->columns ?? []);
             $locale = $request->locale ?? BreadFacade::getLocale();
 
-            $query = $this->loadRelationshipsForQuery($query, $columns);
-            $query = $this->searchQuery($query, array_filter($request->filter ?? []), $columns);
-            $query = $this->orderQuery($query, $request->orderField, ($request->orderDir ?? 'asc'), $columns);
+            $this->loadRelationshipsForQuery($query, $columns);
+            $this->searchQuery($query, array_filter($request->filter ?? []), $columns);
+            $this->orderQuery($query, $request->orderField, ($request->orderDir ?? 'asc'), $columns);
 
             $records = $query->count();
             // Pagination
             $query = $query->slice((($request->page ?? 1) - 1) * $perPage)->take($perPage);
             // Add read/edit/delete links
-            $query = $this->addLinksToQuery($query);
+            $this->addLinksToQuery($query);
             $rows = $query->values()->toArray();
         }
 
@@ -131,7 +131,7 @@ class BreadController extends Controller
         ]);
     }
 
-    protected function searchQuery($query, $filters, $columns)
+    protected function searchQuery(&$query, $filters, $columns)
     {
         foreach ($filters as $field => $filter) {
             if (Str::contains($field, '.')) {
@@ -151,11 +151,9 @@ class BreadController extends Controller
                 }
             }
         }
-
-        return $query;
     }
 
-    protected function orderQuery($query, $field, $direction, $columns)
+    protected function orderQuery(&$query, $field, $direction, $columns)
     {
         $orderMethod = 'sortBy'.($direction == 'asc' ? '' : 'Desc');
         if ($columns->where('field', $field)->first()['options']['translatable'] ?? false) {
@@ -170,11 +168,9 @@ class BreadController extends Controller
         } else {
             $query = $query->get()->$orderMethod($field);
         }
-
-        return $query;
     }
 
-    protected function loadRelationshipsForQuery($query, $columns)
+    protected function loadRelationshipsForQuery(&$query, $columns)
     {
         foreach ($columns as $column) {
             if (Str::contains($column['field'], '.')) {
@@ -182,11 +178,9 @@ class BreadController extends Controller
                 $query = $query->with($relationship);
             }
         }
-
-        return $query;
     }
 
-    protected function addLinksToQuery($query)
+    protected function addLinksToQuery(&$query)
     {
         $query->transform(function ($item) {
             // TODO: what if getKey() is translatable?
