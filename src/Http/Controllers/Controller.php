@@ -33,20 +33,36 @@ class Controller extends BaseController
             if (($formfield->options->translatable ?? false)) {
                 foreach (BreadFacade::getLocales() as $locale) {
                     $computed_rules[$field.'.'.$locale] = '';
-                    collect($formfield->validation)->each(function ($rule) use ($locale, $field, &$computed_rules, &$computed_messages) {
+                    collect($formfield->validation)->each(function ($rule) use (
+                            $locale,
+                            $field,
+                            &$computed_rules,
+                            &$computed_messages
+                    ) {
                         if (($rule->deep ?? false) || $locale == BreadFacade::getLocale()) {
                             $computed_rules[$field.'.'.$locale] .= $rule->rule.'|';
-                            $message = str_replace(':locale', strtoupper($locale), BreadFacade::getTranslation($rule->message));
-                            $computed_messages[$field.'.'.$locale.'.'.Str::before($rule->rule, ':')] = $message;
+                            $message = str_replace(
+                                ':locale',
+                                strtoupper($locale),
+                                BreadFacade::getTranslation($rule->message)
+                            );
+                            $key = $field.'.'.$locale.'.'.Str::before($rule->rule, ':');
+                            $computed_messages[$key] = $message;
                         }
                     });
                     if ($computed_rules[$field.'.'.$locale]) {
-                        $computed_rules[$field.'.'.$locale] = substr($computed_rules[$field.'.'.$locale], 0, -1);
+                        $computed_rules[$field.'.'.$locale] = substr(
+                            $computed_rules[$field.'.'.$locale], 0, -1
+                        );
                     }
                 }
             } else {
                 $computed_rules[$field] = '';
-                collect($formfield->validation)->each(function ($rule) use ($field, &$computed_rules, &$computed_messages) {
+                collect($formfield->validation)->each(function ($rule) use (
+                        $field,
+                        &$computed_rules,
+                        &$computed_messages
+                ) {
                     $computed_rules[$field] .= $rule->rule.'|';
                     $message = BreadFacade::getTranslation($rule->message);
                     $computed_messages[$field.'.'.Str::before($rule->rule, ':')] = $message;
@@ -54,7 +70,10 @@ class Controller extends BaseController
             }
         });
 
-        return Validator::make($this->processRequest($request, $formfields), array_filter($computed_rules), $computed_messages);
+        return Validator::make(
+            $this->processRequest($request, $formfields),
+            array_filter($computed_rules), $computed_messages
+        );
     }
 
     public function processRequest(Request $request, $formfields)
