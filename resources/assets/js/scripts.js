@@ -13,16 +13,16 @@ let helper = [
 
 require('./vendor');
 
-import LanguageInput from './components/LanguageInput';
+import LanguageInput from '../components/LanguageInput';
 Vue.component('language-input', LanguageInput);
 
-import LanguagePicker from './components/LanguagePicker';
+import LanguagePicker from '../components/LanguagePicker';
 Vue.component('language-picker', LanguagePicker);
 
-import ValidationInput from './components/ValidationInput';
+import ValidationInput from '../components/ValidationInput';
 Vue.component('validation-input', ValidationInput);
 
-import Pagination from './components/Pagination';
+import Pagination from '../components/Pagination';
 Vue.component('pagination', Pagination);
 
 // Helper
@@ -31,9 +31,9 @@ helper.forEach(function (helper) {
 });
 
 // Formfields
-import BaseFormfield from './components/Formfields/BaseFormfield';
+import BaseFormfield from '../components/Formfields/BaseFormfield';
 Vue.component('formfield-base', BaseFormfield);
 
 formfields.forEach(function (formfield) {
-    Vue.component('formfield-'+Vue.prototype.kebab_case(formfield), require('./components/Formfields/'+formfield).default);
+    Vue.component('formfield-'+Vue.prototype.kebab_case(formfield), require('../components/Formfields/'+formfield).default);
 });

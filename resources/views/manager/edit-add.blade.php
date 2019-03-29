@@ -237,6 +237,7 @@ var builder = new Vue({
             this.currentLayout.formfields.splice(key, 1);
         },
         saveBread: function () {
+            // TODO: check if there are any formfields with no field selected
             this.$http.post("{{ route('voyager.bread.store') }}", {
                 '_token': '{{ csrf_token() }}',
                 'bread': JSON.stringify(this.bread)
