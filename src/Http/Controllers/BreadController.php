@@ -168,7 +168,7 @@ class BreadController extends Controller
             } else {
                 // Translatable field
                 if (($columns->where('field', $field)->first()['options']['translatable'] ?? false) &&
-                    ($columns->where('field', $field)->first()['options']['search_in_locale'] ?? false) ) {
+                    ($columns->where('field', $field)->first()['options']['search_in_locale'] ?? false)) {
                     $query = $query->whereRaw('lower('.$field.'->"$.'.$locale.'") like lower(?)', ["%{$filter}%"]);
                 } else {
                     // Normal field search
