@@ -74,7 +74,8 @@ class Controller extends BaseController
 
         return Validator::make(
             $this->processRequest($request, $formfields),
-            array_filter($computed_rules), $computed_messages
+            array_filter($computed_rules),
+            $computed_messages
         );
     }
 
