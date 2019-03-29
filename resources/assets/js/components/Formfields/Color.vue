@@ -12,8 +12,9 @@
             :shapes="options.shape || 'circles'"
             :inline="options.inline"
             :colors="options.palette || 'basic'"
-            v-bind:value="$parent.getValue() || getTranslation(options.value || '')"
-            v-on:input="$parent.setValue($event.target.value)"
+            v-bind:value="$parent.getValue()"
+            v-on:input="$parent.setValue($event)"
+            v-default="options.value || ''"
             />
         
     </div>

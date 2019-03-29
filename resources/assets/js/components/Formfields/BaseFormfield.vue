@@ -59,7 +59,7 @@
                     <div slot="reference"></div>
                 </popper>
             </div>
-            <div class="panel-body">
+            <div class="panel-body" style="overflow: visible">
                 <div class="form-group">
                     <div class="alert alert-danger" v-if="errors.length > 0">
                         <ul>

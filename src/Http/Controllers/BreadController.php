@@ -100,6 +100,14 @@ class BreadController extends Controller
     // Delete
     public function destroy(Request $request, $id)
     {
+        if ($this->bread && $layout = $this->bread->getLayout('edit')) {
+            $data = $this->bread->getModel()->findOrFail($id);
+            $this->processData($request, $layout, 'delete', $data);
+
+            $data->delete();
+        }
+
+        return redirect()->route('voyager.'.$this->bread->getTranslation('slug').'.index');
     }
 
     public function getData(Request $request)

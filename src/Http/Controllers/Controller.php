@@ -28,7 +28,7 @@ class Controller extends BaseController
         $computed_messages = [];
 
         $formfields->each(function ($formfield) use (&$computed_rules, &$computed_messages) {
-            $field = $formfield->options->field;
+            $field = $formfield->options->field ?? '';
 
             if (($formfield->options->translatable ?? false)) {
                 foreach (BreadFacade::getLocales() as $locale) {
@@ -83,7 +83,7 @@ class Controller extends BaseController
     {
         $newRequest = collect();
         $formfields->each(function ($formfield) use ($request, $newRequest) {
-            $field = $formfield->options->field;
+            $field = $formfield->options->field ?? '';
             if (($formfield->options->translatable ?? false)) {
                 $newRequest->put($field, json_decode($request->get($field), true));
             } else {

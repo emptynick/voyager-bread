@@ -43,12 +43,14 @@
                                            :placeholder="column.search_text"
                                            @input="filterBy(column.field, $event.target.value)">
                                 </th>
-                                <th></th>
+                                <th>
+                                    
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-for="(row, key) in rows" :key="'tr'+key">
-                                <td><input type="checkbox" @click="selectItem($event.target.checked, row.computed_actions.pk)"></td>
+                                <td><input type="checkbox" v-model="selectedItems[row.computed_actions.pk]"></td>
                                 <td v-for="(column, key) in parameter.columns" :key="'tr_'+key+column.field">
                                         <formfield-base
                                                         :view="'browse'"
@@ -60,7 +62,20 @@
                                                         :value="row[column.field]">
                                         </formfield-base>
                                 </td>
-                                <td></td>
+                                <td>
+                                    <a class="btn btn-sm btn-primary" :href="row['computed_actions']['read']">
+                                        <i class="voyager-eye"></i>
+                                        {{ __('voyager::generic.view') }}
+                                    </a>
+                                    <a class="btn btn-sm btn-warning" :href="row['computed_actions']['edit']">
+                                        <i class="voyager-edit"></i>
+                                        {{ __('voyager::generic.edit') }}
+                                    </a>
+                                    <a class="btn btn-sm btn-danger" :href="row['computed_actions']['delete']" @click.prevent="deleteEntry(row['computed_actions']['pk'])">
+                                        <i class="voyager-trash"></i>
+                                        {{ __('voyager::generic.delete') }}
+                                    </a>
+                                </td>
                             </tr>
                             <tr v-if="rows.length == 0">
                                 <td :colspan="parameter.columns.length + 2" style="text-align:center">No results :(</td>
@@ -92,6 +107,7 @@ var builder = new Vue({
         rows: [],
         totalRecords: 0,
         loading: true,
+        selectedItems: [],
         parameter: {
             columns: {!! json_encode($layout->getColumnDefinitions()) !!},
             page: 1,
@@ -138,9 +154,12 @@ var builder = new Vue({
             });
         },
         selectAll: function (select) {
-            
+            var vm = this;
+            this.rows.forEach(function (row) {
+                Vue.set(vm.selectedItems, row.computed_actions.pk, select);
+            });
         },
-        selectItem: function (select, pk) {
+        deleteEntry: function (pk) {
 
         }
     },
