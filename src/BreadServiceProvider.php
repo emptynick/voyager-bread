@@ -17,7 +17,7 @@ class BreadServiceProvider extends ServiceProvider
         \Bread\Formfields\Text::class,
         \Bread\Formfields\Number::class,
         \Bread\Formfields\Color::class,
-        \Bread\Formfields\MaskedInput::class
+        \Bread\Formfields\MaskedInput::class,
     ];
 
     public function boot()
