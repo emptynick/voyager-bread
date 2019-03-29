@@ -83,7 +83,7 @@ class BreadServiceProvider extends ServiceProvider
     {
         $namespace = '\\Bread\\Http\\Controllers\\';
 
-        $router->group(['as' => 'bread.', 'prefix' => 'bread', ], function () use ($namespace, $router) {
+        $router->group(['as' => 'bread.', 'prefix' => 'bread'], function () use ($namespace, $router) {
             //Index
             $router->get('/', ['uses' => $namespace.'ManagerController@index', 'as' => 'index']);
             //Create
