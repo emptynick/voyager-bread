@@ -109,12 +109,8 @@ class BreadController extends Controller
 
         if ($this->bread) {
             $query = $this->bread->getModel()->select('*');
-
-            $page = $request->page ?? 1;
             $perPage = $request->perPage ?? 10;
-
             $columns = collect($request->columns ?? []);
-
             $locale = $request->locale ?? BreadFacade::getLocale();
 
             // Load relationships
@@ -124,16 +120,12 @@ class BreadController extends Controller
                     $query = $query->with($relationship);
                 }
             }
-
             $query = $this->searchQuery($query, array_filter($request->filter ?? []), $columns);
             $query = $this->orderQuery($query, $request->orderField, ($request->orderDir ?? 'asc'), $columns);
 
-            // Total records
             $records = $query->count();
-
             // Pagination
-            $query = $query->slice(($page - 1) * $perPage)->take($perPage);
-
+            $query = $query->slice((($request->page ?? 1) - 1) * $perPage)->take($perPage);
             // Add read/edit/delete links
             $query->transform(function ($item) {
                 // TODO: what if getKey() is translatable?
@@ -146,7 +138,6 @@ class BreadController extends Controller
 
                 return $item;
             });
-
             $rows = $query->values()->toArray();
         }
 
