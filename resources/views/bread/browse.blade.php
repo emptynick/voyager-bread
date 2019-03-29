@@ -60,7 +60,7 @@
                                                         :layout="layout"
                                                         :options="column.options"
                                                         :validation="column.validation"
-                                                        :value="row[column.field]">
+                                                        :value="getValue(row, column.field)">
                                         </formfield-base>
                                 </td>
                                 <td>
@@ -135,6 +135,19 @@ var builder = new Vue({
         }
     },
     methods: {
+        getValue: function (row, field) {
+            if (field.includes('.')) {
+                var fields = field.split('.');
+                
+                if (row[fields[0]]) {
+                    return row[fields[0]][fields[1]] || '';
+                }
+
+                return '';
+            }
+
+            return row[field];
+        },
         orderBy: function (field) {
             if (this.parameter.orderField == field && this.parameter.orderDir == 'asc') {
                 this.parameter.orderDir = 'desc';
