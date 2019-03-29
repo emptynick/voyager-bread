@@ -13,6 +13,12 @@ use TCG\Voyager\Facades\Voyager;
 class BreadServiceProvider extends ServiceProvider
 {
     private $breadPath;
+    private $formfields = [
+        \Bread\Formfields\Text::class,
+        \Bread\Formfields\Number::class,
+        \Bread\Formfields\Color::class,
+        \Bread\Formfields\MaskedInput::class
+    ];
 
     public function boot()
     {
@@ -43,28 +49,11 @@ class BreadServiceProvider extends ServiceProvider
             return DB::connection();
         });
 
-        Collection::macro('whereTranslation', function ($field, $query) {
-            return $this->filter(function ($bread) use ($field, $query) {
-                if (is_object($bread->{$field})) {
-                    foreach ($bread->{$field} as $locale) {
-                        if ($locale == $query) {
-                            return true;
-                        }
-                    }
-                } else {
-                    if ($bread->{$field} == $query) {
-                        return true;
-                    }
-                }
+        $this->addCollectionMacros();
 
-                return false;
-            });
-        });
-
-        BreadFacade::addFormfield(\Bread\Formfields\Text::class);
-        BreadFacade::addFormfield(\Bread\Formfields\Number::class);
-        BreadFacade::addFormfield(\Bread\Formfields\Color::class);
-        BreadFacade::addFormfield(\Bread\Formfields\MaskedInput::class);
+        foreach ($this->formfields as $formfield) {
+            BreadFacade::addFormfield($formfield);
+        }
     }
 
     public function loadBreadsFrom($path)
@@ -108,6 +97,27 @@ class BreadServiceProvider extends ServiceProvider
                     $router->post($slug.'/data', $controller.'@getData')->name($slug.'.data');
                 }
             }
+        });
+    }
+
+    protected function addCollectionMacros()
+    {
+        Collection::macro('whereTranslation', function ($field, $query) {
+            return $this->filter(function ($bread) use ($field, $query) {
+                if (is_object($bread->{$field})) {
+                    foreach ($bread->{$field} as $locale) {
+                        if ($locale == $query) {
+                            return true;
+                        }
+                    }
+                } else {
+                    if ($bread->{$field} == $query) {
+                        return true;
+                    }
+                }
+
+                return false;
+            });
         });
     }
 }
