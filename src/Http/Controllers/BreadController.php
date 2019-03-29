@@ -127,17 +127,7 @@ class BreadController extends Controller
             // Pagination
             $query = $query->slice((($request->page ?? 1) - 1) * $perPage)->take($perPage);
             // Add read/edit/delete links
-            $query->transform(function ($item) {
-                // TODO: what if getKey() is translatable?
-                $item->computed_actions = [
-                    'pk'     => $item->getKey(),
-                    'read'   => route('voyager.'.$this->bread->getTranslation('slug').'.show', $item->getKey()),
-                    'edit'   => route('voyager.'.$this->bread->getTranslation('slug').'.edit', $item->getKey()),
-                    'delete' => route('voyager.'.$this->bread->getTranslation('slug').'.destroy', $item->getKey()),
-                ];
-
-                return $item;
-            });
+            $query = $this->addStaticsToQuery($query);
             $rows = $query->values()->toArray();
         }
 
@@ -188,5 +178,20 @@ class BreadController extends Controller
         }
 
         return $query;
+    }
+
+    protected function addStaticsToQuery($query)
+    {
+        $query->transform(function ($item) {
+            // TODO: what if getKey() is translatable?
+            $item->computed_actions = [
+                'pk'     => $item->getKey(),
+                'read'   => route('voyager.'.$this->bread->getTranslation('slug').'.show', $item->getKey()),
+                'edit'   => route('voyager.'.$this->bread->getTranslation('slug').'.edit', $item->getKey()),
+                'delete' => route('voyager.'.$this->bread->getTranslation('slug').'.destroy', $item->getKey()),
+            ];
+
+            return $item;
+        });
     }
 }
