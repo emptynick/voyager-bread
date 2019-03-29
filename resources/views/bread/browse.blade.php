@@ -11,6 +11,7 @@
 @section('content')
 <div class="page-content container-fluid" id="bread-browse">
     <language-picker></language-picker>
+    <vue-snotify></vue-snotify>
     @include('voyager::alerts')
     <div class="row">
         <div class="col-md-12">
@@ -183,7 +184,33 @@ var builder = new Vue({
             });
         },
         deleteEntry: function (pk) {
-
+            var url = '{{ route('voyager.'.$bread->getTranslation('slug').'.destroy', '#') }}';
+            url = Vue.prototype.getUrl(url, pk);
+            this.$snotify.confirm(
+                '{{ __('bread::bread.delete_name_singular_text', ['name' => $bread->getTranslation('name_singular')]) }}',
+                '{{ __('bread::bread.delete_name_singular', ['name' => $bread->getTranslation('name_singular')]) }}', {
+                timeout: 5000,
+                showProgressBar: true,
+                closeOnClick: false,
+                pauseOnHover: true,
+                buttons: [
+                    {text: 'Yes', action: (toast) => {
+                        this.$snotify.remove(toast.id);
+                        this.$http.post(url, {
+                            _token: '{{ csrf_token() }}',
+                            _method: 'DELETE'
+                        }).then(response => {
+                            this.$snotify.success('Successfully deleted...', 'Deleted');
+                            this.loadItems();
+                        }, response => {
+                            toastr.error('Deleting failed: '+response.body.message);
+                        });
+                    }},
+                    {text: 'No', action: (toast) => {
+                        this.$snotify.remove(toast.id);
+                    }},
+                ]
+            });
         },
         pushToUrl: function () {
             if (history.pushState) {

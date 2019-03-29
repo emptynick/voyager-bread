@@ -97,8 +97,10 @@ class Controller extends BaseController
     public function processData(Request $request, $layout, $action, $data)
     {
         $layout->formfields->each(function ($formfield) use ($request, $action, &$data) {
-            $field = $formfield->options->field;
-            $data->{$field} = $formfield->$action($request->get($field) ?? '');
+            $field = $formfield->options->field ?? null;
+            if ($field) {
+                $data->{$field} = $formfield->$action($request->get($field) ?? $data->{$field});
+            }
         });
 
         return $data;

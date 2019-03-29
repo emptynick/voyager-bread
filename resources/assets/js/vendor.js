@@ -12,4 +12,7 @@ Vue.component('popper', Popper);
 var VueResource = require('vue-resource');
 Vue.use(VueResource);
 
+var Snotify = require('vue-snotify');
+Vue.use(Snotify);
+
 Vue.prototype.debounce = require('debounce');

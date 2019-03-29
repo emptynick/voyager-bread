@@ -3,6 +3,8 @@
 return [
     'add_name_singular'         => 'Add :name',
     'browse_name_plural'        => 'Browse :name',
+    'delete_name_singular'      => 'Delete :name?',
+    'delete_name_singular_text' => 'Do you really want to delete this :name?',
     'edit_name_singular'        => 'Edit :name',
     'filter_by_column'          => 'Filter by :column',
     'names_selected'            => ':name selected',
