@@ -47,13 +47,13 @@ class Layout implements \JsonSerializable
         $columns = [];
         $this->formfields->each(function ($formfield) use (&$columns) {
             $columns[] = (object) [
-                'label'         => $this->getTranslation($formfield->options->title),
+                'label'         => $this->getTranslationFromObject($formfield->options->title),
                 'field'         => $formfield->options->field,
                 'type'          => $formfield->getType(),
                 'sortable'      => $formfield->options->orderable,
                 'searchable'    => $formfield->options->searchable,
                 'search_text'   => __('bread::bread.filter_by_column', [
-                                                    'column' => $this->getTranslation($formfield->options->title),
+                                                    'column' => $this->getTranslationFromObject($formfield->options->title),
                                                     ]),
                 'width'         => (($formfield->options->width ?? 25) * 0.80).'%',
                 'options'       => $formfield->options,

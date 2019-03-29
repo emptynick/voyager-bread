@@ -44,7 +44,7 @@ class Controller extends BaseController
                             $message = str_replace(
                                 ':locale',
                                 strtoupper($locale),
-                                BreadFacade::getTranslation($rule->message)
+                                BreadFacade::getTranslationFromObject($rule->message)
                             );
                             $key = $field.'.'.$locale.'.'.Str::before($rule->rule, ':');
                             $computed_messages[$key] = $message;
@@ -66,7 +66,7 @@ class Controller extends BaseController
                     &$computed_messages
                 ) {
                     $computed_rules[$field] .= $rule->rule.'|';
-                    $message = BreadFacade::getTranslation($rule->message);
+                    $message = BreadFacade::getTranslationFromObject($rule->message);
                     $computed_messages[$field.'.'.Str::before($rule->rule, ':')] = $message;
                 });
             }

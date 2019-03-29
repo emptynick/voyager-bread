@@ -10,35 +10,44 @@ trait Translatable
     {
         $locale = $locale ?? BreadFacade::getLocale();
         $translation = $field;
-        if (is_object($field)) {
-            return $this->getTranslationFromObject($field, $locale);
-        } elseif (is_array($field)) {
-            return $this->getTranslationFromArray($field, $locale);
-        } elseif (is_int($field)) {
-            $translation = $field;
-        } elseif ($this->{$field} && is_object($this->{$field})) {
-            $translation = $this->{$field}->{$locale} ?? '';
-        } elseif ($this->{$field} && is_array($this->{$field})) {
-            $translation = $this->{$field}[$locale] ?? '';
-        } elseif ($this->{$field}) {
-            $json = @json_decode($this->{$field});
-            if (json_last_error() == JSON_ERROR_NONE) {
-                $translation = $json->{$locale} ?? '';
+        $prop = $this->{$field};
+
+        if ($prop) {
+            if (is_object($prop)) {
+                $translation = $this->getTranslationFromObject($prop, $locale);
+            } elseif (is_array($prop)) {
+                $translation = $this->getTranslationFromArray($prop, $locale);
             } else {
-                $translation = $this->{$field};
+                $translation = $this->getTranslationFromString($prop, $locale);
             }
         }
 
         return $translation;
     }
 
-    public function getTranslationFromObject(object $object, $locale)
+    public function getTranslationFromObject(object $object, $locale = null)
     {
+        $locale = $locale ?? BreadFacade::getLocale();
+
         return $object->{$locale} ?? '';
     }
 
-    public function getTranslationFromArray(array $array, $locale)
+    public function getTranslationFromArray(array $array, $locale = null)
     {
+        $locale = $locale ?? BreadFacade::getLocale();
+
         return $array[$locale] ?? '';
+    }
+
+    public function getTranslationFromString(string $string, $locale = null)
+    {
+        $locale = $locale ?? BreadFacade::getLocale();
+
+        $json = @json_decode($string);
+        if (json_last_error() == JSON_ERROR_NONE) {
+            return $json->{$locale} ?? '';
+        } else {
+            return $string;
+        }
     }
 }

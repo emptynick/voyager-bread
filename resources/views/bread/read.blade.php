@@ -5,7 +5,7 @@
 <ol class="breadcrumb hidden-xs">
     <li><a href="{{ route('voyager.dashboard')}}"><i class="voyager-boat"></i> {{ __('voyager::generic.dashboard') }}</a></li>
     <li><a href="{{ route('voyager.'.$bread->getTranslation('slug').'.index')}}">{{ $bread->getTranslation('name_plural') }}</a></li>
-    <li class="active">{{ $bread->getTranslation($data->getKey()) }}</li>
+    <li class="active">#</li>
 </ol>
 @endsection
 
