@@ -23,6 +23,9 @@
                 </div>
 
                 <div class="panel-body" style="overflow: visible">
+                    <div class="overlay" v-if="loading">
+                        <img src="{{ voyager_asset('images/logo-icon.png') }}" alt="Voyager Loader">
+                    </div>
                     <table class="table table-bordered table-striped">
                         <thead>
                             <tr>
@@ -88,6 +91,7 @@ var builder = new Vue({
         layout: {!! json_encode($layout) !!},
         rows: [],
         totalRecords: 0,
+        loading: true,
         parameter: {
             columns: {!! json_encode($layout->getColumnDefinitions()) !!},
             page: 1,
@@ -122,12 +126,15 @@ var builder = new Vue({
             this.loadItems();
         },
         loadItems: function () {
+            this.loading = true;
             this.locale = this.$eventHub.locale;
             this.$http.post('{{ route('voyager.'.$bread->getTranslation('slug').'.data') }}', this.parameter).then(response => {
                 this.totalRecords = response.body.records;
                 this.rows = response.body.rows;
+                this.loading = false;
             }, response => {
                 toastr.error('Loading data failed: '+response.body.message);
+                this.loading = false;
             });
         },
         selectAll: function (select) {
@@ -153,4 +160,27 @@ var builder = new Vue({
 
 @section('css')
 <link rel="stylesheet" href="{{ route('voyager.bread.styles') }}">
+<style>
+.overlay {
+    background-color: rgba(0, 0, 0, 0.05);
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0px;
+    top: 0px;
+    z-index: 99;
+}
+.overlay img{
+    width: 100px;
+    height: 100px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-left: -50px;
+    margin-right: -50px;
+    -webkit-animation: spin 1s linear infinite;
+    -moz-animation: spin 1s linear infinite;
+    animation: spin 1s linear infinite;
+}
+</style>
 @endsection

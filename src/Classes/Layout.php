@@ -52,7 +52,9 @@ class Layout implements \JsonSerializable
                 'type'          => $formfield->getType(),
                 'sortable'      => $formfield->options->orderable,
                 'searchable'    => $formfield->options->searchable,
-                'search_text'   => __('bread::bread.filter_by_column', ['column' => $this->getTranslation($formfield->options->title)]),
+                'search_text'   => __('bread::bread.filter_by_column', [
+                                                    'column' => $this->getTranslation($formfield->options->title)
+                                                    ]),
                 'width'         => (($formfield->options->width ?? 25) * 0.80).'%',
                 'options'       => $formfield->options,
                 'validation'    => $formfield->validation,

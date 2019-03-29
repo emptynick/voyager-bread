@@ -125,7 +125,7 @@ class BreadController extends Controller
                 }
             }
 
-            $query = $this->searchQuery($query, ($request->filter ?? []), $columns);
+            $query = $this->searchQuery($query, array_filter($request->filter ?? []), $columns);
             $query = $this->orderQuery($query, $request->orderField, ($request->orderDir ?? 'asc'), $columns);
 
             // Total records
@@ -159,25 +159,20 @@ class BreadController extends Controller
     protected function searchQuery($query, $filters, $columns)
     {
         foreach ($filters as $field => $filter) {
-            debug($filter);
-            if ($filter) {
-                if (Str::contains($field, '.')) {
-                    // Query relationship
-                    list($relationship, $field) = explode('.', $field);
-                    $query = $query->whereHas($relationship, function ($rquery) use ($field, $filter) {
-                        $rquery->where($field, 'like', '%'.$filter.'%');
-                    });
+            if (Str::contains($field, '.')) {
+                // Query relationship
+                list($relationship, $field) = explode('.', $field);
+                $query = $query->whereHas($relationship, function ($rquery) use ($field, $filter) {
+                    $rquery->where($field, 'like', '%'.$filter.'%');
+                });
+            } else {
+                // Translatable field
+                if (($columns->where('field', $field)->first()['options']['translatable'] ?? false) &&
+                    ($columns->where('field', $field)->first()['options']['search_in_locale'] ?? false) ) {
+                    $query = $query->whereRaw('lower('.$field.'->"$.'.$locale.'") like lower(?)', ["%{$filter}%"]);
                 } else {
-                    // Translatable field
-                    if (
-                        ($columns->where('field', $field)->first()['options']['translatable'] ?? false) &&
-                        ($columns->where('field', $field)->first()['options']['search_in_locale'] ?? false)
-                    ) {
-                        $query = $query->whereRaw('lower('.$field.'->"$.'.$locale.'") like lower(?)', ["%{$filter}%"]);
-                    } else {
-                        // Normal field search
-                        $query = $query->where($field, 'like', '%'.$filter.'%');
-                    }
+                    // Normal field search
+                    $query = $query->where($field, 'like', '%'.$filter.'%');
                 }
             }
         }
