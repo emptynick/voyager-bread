@@ -145,7 +145,8 @@ var builder = new Vue({
             this.loadItems();
         },
         filterBy: Vue.prototype.debounce(function () {
-            this.loadItems();
+            this.parameter.page = 1;
+            // Items are automatically reloaded through page-watcher
         }, 300),
         loadItems: function () {
             if (!this.loading) {
