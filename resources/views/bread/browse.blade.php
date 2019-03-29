@@ -41,7 +41,8 @@
                                     <input type="text" class="form-control"
                                            v-if="column.searchable"
                                            :placeholder="column.search_text"
-                                           @input="filterBy(column.field, $event.target.value)">
+                                           v-model="parameter.filter[column.field]"
+                                           @input="filterBy()">
                                 </th>
                                 <th>
                                     
@@ -83,13 +84,22 @@
                         </tbody>
                         <tfoot>
                             <tr>
-                                <td :colspan="parameter.columns.length + 2">
+                                <td :colspan="parameter.columns.length">
                                     <pagination
                                         :pages="pages"
                                         v-model="parameter.page"
                                         :prev-text="'Prev'"
                                         :next-text="'Next'">
                                     </pagination>
+                                </td>
+                                <td colspan="2">
+                                    <select class="form-control pull-right" v-model="parameter.perPage" @change="loadItems()">
+                                        <option :value="10">10</option>
+                                        <option :value="25">25</option>
+                                        <option :value="50">50</option>
+                                        <option :value="100">100</option>
+                                        <option :value="Number.MAX_SAFE_INTEGER">All</option>
+                                    </select>
                                 </td>
                             </tr>
                         </tfoot>
@@ -134,19 +144,13 @@ var builder = new Vue({
             this.parameter.orderField = field;
             this.loadItems();
         },
-        filterBy: Vue.prototype.debounce(function (field, query) {
-            this.parameter.filter[field] = query;
+        filterBy: Vue.prototype.debounce(function () {
             this.loadItems();
         }, 300),
-        openPage: function (page) {
-            this.parameter.page = page;
-            this.loadItems();
-        },
-        selectPerPage: function (number) {
-            this.parameter.perPage = number;
-            this.loadItems();
-        },
         loadItems: function () {
+            if (!this.loading) {
+                this.pushToUrl();
+            }
             this.loading = true;
             this.locale = this.$eventHub.locale;
             this.$http.post('{{ route('voyager.'.$bread->getTranslation('slug').'.data') }}', this.parameter).then(response => {
@@ -166,6 +170,45 @@ var builder = new Vue({
         },
         deleteEntry: function (pk) {
 
+        },
+        pushToUrl: function () {
+            if (history.pushState) {
+                var out = [];
+                for (var key in this.parameter) {
+                    if (key != 'columns' && key != '_token' && key != 'filter' && this.parameter.hasOwnProperty(key)) {
+                        out.push(key + '=' + encodeURIComponent(this.parameter[key]));
+                    }
+                }
+                for (var key in this.parameter.filter) {
+                    if (this.parameter.filter[key] !== '') {
+                        out.push('filter['+key+']=' + encodeURIComponent(this.parameter.filter[key]));
+                    }
+                }
+                var newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?' + out.join('&');
+                window.history.pushState({ path: newurl }, '', newurl);
+            }
+        },
+        getFromUrl: function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const iterator = urlParams.entries();
+            let result = iterator.next();
+            while (!result.done) {
+                var key = result.value[0];
+                var value = result.value[1];
+
+                if (!key.startsWith('filter')) {
+                    if (key == 'page' || key == 'perPage') {
+                        this.parameter[key] = parseInt(value);
+                    } else {
+                        this.parameter[key] = value;
+                    }
+                } else {
+                    var field = key.replace(/filter\[|\]/gi, '');
+                    this.parameter.filter[field] = value;
+                }
+
+                result = iterator.next();
+            }
         }
     },
     computed: {
@@ -173,8 +216,14 @@ var builder = new Vue({
             return Math.ceil(this.totalRecords / this.parameter.perPage);
         },
     },
+    watch: {
+        'parameter.page': function () {
+            this.loadItems();
+        }
+    },
     mounted: function () {
         @localization
+        this.getFromUrl();
         this.loadItems();
         
     },
