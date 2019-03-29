@@ -11,9 +11,9 @@ trait Translatable
         $locale = $locale ?? BreadFacade::getLocale();
         $translation = $field;
         if (is_object($field)) {
-            $translation = $field->{$locale} ?? '';
+            return $this->getTranslationFromObject($field, $locale);
         } elseif (is_array($field)) {
-            $translation = $field[$locale] ?? '';
+            return $this->getTranslationFromArray($field, $locale);
         } elseif (is_int($field)) {
             $translation = $field;
         } elseif ($this->{$field} && is_object($this->{$field})) {
@@ -30,5 +30,15 @@ trait Translatable
         }
 
         return $translation;
+    }
+
+    public function getTranslationFromObject(object $object, $locale)
+    {
+        return $object->{$locale} ?? '';
+    }
+
+    public function getTranslationFromArray(array $array, $locale)
+    {
+        return $array[$locale] ?? '';
     }
 }
