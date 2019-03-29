@@ -753,9 +753,11 @@ module.exports = {
 /*!*************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/assets/components/Pagination.vue?vue&type=script&lang=js& ***!
   \*************************************************************************************************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
+"use strict";
+__webpack_require__.r(__webpack_exports__);
 //
 //
 //
@@ -776,36 +778,158 @@ module.exports = {
 //
 //
 //
-module.exports = {
-  props: ['pages', 'page', 'callback', 'left', 'right'],
-  methods: {
-    openPage: function openPage(page) {
-      if (this.callback) {
-        this.callback(page);
-      }
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: {
+    value: {
+      type: Number
+    },
+    pages: {
+      type: Number,
+      required: true
+    },
+    pageRange: {
+      type: Number,
+      default: 3
+    },
+    marginPages: {
+      type: Number,
+      default: 1
+    },
+    prevText: {
+      type: String,
+      default: "Prev"
+    },
+    nextText: {
+      type: String,
+      default: "Next"
+    },
+    breakViewText: {
+      type: String,
+      default: "…"
     }
   },
+  beforeUpdate: function beforeUpdate() {},
   computed: {
-    previousPage: function previousPage() {
-      var p = this.page - 1;
+    selected: {
+      get: function get() {
+        return this.value || this.innerValue;
+      },
+      set: function set(newValue) {
+        this.innerValue = newValue;
+      }
+    },
+    allPages: function allPages() {
+      var _this = this;
 
-      if (p < 1) {
-        return 1;
+      var items = {};
+
+      if (this.pages <= this.pageRange) {
+        for (var index = 0; index < this.pages; index++) {
+          var page = {
+            index: index,
+            content: index + 1,
+            selected: index === this.selected - 1
+          };
+          items[index] = page;
+        }
+      } else {
+        var halfPageRange = Math.floor(this.pageRange / 2);
+
+        var setPageItem = function setPageItem(index) {
+          var page = {
+            index: index,
+            content: index + 1,
+            selected: index === _this.selected - 1
+          };
+          items[index] = page;
+        };
+
+        var setBreakView = function setBreakView(index) {
+          var breakView = {
+            disabled: true,
+            breakView: true
+          };
+          items[index] = breakView;
+        }; // 1st - loop thru low end of margin pages
+
+
+        for (var i = 0; i < this.marginPages; i++) {
+          setPageItem(i);
+        } // 2nd - loop thru selected range
+
+
+        var selectedRangeLow = 0;
+
+        if (this.selected - halfPageRange > 0) {
+          selectedRangeLow = this.selected - 1 - halfPageRange;
+        }
+
+        var selectedRangeHigh = selectedRangeLow + this.pageRange - 1;
+
+        if (selectedRangeHigh >= this.pages) {
+          selectedRangeHigh = this.pages - 1;
+          selectedRangeLow = selectedRangeHigh - this.pageRange + 1;
+        }
+
+        for (var _i = selectedRangeLow; _i <= selectedRangeHigh && _i <= this.pages - 1; _i++) {
+          setPageItem(_i);
+        }
+
+        if (selectedRangeLow > this.marginPages) {
+          setBreakView(selectedRangeLow - 1);
+        }
+
+        if (selectedRangeHigh + 1 < this.pages - this.marginPages) {
+          setBreakView(selectedRangeHigh + 1);
+        }
+
+        for (var _i2 = this.pages - 1; _i2 >= this.pages - this.marginPages; _i2--) {
+          setPageItem(_i2);
+        }
       }
 
-      return p;
+      return items;
+    }
+  },
+  data: function data() {
+    return {
+      innerValue: 1
+    };
+  },
+  methods: {
+    handlePageSelected: function handlePageSelected(selected) {
+      if (this.selected === selected) return;
+      this.innerValue = selected;
+      this.$emit("input", selected);
+    },
+    prevPage: function prevPage() {
+      if (this.selected <= 1) return;
+      this.handlePageSelected(this.selected - 1);
     },
     nextPage: function nextPage() {
-      var p = this.page + 1;
-
-      if (p > this.pages) {
-        return this.pages;
-      }
-
-      return p;
+      if (this.selected >= this.pages) return;
+      this.handlePageSelected(this.selected + 1);
+    },
+    firstPageSelected: function firstPageSelected() {
+      return this.selected === 1;
+    },
+    lastPageSelected: function lastPageSelected() {
+      return this.selected === this.pages || this.pages === 0;
+    },
+    selectFirstPage: function selectFirstPage() {
+      if (this.selected <= 1) return;
+      this.handlePageSelected(1);
+    },
+    selectLastPage: function selectLastPage() {
+      if (this.selected >= this.pages) return;
+      this.handlePageSelected(this.pages);
     }
   }
-};
+});
 
 /***/ }),
 
@@ -862,7 +986,7 @@ module.exports = {
 
 /***/ }),
 
-/***/ "./node_modules/css-loader/index.js?!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-swatches/dist/vue-swatches.min.css?c671":
+/***/ "./node_modules/css-loader/index.js?!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-swatches/dist/vue-swatches.min.css":
 /*!*********************************************************************************************************************************************!*\
   !*** ./node_modules/css-loader??ref--6-1!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-swatches/dist/vue-swatches.min.css ***!
   \*********************************************************************************************************************************************/
@@ -9416,97 +9540,106 @@ var render = function() {
     "ul",
     { staticClass: "pagination" },
     [
-      _vm.page != 1
-        ? _c("li", [
-            _c(
-              "a",
-              {
-                attrs: { href: "#" },
-                on: {
-                  click: function($event) {
-                    $event.preventDefault()
-                    return _vm.openPage(1)
+      !_vm.firstPageSelected()
+        ? _c("li", { class: [_vm.firstPageSelected() ? "disabled" : ""] }, [
+            _c("a", {
+              attrs: { tabindex: _vm.firstPageSelected() ? -1 : 0 },
+              domProps: { innerHTML: _vm._s(_vm.prevText) },
+              on: {
+                click: function($event) {
+                  return _vm.prevPage()
+                },
+                keyup: function($event) {
+                  if (
+                    !$event.type.indexOf("key") &&
+                    _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+                  ) {
+                    return null
                   }
+                  return _vm.prevPage()
                 }
-              },
-              [_vm._v("«")]
-            )
+              }
+            })
           ])
         : _vm._e(),
       _vm._v(" "),
-      _vm.page != 1
-        ? _c("li", [
-            _c(
-              "a",
-              {
-                attrs: { href: "#" },
-                on: {
-                  click: function($event) {
-                    $event.preventDefault()
-                    return _vm.openPage(_vm.previousPage)
-                  }
-                }
-              },
-              [_vm._v("<")]
-            )
-          ])
-        : _vm._e(),
-      _vm._v(" "),
-      _vm._l(_vm.pages, function(p) {
+      _vm._l(_vm.allPages, function(page, key) {
         return _c(
           "li",
-          { key: "pagination_" + p, class: [p == _vm.page ? "active" : ""] },
+          {
+            key: "pagination_" + key,
+            class: [
+              page.selected ? "active" : "",
+              page.disabled ? "disabled" : ""
+            ]
+          },
           [
-            _c(
-              "a",
-              {
-                attrs: { href: "#" },
-                on: {
-                  click: function($event) {
-                    $event.preventDefault()
-                    return _vm.openPage(p)
-                  }
-                }
-              },
-              [_vm._v(_vm._s(p))]
-            )
+            page.breakView
+              ? _c(
+                  "a",
+                  { attrs: { tabindex: "0" } },
+                  [
+                    _vm._t("breakViewContent", [
+                      _vm._v(_vm._s(_vm.breakViewText))
+                    ])
+                  ],
+                  2
+                )
+              : page.disabled
+              ? _c("a", { attrs: { tabindex: "0" } }, [
+                  _vm._v(_vm._s(page.content))
+                ])
+              : _c(
+                  "a",
+                  {
+                    attrs: { tabindex: "0" },
+                    on: {
+                      click: function($event) {
+                        return _vm.handlePageSelected(page.index + 1)
+                      },
+                      keyup: function($event) {
+                        if (
+                          !$event.type.indexOf("key") &&
+                          _vm._k(
+                            $event.keyCode,
+                            "enter",
+                            13,
+                            $event.key,
+                            "Enter"
+                          )
+                        ) {
+                          return null
+                        }
+                        return _vm.handlePageSelected(page.index + 1)
+                      }
+                    }
+                  },
+                  [_vm._v(_vm._s(page.content))]
+                )
           ]
         )
       }),
       _vm._v(" "),
-      _vm.page != _vm.pages
-        ? _c("li", [
-            _c(
-              "a",
-              {
-                attrs: { href: "#" },
-                on: {
-                  click: function($event) {
-                    $event.preventDefault()
-                    return _vm.openPage(_vm.pages)
+      !_vm.lastPageSelected()
+        ? _c("li", { class: [_vm.lastPageSelected() ? "disabled" : ""] }, [
+            _c("a", {
+              attrs: { tabindex: _vm.lastPageSelected() ? -1 : 0 },
+              domProps: { innerHTML: _vm._s(_vm.nextText) },
+              on: {
+                click: function($event) {
+                  return _vm.nextPage()
+                },
+                keyup: function($event) {
+                  if (
+                    !$event.type.indexOf("key") &&
+                    _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+                  ) {
+                    return null
                   }
+                  return _vm.nextPage()
                 }
-              },
-              [_vm._v("»")]
-            )
-          ])
-        : _vm._e(),
-      _vm._v(" "),
-      _vm.page != _vm.pages
-        ? _c("li", [
-            _c(
-              "a",
-              {
-                attrs: { href: "#" },
-                on: {
-                  click: function($event) {
-                    $event.preventDefault()
-                    return _vm.openPage(_vm.nextPage)
-                  }
-                }
-              },
-              [_vm._v(">")]
-            )
+              }
+            })
           ])
         : _vm._e()
     ],
@@ -11395,7 +11528,7 @@ if (typeof window !== 'undefined' && window.Vue) {
 /***/ (function(module, exports, __webpack_require__) {
 
 
-var content = __webpack_require__(/*! !../../css-loader??ref--6-1!../../postcss-loader/src??ref--6-2!./vue-swatches.min.css */ "./node_modules/css-loader/index.js?!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-swatches/dist/vue-swatches.min.css?c671");
+var content = __webpack_require__(/*! !../../css-loader??ref--6-1!../../postcss-loader/src??ref--6-2!./vue-swatches.min.css */ "./node_modules/css-loader/index.js?!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-swatches/dist/vue-swatches.min.css");
 
 if(typeof content === 'string') content = [[module.i, content, '']];
 
@@ -24026,9 +24159,7 @@ component.options.__file = "resources/assets/components/Pagination.vue"
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Pagination_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./Pagination.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/assets/components/Pagination.vue?vue&type=script&lang=js&");
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Pagination_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Pagination_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__);
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Pagination_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Pagination_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
- /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Pagination_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0___default.a); 
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Pagination_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
 
 /***/ }),
 

@@ -84,7 +84,12 @@
                         <tfoot>
                             <tr>
                                 <td :colspan="parameter.columns.length + 2">
-                                    <pagination :pages="pages" :page="parameter.page" :callback="openPage" class="pagination-sm" />
+                                    <pagination
+                                        :pages="pages"
+                                        v-model="parameter.page"
+                                        :prev-text="'Prev'"
+                                        :next-text="'Next'">
+                                    </pagination>
                                 </td>
                             </tr>
                         </tfoot>
