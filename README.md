@@ -14,11 +14,11 @@ Navigate to your adminpanel and go to `Tools > BREAD`
 
 ## Formfield:
 
-[X] Text / Textarea
-[X] Number
-[X] Color
-[ ] Masked Input (needs formatting on browse and read)
-[ ] Password
-[ ] Select
-[ ] Date/Time/Datetime
-[ ] Relationships
+- [X] Text / Textarea
+- [X] Number
+- [X] Color
+- [ ] Masked Input (needs formatting on browse and read)
+- [ ] Password
+- [ ] Select
+- [ ] Date/Time/Datetime
+- [ ] Relationships
