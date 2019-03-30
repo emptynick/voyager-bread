@@ -12,12 +12,13 @@ composer require emptynick/voyager-bread
 That's it. No installation or configuration is required.  
 Navigate to your adminpanel and go to `Tools > BREAD`
 
-## Todo:
+## Formfield:
 
-There is too much to do to write it all down at the moment.  
-This is just for myself:
-- Masked input: format read and browse appropriately
-
-## Bugs:
-
-* A lot right now
+[X] Text / Textarea
+[X] Number
+[X] Color
+[ ] Masked Input (needs formatting on browse and read)
+[ ] Password
+[ ] Select
+[ ] Date/Time/Datetime
+[ ] Relationships
