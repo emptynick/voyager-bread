@@ -5,6 +5,11 @@ let formfields = [
     'MaskedInput',
 ];
 
+let bread_components = [
+    'BrowseTable',
+    'Builder'
+];
+
 let helper = [
     'i18n',
     'string',
@@ -36,4 +41,9 @@ Vue.component('formfield-base', BaseFormfield);
 
 formfields.forEach(function (formfield) {
     Vue.component('formfield-'+Vue.prototype.kebab_case(formfield), require('../components/Formfields/'+formfield).default);
+});
+
+// BREAD components
+bread_components.forEach(function (comp) {
+    Vue.component(Vue.prototype.kebab_case(comp), require('../components/Bread/'+comp).default);
 });

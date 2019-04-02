@@ -17,7 +17,7 @@
         "vue": "^2.6.10",
         "vue-popperjs": "^2.0.3",
         "vue-resource": "^1.5.1",
-        "vue-select": "^2.6.3",
+        "vue-select": "^2.6.4",
         "vue-snotify": "^3.2.1",
         "vue-swatches": "^1.0.3",
         "vue-template-compiler": "^2.6.10",
