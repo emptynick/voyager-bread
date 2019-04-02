@@ -27,5 +27,8 @@
                 "Bread\\BreadServiceProvider"
             ]
         }
+    },
+    "require-dev": {
+        "orchestra/testbench-dusk": "3.8"
     }
 }
