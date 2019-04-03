@@ -76,9 +76,7 @@ class Bread
     public function getBreadAccessors($table)
     {
         if ($bread = $this->getBread($table)) {
-            return [
-                1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
-            ];
+            return $bread->getModel()->accessors ?? [];
         }
 
         return [];
