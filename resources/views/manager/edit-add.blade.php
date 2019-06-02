@@ -7,7 +7,7 @@
     @include('voyager::alerts')
     <div class="row">
         <div class="col-md-12">
-            <div class="panel panel-primary panel-bordered">                
+            <div class="panel panel-primary panel-bordered">
                 <div class="panel-heading">
                     <h3 class="panel-title panel-icon"><i class="voyager-info-circled"></i> {{ ucfirst($table) }} {{ __('voyager::bread.bread_info') }}</h3>
                     <div class="panel-actions">
@@ -66,7 +66,7 @@
                     </div>
                 </div><!-- .panel-body -->
             </div><!-- .panel -->
-            <div class="panel panel-primary panel-bordered">                
+            <div class="panel panel-primary panel-bordered">
                 <div class="panel-heading">
                     <h3 class="panel-title panel-icon"><i class="voyager-bread"></i> Layout Builder</h3>
                     <div class="panel-actions">
@@ -141,7 +141,7 @@
                     </div>
                 </div>
             </div>
-            <div class="panel panel-primary panel-bordered">                
+            <div class="panel panel-primary panel-bordered">
                 <div class="panel-heading">
                     <h3 class="panel-title panel-icon"><i class="voyager-lock"></i> Roles</h3>
                     <div class="panel-actions">
@@ -196,7 +196,7 @@
                     </div>
                 </div>
             </div>
-            <div class="panel panel-primary panel-bordered">                
+            <div class="panel panel-primary panel-bordered">
                 <div class="panel-heading">
                     <h3 class="panel-title panel-icon"><i class="voyager-code"></i> Code</h3>
                     <div class="panel-actions">

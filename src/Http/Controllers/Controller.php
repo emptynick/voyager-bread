@@ -98,7 +98,20 @@ class Controller extends BaseController
     {
         $layout->formfields->each(function ($formfield) use ($request, $action, &$data) {
             $field = $formfield->options->field ?? null;
+            $translatable = $formfield->options->translatable ?? false;
             if ($field) {
+                if ($translatable) {
+                    $json = @json_decode($request->get($field));
+                    if (json_last_error() == JSON_ERROR_NONE && is_array($json)) {
+                        $newVal = [];
+                        foreach ($json as $locale => $str) {
+                            $newVal[$locale] = $formfield->$action($str);
+                        }
+                        $data->{$field} = json_encode($newVal);
+
+                        return;
+                    }
+                }
                 $data->{$field} = $formfield->$action($request->get($field) ?? $data->{$field});
             }
         });

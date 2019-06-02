@@ -12,7 +12,7 @@ composer require emptynick/voyager-bread
 That's it. No installation or configuration is required.  
 Navigate to your adminpanel and go to `Tools > BREAD`
 
-## Formfields:
+## Formfields
 
 - [X] Text / Textarea
 - [X] Number
@@ -22,3 +22,7 @@ Navigate to your adminpanel and go to `Tools > BREAD`
 - [ ] Select
 - [ ] Date/Time/Datetime
 - [ ] Relationships
+
+## Bugs
+
+- Deleting List elements

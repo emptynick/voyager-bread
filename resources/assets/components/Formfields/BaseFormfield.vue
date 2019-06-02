@@ -4,7 +4,7 @@
             <div class="panel-heading" v-if="view == 'mockup'">
                 <h3 class="panel-title">{{ type.charAt(0).toUpperCase() + type.slice(1) }}, Field: {{ options.field || 'none' }}</h3>
                 <div class="panel-actions">
-                    <a class="panel-action voyager-trash" @click="$parent.$parent.deleteFormfield($vnode.key)"></a>
+                    <a class="panel-action voyager-trash" @click="$parent.deleteFormfield($vnode.key)"></a>
                     <a class="panel-action voyager-settings open-settings" @click="optionsOpen = !optionsOpen"></a>
                     <a class="panel-action voyager-code" @mousedown="startResize()" @mouseup="endResize()"></a>
                     <a class="panel-action voyager-handle drag_handle"></a>
@@ -68,7 +68,7 @@
                     </div>
                     <label v-if="options.title">{{ getTranslation(options.title, view != 'mockup') }}</label>
                     <component :is="'formfield-'+type" :view="view" :options="options" :layout-type="layoutType" :base="this" />
-                    <input type="hidden" :name="options.field" :value="getTranslatedValue()">
+                    <input type="text" :name="options.field" :value="getTranslatedValue()">
                     <span v-if="options.help_text && view != 'read'">{{ getTranslation(options.help_text, view != 'mockup') }}</span>
                 </div>
             </div>
@@ -120,7 +120,7 @@
                 <div slot="reference"></div>
             </popper>
             <button class="btn btn-primary" @click="optionsOpen = !optionsOpen">Options</button>
-            <button class="btn btn-danger" @click="$parent.$parent.deleteFormfield($vnode.key)">Delete</button>
+            <button class="btn btn-danger" @click="$parent.deleteFormfield($vnode.key)">Delete</button>
         </div>
     </div>
     <component v-else :is="'formfield-'+type" :view="view" :options="options" :base="this" />
