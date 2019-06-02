@@ -12,32 +12,18 @@ use TCG\Voyager\Facades\Voyager;
 
 class BreadServiceProvider extends ServiceProvider
 {
-    private $breadPath;
-    private $formfields = [
-        \Bread\Formfields\Text::class,
-        \Bread\Formfields\Number::class,
-        \Bread\Formfields\Color::class,
-        \Bread\Formfields\MaskedInput::class,
-    ];
-
     public function boot()
     {
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'bread');
         $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'bread');
 
         Blade::directive('localization', function () {
-            return 'this.$eventHub.locale = "'.BreadFacade::getLocale().'";
-                this.$eventHub.initialLocale = "'.BreadFacade::getLocale().'";
-                this.$eventHub.locales = '.json_encode(BreadFacade::getLocales()).';
-                this.$eventHub.translatable = '.var_export(BreadFacade::translatable(), true).';
-                this.$eventHub.translations = '.$this->getTranslations().';';
+            return '';
         });
     }
 
     public function register()
     {
-        $this->loadBreadsFrom(storage_path('bread'));
-
         app(Dispatcher::class)->listen('voyager.admin.routing.after', function ($router) {
             $this->addRoutes($router);
         });
@@ -48,24 +34,6 @@ class BreadServiceProvider extends ServiceProvider
         $this->app->singleton('BreadDB', function () {
             return DB::connection();
         });
-
-        $this->addCollectionMacros();
-
-        foreach ($this->formfields as $formfield) {
-            BreadFacade::addFormfield($formfield);
-        }
-    }
-
-    public function loadBreadsFrom($path)
-    {
-        BreadFacade::breadPath($path);
-    }
-
-    public function getTranslations()
-    {
-        return collect(['bread', 'generic', 'manager'])->flatMap(function ($file) {
-            return ['bread::'.($translation = $file) => trans('bread::'.$translation)];
-        })->toJson();
     }
 
     protected function addRoutes($router)
@@ -86,38 +54,6 @@ class BreadServiceProvider extends ServiceProvider
             //Assets
             $router->get('/styles.css', ['uses' => $namespace.'AssetController@styles', 'as' => 'styles']);
             $router->get('/scripts.js', ['uses' => $namespace.'AssetController@scripts', 'as' => 'scripts']);
-        });
-
-        //BREADs
-        BreadFacade::getBreads()->each(function ($bread) use ($router, $namespace) {
-            foreach ((array) $bread->slug as $slug) {
-                if ($slug) {
-                    $controller = $bread->controller ?? $namespace.'BreadController';
-                    $router->resource($slug, $controller);
-                    $router->post($slug.'/data', $controller.'@getData')->name($slug.'.data');
-                }
-            }
-        });
-    }
-
-    protected function addCollectionMacros()
-    {
-        Collection::macro('whereTranslation', function ($field, $query) {
-            return $this->filter(function ($bread) use ($field, $query) {
-                if (is_object($bread->{$field})) {
-                    foreach ($bread->{$field} as $locale) {
-                        if ($locale == $query) {
-                            return true;
-                        }
-                    }
-                } else {
-                    if ($bread->{$field} == $query) {
-                        return true;
-                    }
-                }
-
-                return false;
-            });
         });
     }
 }

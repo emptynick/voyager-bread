@@ -10,36 +10,22 @@ class ManagerController extends Controller
 {
     public function index()
     {
-        return view('bread::manager.browse');
+
     }
 
     // Create AND edit a BREAD for a table
     public function create($table)
     {
-        return view('bread::manager.edit-add', compact('table'));
+
     }
 
     public function store(Request $request)
     {
-        // TODO: remove views and lists from formfields
-        $json = @json_decode($request->bread);
-        if (json_last_error() == JSON_ERROR_NONE) {
-            $path = BreadFacade::breadPath().$json->table.'.json';
-            File::put($path, json_encode($json, JSON_PRETTY_PRINT));
 
-            return response()->json(['path' => $json->table.'.json']);
-        }
-
-        BreadFacade::debug('Saving BREAD failed: '.json_last_error());
-
-        return response('Invalid JSON');
     }
 
     public function destroy($table)
     {
-        $path = BreadFacade::breadPath().$table.'.json';
-        File::delete($path);
-
-        return redirect()->route('voyager.bread.index');
+        
     }
 }
