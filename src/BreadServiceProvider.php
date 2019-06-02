@@ -4,7 +4,6 @@ namespace Bread;
 
 use Illuminate\Events\Dispatcher;
 use Illuminate\Foundation\AliasLoader;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
